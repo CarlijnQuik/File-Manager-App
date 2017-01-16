@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/question_mark"
+        android:contentDescription="@string/image_display"
+        android:id="@+id/ivLocation"
+        android:layout_alignTop="@+id/tvFilename"
+        android:layout_toRightOf="@+id/tvFilename"
+        android:layout_toEndOf="@+id/tvFilename"
+        android:layout_marginLeft="36dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:text="@string/filetype"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:id="@+id/tvType"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/ivType"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/image_display"
+        android:src="@drawable/file_icon"
+        android:layout_marginLeft="22dp"
+        android:layout_marginStart="22dp"
+        android:id="@+id/ivType"
+        android:layout_alignBottom="@+id/tvFilename"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="@string/name_availability"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:textSize="20sp"
+        android:id="@+id/tvFilename"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp" />
+
+</RelativeLayout>

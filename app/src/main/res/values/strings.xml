@@ -9,4 +9,12 @@
     <string name="sort_by">Sort by</string>
     <string name="select">Select</string>
     <string name="select_all">Select all</string>
+    <string name="home">Home</string>
+    <string name="sign_in">Sign in with your Google account</string>
+    <string name="image_display">Image Display</string>
+    <string name="password">Password</string>
+    <string name="hint_email">Enter e-mail</string>
+    <string name="slogan">Never lose your files again</string>
+    <string name="filetype">Filetype unknown</string>
+    <string name="name_availability">Name not available</string>
 </resources>

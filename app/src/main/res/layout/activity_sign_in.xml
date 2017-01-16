@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_sign_in"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.carlijnquik.nlmprogblifi.SignInActivity">
+
+    <TextView
+        android:text="@string/sign_in"
+        android:textColor="?attr/colorControlNormal"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvWelcome"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/tvSlogan"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/image_display"
+        android:src="@drawable/google_drive_logo"
+        android:id="@+id/ivDriveLogo"
+        android:layout_marginTop="42dp"
+        android:layout_alignTop="@+id/tvWelcome"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="21dp"
+        android:id="@+id/rlEmailPassword"
+        android:background="@drawable/light_grey_background"
+        android:layout_below="@+id/ivDriveLogo"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:text="@string/sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bLogIn"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignLeft="@+id/etEmail"
+            android:layout_alignStart="@+id/etEmail"
+            android:theme="@style/AppTheme.Button"
+            android:textColor="@android:color/background_light" />
+
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:layout_marginTop="20dp"
+            android:hint="@string/password"
+            android:textColorHint="?attr/editTextColor"
+            android:id="@+id/etPassword"
+            android:background="@drawable/edit_text_style"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/etEmail" />
+
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:hint="@string/hint_email"
+            android:textColorHint="?attr/editTextColor"
+            android:id="@+id/etEmail"
+            android:background="@drawable/edit_text_style"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:text="@string/slogan"
+        android:textSize="29sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvSlogan"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
