@@ -3,6 +3,8 @@ package com.example.carlijnquik.nlmprogblifi;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -35,7 +37,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -67,7 +69,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_sort_by) {
             return true;
         }
 
@@ -79,19 +81,13 @@ public class NavigationDrawerActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        android.app.FragmentManager fragmentManager = getFragmentManager();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_home){
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+        }
+        else if (id == R.id.nav_sign_out) {
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new SignOutFragment()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -1,8 +1,12 @@
 <resources>
-    <string name="app_name">nl.mprog.blifi</string>
+    <string name="app_name">BliFi</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="sort_by">Sort by</string>
+    <string name="select">Select</string>
+    <string name="select_all">Select all</string>
 </resources>
