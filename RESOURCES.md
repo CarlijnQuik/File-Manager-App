@@ -45,3 +45,6 @@ http://www.iconsdb.com/icons/preview/purple/text-file-xxl.png
 
 *File type icons*
 https://www.google.nl/search?q=file+format+icons&client=firefox-b-ab&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjNl_SBvLzRAhVVOlAKHQvXCVQQ_AUICCgB&biw=944&bih=916&dpr=1#imgrc=1nFjZadBkfuCrM%3A
+
+*Sign out button*
+https://pixabay.com/p-297018/?no_redirect
