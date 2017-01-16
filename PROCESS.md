@@ -50,5 +50,6 @@
 #### Day 6
 - Decided to leave the back button not functioning and some other bugs within this implementation and to focus on creating a full version
 - Decided to create the menus first so the prototype is complete, then create the Google Drive component
+- Created a functioning Git repository by creating a new android studio project and copying everything to it to synchronize
 
 
