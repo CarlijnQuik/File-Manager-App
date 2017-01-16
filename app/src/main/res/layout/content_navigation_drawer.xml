@@ -13,8 +13,6 @@
     tools:context="com.example.carlijnquik.nlmprogblifi.NavigationDrawerActivity"
     tools:showIn="@layout/app_bar_navigation_drawer">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+
+
 </RelativeLayout>
