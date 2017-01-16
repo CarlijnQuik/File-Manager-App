@@ -9,9 +9,10 @@
 - http://stackoverflow.com/questions/26346727/android-material-design-button-styles
 - https://www.codeproject.com/Tips/845894/How-to-make-EditText-With-Border-and-Gradient-Back
 
-*Action bar*
+*Navigation drawer*
 - http://www.vogella.com/tutorials/AndroidActionBar/article.html
 - https://www.youtube.com/watch?v=ju837bQOBfg
+- https://www.youtube.com/watch?v=5b6AGSh4dVE
 
 *Internal storage and SD card access*
 - http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location/5695129#5695129
