@@ -41,20 +41,6 @@
         android:layout_below="@+id/ivDriveLogo"
         android:layout_centerHorizontal="true">
 
-        <Button
-            android:text="@string/sign_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bLogIn"
-            android:gravity="center"
-            android:layout_marginBottom="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_alignLeft="@+id/etEmail"
-            android:layout_alignStart="@+id/etEmail"
-            android:theme="@style/AppTheme.Button"
-            android:textColor="@android:color/background_light" />
-
         <EditText
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -82,11 +68,24 @@
             android:background="@drawable/edit_text_style"
             android:layout_centerHorizontal="true" />
 
+        <Button
+            android:text="@string/string_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bSignIn"
+            android:gravity="center"
+            android:theme="@style/AppTheme.Button"
+            android:textColor="@android:color/background_light"
+            android:layout_marginBottom="37dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/etPassword"
+            android:layout_alignStart="@+id/etPassword" />
+
     </RelativeLayout>
 
     <TextView
         android:text="@string/slogan"
-        android:textSize="29sp"
+        android:textSize="25sp"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

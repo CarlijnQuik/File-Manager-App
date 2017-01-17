@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Decides what the home button does
+ * Enables the user to view and open files
  */
 
 public class FileListFragment extends Fragment {
@@ -37,6 +37,7 @@ public class FileListFragment extends Fragment {
         // create an array list to put the file objects in
         fileList = new ArrayList<>();
 
+        // set the adapter
         lvFiles = (ListView) view.findViewById(R.id.lvFiles);
         adapter = new FileAdapter(getActivity(), fileList);
         lvFiles.setAdapter(adapter);
@@ -79,6 +80,7 @@ public class FileListFragment extends Fragment {
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
+    /* Adds the files from the given path to the array list */
     public void getFiles(String path, String location){
         File list = new File(path);
         File[] files = list.listFiles();
@@ -108,7 +110,7 @@ public class FileListFragment extends Fragment {
             }
         }
 
-        // set the adapter
+        // set the adapter with new array list
         adapter = new FileAdapter(getActivity(), fileList);
         lvFiles.setAdapter(adapter);
 
