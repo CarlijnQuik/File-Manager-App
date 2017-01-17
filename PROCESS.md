@@ -57,6 +57,7 @@
 - Figured out how to let the user sign in with Google, though he or she is not able to switch accounts yet, sign out in the menu drawer leads back to sign in activity
 - Found out that there is a OneDrive API, changed the sign in activity to not using FireBase, also because no database will be needed for the app
 - Sign Out button does not work yet, will fix this later
+- Need to figure out how to connect to the signed in user in multiple activities/fragments using the googleApiClient, so the Drive files can be accessed and the user can be logged out
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/22018520/7a3561de-dcaf-11e6-8bfd-e759f2d36328.png" width="200">
 <img src="https://cloud.githubusercontent.com/assets/22945709/22018519/7a34e6b4-dcaf-11e6-9234-0cb8e1a1eed8.png" width="200">
