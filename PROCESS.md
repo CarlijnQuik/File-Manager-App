@@ -54,11 +54,10 @@
 
 #### Day 7
 - Spent day 6 and all morning on figuring out how to let the fragment show the array list with file objects, after trying a lot of online sources decided to try it myself intuitively by just putting the whole activity in the fragment and change onCreate to onCreateView, which worked: thought me to try myself first instead of following the advices given online
-- Figured out how to let the user sign in with Google, though he or she is not able to switch accounts yet
+- Figured out how to let the user sign in with Google, though he or she is not able to switch accounts yet, sign out in the menu drawer leads back to sign in activity
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/22018520/7a3561de-dcaf-11e6-8bfd-e759f2d36328.png" width="200">
 <img src="https://cloud.githubusercontent.com/assets/22945709/22018519/7a34e6b4-dcaf-11e6-9234-0cb8e1a1eed8.png" width="200">
-<img src="https://cloud.githubusercontent.com/assets/22945709/22018518/7a32cd0c-dcaf-11e6-97c4-98778b420270.png" width="200">
 <img src="https://cloud.githubusercontent.com/assets/22945709/22024429/409eaa50-dcca-11e6-8e48-3057521e0b1b.png" width="200">
 
 
