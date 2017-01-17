@@ -8,11 +8,10 @@
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/21845853/a353540a-d7f4-11e6-83f9-5da9875df450.png" width="400">
 #### Day 2
-- Had a job interview in the morning, started in the afternoon at 13:00
 - Set my personal goal for this week to finding out how to link the App with Google Drive and create the overview of files in a list
 - Started the design document: decided to immediately turn the desired sign in activity into a prototype, to give an idea of the style of the App
 - Looked into how to create an activity with a menu, search and settings option in the toolbar
-- First concept of the design document is done
+- Created the design document
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/21811271/610f8794-d74f-11e6-9336-8ef359f75a76.png" width="300">
 <img src="https://cloud.githubusercontent.com/assets/22945709/21816695/5259cfb8-d761-11e6-930b-fdab08e85a54.png" width="400">
@@ -55,9 +54,14 @@
 
 #### Day 7
 - Spent day 6 and all morning on figuring out how to let the fragment show the array list with file objects, after trying a lot of online sources decided to try it myself intuitively by just putting the whole activity in the fragment and change onCreate to onCreateView, which worked: thought me to try myself first instead of following the advices given online
+- Figured out how to let the user sign in with Google, though he or she is not able to switch accounts yet
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/22018520/7a3561de-dcaf-11e6-8bfd-e759f2d36328.png" width="200">
 <img src="https://cloud.githubusercontent.com/assets/22945709/22018519/7a34e6b4-dcaf-11e6-9234-0cb8e1a1eed8.png" width="200">
 <img src="https://cloud.githubusercontent.com/assets/22945709/22018518/7a32cd0c-dcaf-11e6-97c4-98778b420270.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22024429/409eaa50-dcca-11e6-8e48-3057521e0b1b.png" width="200">
+
+
+
 
 
