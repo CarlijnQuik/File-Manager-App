@@ -53,4 +53,6 @@
 - Created a functioning Git repository by creating a new android studio project and copying everything to it to synchronize
 - Figured out how the navigation drawer works, next step is to figure out the differences between fragments and activities
 
+#### Day 7
+- Spent day 6 and all morning on figuring out how to let the fragment show the array list with file objects, after trying a lot of online sources decided to try it myself intuitively by just putting the whole activity in the fragment and change onCreate to onCreateView, which worked: thought me to try myself first instead of following the advices given online
 
