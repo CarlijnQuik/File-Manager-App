@@ -13,6 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * Controls the navigation drawer
+ */
+
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,7 +29,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation_drawer);
 
         // set the fragment initially
-        FileListActivity fragment = new FileListActivity();
+        HomeFragment fragment = new HomeFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment);
         fragmentTransaction.commit();
@@ -92,7 +96,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         if (id == R.id.nav_home){
             // set the fragment initially
-            FileListActivity fragment = new FileListActivity();
+            HomeFragment fragment = new HomeFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment);
             fragmentTransaction.commit();

@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignInActivity"></activity>
+        <activity android:name=".FileListActivity"></activity>
     </application>
 
 </manifest>

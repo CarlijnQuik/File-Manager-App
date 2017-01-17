@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,23 +23,14 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Carlijn Quik on 1/16/2017.
+ * Retrieves all files and lets the user open them
  */
 
-public class FileListActivity extends FragmentActivity {
+public class FileListActivity extends AppCompatActivity {
 
     ArrayList<FileObject> fileList;
     FileAdapter adapter;
     ListView lvFiles;
-
-    public FileListActivity(){
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.nav_home, container, false);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
