@@ -1,21 +1,19 @@
 {
   "project_info": {
-    "project_number": "233189140338",
-    "firebase_url": "https://blifi-87f41.firebaseio.com",
-    "project_id": "blifi-87f41",
-    "storage_bucket": "blifi-87f41.appspot.com"
+    "project_number": "196002366275",
+    "project_id": "default-demo-app-4164f"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:233189140338:android:788525e27d3f15dc",
+        "mobilesdk_app_id": "1:196002366275:android:788525e27d3f15dc",
         "android_client_info": {
           "package_name": "com.example.carlijnquik.nlmprogblifi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "233189140338-b22tif5dn8ssuglrh5g7pvan7ph04hgt.apps.googleusercontent.com",
+          "client_id": "196002366275-advnmqeeimc42dvjjfhvb5rt4jrudada.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.carlijnquik.nlmprogblifi",
@@ -23,13 +21,13 @@
           }
         },
         {
-          "client_id": "233189140338-9bncrtd1ke0nj767j7jehiujoegboiem.apps.googleusercontent.com",
+          "client_id": "196002366275-7t8qdrjed00aoecbbo6sr9qe523f08e6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBUrCVRTzR4PHo2qL4s9T1xhrosH7YAbwI"
+          "current_key": "AIzaSyA9cUkPi5mb7c290lVfA9QedRxnZGrRjgs"
         }
       ],
       "services": {
@@ -37,16 +35,11 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "233189140338-9bncrtd1ke0nj767j7jehiujoegboiem.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 2
+          "status": 1
         }
       }
     }

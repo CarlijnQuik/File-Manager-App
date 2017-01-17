@@ -16,16 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiActivity;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Controls the navigation drawer
@@ -66,8 +56,6 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Navig
         navigationView.setNavigationItemSelectedListener(this);
 
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -115,12 +103,8 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Navig
             fragmentTransaction.commit();
         }
         else if(id == R.id.nav_sign_out){
-            // Firebase sign out
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            mAuth.signOut();
             forwardUser();
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

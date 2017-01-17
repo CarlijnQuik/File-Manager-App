@@ -36,56 +36,25 @@
         android:layout_width="300dp"
         android:layout_height="250dp"
         android:layout_marginTop="21dp"
-        android:id="@+id/rlEmailPassword"
+        android:id="@+id/rlSignIn"
         android:background="@drawable/light_grey_background"
         android:layout_below="@+id/ivDriveLogo"
         android:layout_centerHorizontal="true">
 
-        <EditText
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:layout_marginTop="20dp"
-            android:hint="@string/password"
-            android:textColorHint="?attr/editTextColor"
-            android:id="@+id/etPassword"
-            android:background="@drawable/edit_text_style"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/etEmail" />
-
-        <EditText
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginTop="20dp"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:hint="@string/hint_email"
-            android:textColorHint="?attr/editTextColor"
-            android:id="@+id/etEmail"
-            android:background="@drawable/edit_text_style"
-            android:layout_centerHorizontal="true" />
-
-        <Button
-            android:text="@string/string_sign_in"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/bSignIn"
-            android:gravity="center"
-            android:theme="@style/AppTheme.Button"
-            android:textColor="@android:color/background_light"
-            android:layout_marginBottom="37dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignLeft="@+id/etPassword"
-            android:layout_alignStart="@+id/etPassword" />
+            android:visibility="visible"
+            android:layout_marginLeft="18dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="45dp" />
 
     </RelativeLayout>
 
     <TextView
         android:text="@string/slogan"
-        android:textSize="25sp"
+        android:textSize="29sp"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
