@@ -29,9 +29,9 @@ public class NavigationDrawerActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation_drawer);
 
         // set the fragment initially
-        HomeFragment fragment = new HomeFragment();
+        FileListFragment fragment = new FileListFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, fragment);
+        fragmentTransaction.replace(R.id.content_navigation_drawer, fragment);
         fragmentTransaction.commit();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -96,16 +96,16 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         if (id == R.id.nav_home){
             // set the fragment initially
-            HomeFragment fragment = new HomeFragment();
+            FileListFragment fragment = new FileListFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment);
+            fragmentTransaction.replace(R.id.content_navigation_drawer, fragment);
             fragmentTransaction.commit();
         }
         else if(id == R.id.nav_sign_out){
             // set the fragment initially
             SignOutFragment fragment = new SignOutFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment);
+            fragmentTransaction.replace(R.id.content_navigation_drawer, fragment);
             fragmentTransaction.commit();
         }
 

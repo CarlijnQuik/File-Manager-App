@@ -1,5 +1,8 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.File;
 import java.io.Serializable;
 
@@ -7,7 +10,7 @@ import java.io.Serializable;
  * File object
  */
 
-public class FileObject implements Serializable {
+public class FileObject {
 
     public File file = null;
     public String location = null;

@@ -18,11 +18,11 @@ import java.util.ArrayList;
 
 public class FileAdapter extends BaseAdapter {
 
-    FileListActivity activity;
+    Activity activity;
     Context context;
     ArrayList<FileObject> files;
 
-    public FileAdapter(FileListActivity activity, ArrayList<FileObject> files) {
+    public FileAdapter(Activity activity, ArrayList<FileObject> files) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
         this.files = files;

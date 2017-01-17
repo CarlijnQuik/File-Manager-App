@@ -1,15 +1,13 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,25 +21,25 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Retrieves all files and lets the user open them
+ * Decides what the home button does
  */
 
-public class FileListActivity extends AppCompatActivity {
+public class FileListFragment extends Fragment {
 
     ArrayList<FileObject> fileList;
     FileAdapter adapter;
     ListView lvFiles;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.nav_home);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.nav_home, container, false);
 
         // create an array list to put the file objects in
         fileList = new ArrayList<>();
 
-        // initialize list view
-        lvFiles = (ListView) findViewById(R.id.lvFiles);
+        lvFiles = (ListView) view.findViewById(R.id.lvFiles);
+        adapter = new FileAdapter(getActivity(), fileList);
+        lvFiles.setAdapter(adapter);
 
         // get files from device storage via path
         getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
@@ -72,10 +70,7 @@ public class FileListActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    public void onBackPressed(){
-        super.onBackPressed();
+        return view;
     }
 
     /* Checks if external storage is available for read and write */
@@ -113,8 +108,8 @@ public class FileListActivity extends AppCompatActivity {
             }
         }
 
-        // set adapter
-        adapter = new FileAdapter(this, fileList);
+        // set the adapter
+        adapter = new FileAdapter(getActivity(), fileList);
         lvFiles.setAdapter(adapter);
 
     }
@@ -127,9 +122,9 @@ public class FileListActivity extends AppCompatActivity {
         newIntent.setDataAndType(Uri.fromFile(file),mimeType);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
-            getApplicationContext().startActivity(newIntent);
+            getContext().startActivity(newIntent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(getApplicationContext(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -152,5 +147,4 @@ public class FileListActivity extends AppCompatActivity {
 
         }
     }
-
 }
