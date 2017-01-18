@@ -1,4 +1,4 @@
-### Resources used
+### Resources used (not all sources are included, only important ones)
 
 #### Technicalities
 *Markdown usage*
@@ -22,8 +22,16 @@
 - http://stackoverflow.com/questions/5414657/extract-substring-from-a-string
 - http://stackoverflow.com/questions/6265298/action-view-intent-for-a-file-with-unknown-mimetype
 
-*Sign in*
+*Google Drive sign in*
 - https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivityWithDrive.java
+- https://developers.google.com/fit/rest/
+- https://developers.google.com/drive/v3/web/quickstart/android
+
+*Debugging*
+- http://stackoverflow.com/questions/18578356/classcastexception-android-widget-button-to-com-google-android-gms-common-signin
+- http://stackoverflow.com/questions/11741270/android-sharedpreferences-in-fragment
+- http://stackoverflow.com/questions/15588981/google-drive-account-picker-onactivityresult-resultcode-is-always-1
+- 
 
 #### Images
 *Google Drive Logo*
