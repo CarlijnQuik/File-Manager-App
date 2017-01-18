@@ -69,5 +69,4 @@
 - Found out that I need to use the Google REST API
 - The example gave me the files as can be seen in the first picture below, now had to figure out how to integrate this into my own design and arraylist
 
-
-
+<img src="https://cloud.githubusercontent.com/assets/22945709/22067208/9323a7be-dd90-11e6-926a-88b2f96608b0.png" width="200">
