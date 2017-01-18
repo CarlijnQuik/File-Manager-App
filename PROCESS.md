@@ -66,6 +66,8 @@
 
 #### Day 8
 - Do not understand how to use the Google account of the signed in user yet, trying to figure that out in order to retreive their Google Drive files
+- Found out that I need to use the Google REST API
+- The example gave me the files as can be seen in the first picture below, now had to figure out how to integrate this into my own design and arraylist
 
 
 
