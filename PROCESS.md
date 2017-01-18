@@ -37,7 +37,7 @@
 - Presentations in the morning, main comment I could not give a straight forward answer to was: "Can you name a concrete problem the app solves?", will think about this for the future
 - Made this new Git repository, saved the old at: https://github.com/carlijnq/nl.mprog.blifi.backup
 - Repository still not synchronizing with project, waiting for assistance on monday
-- Succeeded in letting the user view what's in a folder and open it
+- Succeeded in letting the user view what's in a folder and open it, back button is not working yet though
 
 <img src="https://github.com/carlijnq/nl.mprog.blifi/blob/master/docs/file_open_1.png" width="200">
 <img src="https://github.com/carlijnq/nl.mprog.blifi/blob/master/docs/file_open_2.png" width="200">
