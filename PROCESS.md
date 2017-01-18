@@ -37,7 +37,7 @@
 - Presentations in the morning, main comment I could not give a straight forward answer to was: "Can you name a concrete problem the app solves?", will think about this for the future
 - Made this new Git repository, saved the old at: https://github.com/carlijnq/nl.mprog.blifi.backup
 - Repository still not synchronizing with project, waiting for assistance on monday
-- Succeeded in letting the user view what's in a folder and open it
+- Succeeded in letting the user view what's in a folder and open it, back button is not working yet though
 
 <img src="https://github.com/carlijnq/nl.mprog.blifi/blob/master/docs/file_open_1.png" width="200">
 <img src="https://github.com/carlijnq/nl.mprog.blifi/blob/master/docs/file_open_2.png" width="200">
@@ -70,8 +70,10 @@
 - The example gave me the files as can be seen in the fourth picture below, now had to figure out how to integrate this into my own design and arraylist
 - Figured it out as shown in the pictures, now have to use the files retreived effectively
 - Liked some of the old designs better, but can still change that later on
+- First version with Drive files ready, yet still buggy: opening files is not possible and the type is not right (see image .png shows as .txt)
 
-<img src="https://cloud.githubusercontent.com/assets/22945709/22077448/85873cdc-ddb4-11e6-8bfe-78df5a3fa672.png" width="200">
-<img src="https://cloud.githubusercontent.com/assets/22945709/22077447/8583c624-ddb4-11e6-9b44-8c347decd731.png" width="200">
-<img src="https://cloud.githubusercontent.com/assets/22945709/22077449/85898d48-ddb4-11e6-96d4-15913dcfdf05.png" width="200">
-<img src="https://cloud.githubusercontent.com/assets/22945709/22077450/858b8698-ddb4-11e6-88c0-f209d93e3378.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22077448/85873cdc-ddb4-11e6-8bfe-78df5a3fa672.png" width="150">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22077447/8583c624-ddb4-11e6-9b44-8c347decd731.png" width="150">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22077449/85898d48-ddb4-11e6-96d4-15913dcfdf05.png" width="150">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22077450/858b8698-ddb4-11e6-88c0-f209d93e3378.png" width="150">
+<img src= "https://cloud.githubusercontent.com/assets/22945709/22079150/10fdbf2e-ddbb-11e6-897d-22fdd8ece556.png" width="150">
