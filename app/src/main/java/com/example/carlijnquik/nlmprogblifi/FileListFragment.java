@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+
+import static java.util.Collections.*;
 
 /**
  * Enables the user to view and open files
