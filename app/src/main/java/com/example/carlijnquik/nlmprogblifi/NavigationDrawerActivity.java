@@ -1,6 +1,7 @@
 package com.example.carlijnquik.nlmprogblifi;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,11 +18,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.api.services.drive.model.FileList;
+
 /**
  * Controls the navigation drawer
  */
 
 public class NavigationDrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +38,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Navig
         setContentView(R.layout.activity_navigation_drawer);
 
         // set the fragment initially
-        FileListFragment fragment = new FileListFragment();
+        HomeFragment fragment = new HomeFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_navigation_drawer, fragment);
         fragmentTransaction.commit();
@@ -97,13 +106,24 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Navig
 
         if (id == R.id.nav_home){
             // set the fragment initially
+            HomeFragment fragment = new HomeFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_navigation_drawer, fragment);
+            fragmentTransaction.commit();
+        }
+        else if(id == R.id.nav_file_list){
+            // set the fragment initially
             FileListFragment fragment = new FileListFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_navigation_drawer, fragment);
             fragmentTransaction.commit();
         }
-        else if(id == R.id.nav_sign_out){
-            forwardUser();
+        else if(id == R.id.nav_accounts){
+            // set the fragment initially
+            AccountsFragment fragment = new AccountsFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_navigation_drawer, fragment);
+            fragmentTransaction.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -111,11 +131,6 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Navig
         return true;
     }
 
-    public void forwardUser(){
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
 
 }

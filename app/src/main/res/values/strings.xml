@@ -24,5 +24,8 @@
     <string name="google_status_fmt">String Status</string>
     <string name="sign_out_and_disconnect">Sign Out and Disconnect</string>
     <string name="signed_out">Signed Out</string>
+    <string name="name">Blind File Find</string>
+    <string name="accounts">Accounts</string>
+    <string name="file_list">File List</string>
 
 </resources>

@@ -4,13 +4,18 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/file_icon"
+            android:icon="@drawable/ic_menu_manage"
             android:title="@string/home" />
 
         <item
-            android:id="@+id/nav_sign_out"
-            android:icon="@drawable/sign_out"
-            android:title="@string/sign_out" />
+            android:id="@+id/nav_file_list"
+            android:icon="@drawable/file_icon"
+            android:title="@string/file_list"/>
+
+        <item
+            android:id="@+id/nav_accounts"
+            android:icon="@drawable/google_drive_logo"
+            android:title="@string/accounts" />
 
     </group>
 
