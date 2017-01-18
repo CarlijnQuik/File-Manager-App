@@ -18,9 +18,7 @@ import com.google.api.services.drive.model.*;
 
 import android.Manifest;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.Dialog;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -69,7 +67,7 @@ public class AccountsFragment extends Fragment
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.activity_sign_in, container, false);
+        final View view = inflater.inflate(R.layout.fragment_accounts, container, false);
 
         driveFiles = new ArrayList<FileObject>();
 

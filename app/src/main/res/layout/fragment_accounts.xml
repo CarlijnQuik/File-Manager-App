@@ -8,29 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.carlijnquik.nlmprogblifi.SignInActivity">
-
-    <TextView
-        android:text="@string/slogan"
-        android:textSize="29sp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvSlogan"
-        android:layout_below="@+id/tvName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="13dp" />
-
-    <TextView
-        android:text="@string/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvName"
-        android:textSize="16sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+    tools:context="com.example.carlijnquik.nlmprogblifi.AccountsFragment">
 
     <TextView
         android:text="@string/sign_in"
@@ -40,7 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvStatus"
-        android:layout_below="@+id/tvSlogan"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="19dp" />
 
