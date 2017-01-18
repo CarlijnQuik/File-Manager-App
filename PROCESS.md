@@ -67,6 +67,11 @@
 #### Day 8
 - Do not understand how to use the Google account of the signed in user yet, trying to figure that out in order to retreive their Google Drive files
 - Found out that I need to use the Google REST API
-- The example gave me the files as can be seen in the first picture below, now had to figure out how to integrate this into my own design and arraylist
+- The example gave me the files as can be seen in the fourth picture below, now had to figure out how to integrate this into my own design and arraylist
+- Figured it out as shown in the pictures, now have to use the files retreived effectively
+- Liked some of the old designs better, but can still change that later on
 
-<img src="https://cloud.githubusercontent.com/assets/22945709/22067208/9323a7be-dd90-11e6-926a-88b2f96608b0.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22077448/85873cdc-ddb4-11e6-8bfe-78df5a3fa672.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22077447/8583c624-ddb4-11e6-9b44-8c347decd731.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22077449/85898d48-ddb4-11e6-96d4-15913dcfdf05.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22077450/858b8698-ddb4-11e6-88c0-f209d93e3378.png" width="200">
