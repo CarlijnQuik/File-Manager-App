@@ -14,7 +14,10 @@
 - https://www.youtube.com/watch?v=ju837bQOBfg
 - https://www.youtube.com/watch?v=5b6AGSh4dVE
 - https://www.tutorialspoint.com/android/android_fragments.htm
+
+*ArrayList with files*
 - http://stackoverflow.com/questions/7149802/how-to-transfer-some-data-to-another-fragment
+- http://stackoverflow.com/questions/6383330/how-to-combine-two-array-list-and-show-in-a-listview-in-android
 
 *Internal storage and SD card access*
 - http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location/5695129#5695129
