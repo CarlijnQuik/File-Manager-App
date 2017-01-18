@@ -47,12 +47,10 @@ public class FileAdapter extends BaseAdapter {
         // iterate over the items in achievement array list
         FileObject fileObject = files.get(position);
         File file = fileObject.getFile();
+        com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
         if (files != null) {
 
             // set views according to file properties
-            if (file != null) {
-                tvFilename.setText(file.getName());
-            }
             if (fileObject.getLocation() != null) {
                 if (fileObject.getLocation().equals("SD")){
                     ivLocation.setImageResource(R.drawable.sd_card);
@@ -60,8 +58,17 @@ public class FileAdapter extends BaseAdapter {
                 if (fileObject.getLocation().equals("PHONE")){
                     ivLocation.setImageResource(R.drawable.phone);
                 }
+                if (fileObject.getLocation().equals("DRIVE")){
+                    ivLocation.setImageResource(R.drawable.google_drive_logo);
+                }
             }
-            if (file != null){
+            if (file != null) {
+                tvFilename.setText(file.getName());
+            }
+            if (driveFile != null) {
+                tvFilename.setText(driveFile.getName());
+            }
+            if (fileObject.getType() != null){
                 String fileType = fileObject.getType();
                 tvType.setText(fileType);
 

@@ -2,6 +2,7 @@ package com.example.carlijnquik.nlmprogblifi;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.drive.DriveFile;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -30,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -339,7 +341,23 @@ public class AccountsFragment extends Fragment
                 for (File file : files) {
                     fileInfo.add(String.format("%s (%s)\n",
                             file.getName(), file.getId()));
+                    String fileType = "file";
+                    Log.d("string driveFile", file.getName());
+                    if (file.getName().contains(".")){
+                        fileType = file.getName().substring(file.getName().lastIndexOf("."));
+                    }
+                    driveFiles.add(new FileObject(file, null, "DRIVE", fileType));
                 }
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("driveFiles", driveFiles);
+                FileListFragment fragment = new FileListFragment();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.drawer_content_shown, fragment);
+                fragmentTransaction.commit();
+
+
             }
             return fileInfo;
         }
@@ -382,5 +400,6 @@ public class AccountsFragment extends Fragment
                 tvStatus.setText("Request cancelled.");
             }
         }
+
     }
 }

@@ -27,6 +27,7 @@ public class FileListFragment extends Fragment {
     ArrayList<FileObject> fileList;
     FileAdapter adapter;
     ListView lvFiles;
+    ArrayList<FileObject> driveFiles;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +47,12 @@ public class FileListFragment extends Fragment {
         // get files from sd card if present
         if(isExternalStorageWritable()){
             getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
+        }
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            driveFiles = bundle.getParcelableArrayList("driveFiles");
+            fileList.addAll(driveFiles);
         }
 
         // decide what clicking a file does
@@ -94,7 +101,7 @@ public class FileListFragment extends Fragment {
             // check whether the file is a folder
             if (file.isDirectory()) {
                 Log.d("string folder", file.getName());
-                fileList.add(new FileObject(file, location, "folder"));
+                fileList.add(new FileObject(null, file, location, "folder"));
 
             } else {
                 String fileType = "file";
@@ -104,7 +111,7 @@ public class FileListFragment extends Fragment {
                 }
 
                 Log.d("string test", fileType);
-                fileList.add(new FileObject(file, location, fileType));
+                fileList.add(new FileObject(null, file, location, fileType));
             }
         }
 
