@@ -2,7 +2,6 @@ package com.example.carlijnquik.nlmprogblifi;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.drive.DriveFile;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -348,15 +347,6 @@ public class AccountsFragment extends Fragment
                     }
                     driveFiles.add(new FileObject(file, null, "DRIVE", fileType));
                 }
-
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("driveFiles", driveFiles);
-                FileListFragment fragment = new FileListFragment();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.drawer_content_shown, fragment);
-                fragmentTransaction.commit();
-
 
             }
             return fileInfo;

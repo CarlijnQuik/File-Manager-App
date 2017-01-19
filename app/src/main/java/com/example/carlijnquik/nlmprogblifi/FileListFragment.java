@@ -52,12 +52,6 @@ public class FileListFragment extends Fragment {
             getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
         }
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            driveFiles = bundle.getParcelableArrayList("driveFiles");
-            fileList.addAll(driveFiles);
-        }
-
         // decide what clicking a file does
         lvFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
