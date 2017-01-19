@@ -14,10 +14,16 @@
 - https://www.youtube.com/watch?v=ju837bQOBfg
 - https://www.youtube.com/watch?v=5b6AGSh4dVE
 - https://www.tutorialspoint.com/android/android_fragments.htm
+- http://stackoverflow.com/questions/10609268/difference-between-fragment-and-fragmentactivity
+- https://developer.android.com/guide/components/activities/activity-lifecycle.html
+- https://developer.android.com/guide/components/fragments.html
 
 *ArrayList with files*
 - http://stackoverflow.com/questions/7149802/how-to-transfer-some-data-to-another-fragment
 - http://stackoverflow.com/questions/6383330/how-to-combine-two-array-list-and-show-in-a-listview-in-android
+
+*Android version*
+- http://stackoverflow.com/questions/27749397/can-you-explain-why-suport-v4-and-v7-on-android
 
 *Internal storage and SD card access*
 - http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location/5695129#5695129
@@ -31,6 +37,9 @@
 - https://developers.google.com/fit/rest/
 - https://developers.google.com/drive/v3/web/quickstart/android
 - http://stackoverflow.com/questions/38730055/pass-arraylist-object-to-fragment
+
+*List view*
+- https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
 
 *Debugging*
 - http://stackoverflow.com/questions/18578356/classcastexception-android-widget-button-to-com-google-android-gms-common-signin
