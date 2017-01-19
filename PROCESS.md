@@ -77,3 +77,6 @@
 <img src="https://cloud.githubusercontent.com/assets/22945709/22077449/85898d48-ddb4-11e6-96d4-15913dcfdf05.png" width="150">
 <img src="https://cloud.githubusercontent.com/assets/22945709/22077450/858b8698-ddb4-11e6-88c0-f209d93e3378.png" width="150">
 <img src= "https://cloud.githubusercontent.com/assets/22945709/22079150/10fdbf2e-ddbb-11e6-897d-22fdd8ece556.png" width="150">
+
+#### Day 9
+- New todo's: look into style guides and versions of Android
