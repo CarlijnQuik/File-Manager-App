@@ -15,6 +15,8 @@
 - https://www.youtube.com/watch?v=5b6AGSh4dVE
 - https://www.tutorialspoint.com/android/android_fragments.htm
 - http://stackoverflow.com/questions/10609268/difference-between-fragment-and-fragmentactivity
+- https://developer.android.com/guide/components/activities/activity-lifecycle.html
+- https://developer.android.com/guide/components/fragments.html
 
 *ArrayList with files*
 - http://stackoverflow.com/questions/7149802/how-to-transfer-some-data-to-another-fragment
