@@ -29,7 +29,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,13 +45,14 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class AccountsFragment extends Fragment
+public class RetrieveDriveFilesFragment extends Fragment
         implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
     GoogleAccountCredential mCredential;
     Button bSignIn;
     ProgressDialog mProgress;
     TextView tvStatus;
     ArrayList<FileObject> driveFiles;
+    int counter = 0;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -287,8 +288,25 @@ public class AccountsFragment extends Fragment
 
     @Override
     public void onClick(View view) {
-        tvStatus.setText("");
-        getResultsFromApi();
+       if(counter == 0){
+           getResultsFromApi();
+           counter++;
+       }
+       else{
+           // Instantiate a new fragment
+           RetrieveDriveFilesFragment frag = new RetrieveDriveFilesFragment();
+           restartFragment(R.id.drawer_content_shown, frag);
+       }
+    }
+
+    public void restartFragment(int id, RetrieveDriveFilesFragment retrieveDriveFilesFragment) {
+        if (getContext() == null)
+            return;
+        if (getContext() instanceof NavigationActivity) {
+            NavigationActivity navigationActivity = (NavigationActivity) getContext();
+            navigationActivity.restartFragment(id, retrieveDriveFilesFragment);
+        }
+
     }
 
     /**
@@ -304,7 +322,7 @@ public class AccountsFragment extends Fragment
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.drive.Drive.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Drive API Android Quickstart")
+                    .setApplicationName("BliFi")
                     .build();
         }
 
@@ -349,21 +367,19 @@ public class AccountsFragment extends Fragment
             return fileInfo;
         }
 
-
         @Override
         protected void onPreExecute() {
-            tvStatus.setText("");
             mProgress.show();
         }
 
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
+            bSignIn.setText(R.string.string_sign_out);
             if (output == null || output.size() == 0) {
-                tvStatus.setText("No results returned.");
+                tvStatus.setText(R.string.no_results);
             } else {
-                output.add(0, "Data retrieved using the Drive API:");
-                tvStatus.setText(TextUtils.join("\n", output));
+                tvStatus.setText( R.string.enabled);
             }
         }
 
@@ -378,7 +394,7 @@ public class AccountsFragment extends Fragment
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            AccountsFragment.REQUEST_AUTHORIZATION);
+                            RetrieveDriveFilesFragment.REQUEST_AUTHORIZATION);
                 } else {
                     tvStatus.setText("The following error occurred:\n"
                             + mLastError.getMessage());
@@ -387,6 +403,7 @@ public class AccountsFragment extends Fragment
                 tvStatus.setText("Request cancelled.");
             }
         }
+
 
     }
 }

@@ -14,8 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.api.services.drive.model.FileList;
-
 /**
  * Controls the navigation drawer
  */
@@ -28,13 +26,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         setContentView(R.layout.drawer_navigation);
 
         // set the fragment initially
-        FileListFragment fileListFragment = new FileListFragment();
+        RetrieveInternalFilesFragment retrieveInternalFilesFragment = new RetrieveInternalFilesFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putString("filePath", null);
         bundle.putString("fileLocation", null);
-        fileListFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.drawer_content_shown, fileListFragment);
+        retrieveInternalFilesFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.drawer_content_shown, retrieveInternalFilesFragment);
         fragmentTransaction.commit();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -91,7 +89,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         if(id == R.id.nav_file_list){
             // set the fragment
-            FileListFragment fragment = new FileListFragment();
+            RetrieveInternalFilesFragment fragment = new RetrieveInternalFilesFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             Bundle bundle = new Bundle();
             bundle.putString("filePath", null);
@@ -102,7 +100,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
         else if(id == R.id.nav_accounts){
             // set the fragment
-            AccountsFragment fragment = new AccountsFragment();
+            RetrieveDriveFilesFragment fragment = new RetrieveDriveFilesFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.drawer_content_shown, fragment);
             fragmentTransaction.commit();
@@ -122,13 +120,18 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         return true;
     }
 
-    public void switchContent(int id, FileListFragment fileListFragment) {
+    public void switchContent(int id, RetrieveInternalFilesFragment retrieveInternalFilesFragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(id, fileListFragment, fileListFragment.toString());
+        ft.replace(id, retrieveInternalFilesFragment, retrieveInternalFilesFragment.toString());
         ft.addToBackStack(null);
         ft.commit();
     }
 
+    public void restartFragment(int id, RetrieveDriveFilesFragment retrieveDriveFilesFragment){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(id, retrieveDriveFilesFragment, retrieveDriveFilesFragment.toString());
+        ft.commit();
+    }
 
 
 }

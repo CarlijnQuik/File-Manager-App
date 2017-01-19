@@ -1,21 +1,16 @@
 package com.example.carlijnquik.nlmprogblifi;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -161,7 +156,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
                         Log.d("string folder onclick", file.getAbsolutePath());
                         // Instantiate a new fragment
-                        FileListFragment frag = new FileListFragment();
+                        RetrieveInternalFilesFragment frag = new RetrieveInternalFilesFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("filePath", file.getAbsolutePath());
                         bundle.putString("fileLocation", fileObject.getLocation());
@@ -228,13 +223,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         }
     }
 
-    public void switchContent(int id, FileListFragment fileListFragment) {
+    public void switchContent(int id, RetrieveInternalFilesFragment retrieveInternalFilesFragment) {
         if (context == null)
             return;
         if (context instanceof NavigationActivity) {
             NavigationActivity navigationActivity = (NavigationActivity) context;
-            FileListFragment fragment = fileListFragment;
-            navigationActivity.switchContent(id, fragment);
+            navigationActivity.switchContent(id, retrieveInternalFilesFragment);
         }
 
     }

@@ -28,12 +28,11 @@ import static java.util.Collections.*;
  * Enables the user to view and open files
  */
 
-public class FileListFragment extends Fragment {
+public class RetrieveInternalFilesFragment extends Fragment {
 
     ArrayList<FileObject> fileList;
     FileAdapter adapter;
     RecyclerView rvFiles;
-    ArrayList<FileObject> driveFiles;
     String path;
     String location;
 
@@ -106,8 +105,5 @@ public class FileListFragment extends Fragment {
 
     }
 
-
-
-
-
 }
+

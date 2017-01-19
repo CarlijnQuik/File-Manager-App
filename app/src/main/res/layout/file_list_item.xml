@@ -7,7 +7,7 @@
 
     <TextView
         android:text="@string/name_availability"
-        android:layout_width="180dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:textSize="20sp"
         android:gravity="center"
@@ -32,6 +32,7 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:id="@+id/checkBox"
+        android:visibility="visible"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/ibToolbar"
         android:layout_toEndOf="@+id/ibToolbar" />

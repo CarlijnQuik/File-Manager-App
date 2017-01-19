@@ -27,5 +27,8 @@
     <string name="name">Blind File Find</string>
     <string name="accounts">Accounts</string>
     <string name="file_list">File List</string>
+    <string name="select_dot">Select...</string>
+    <string name="enabled">Google account enabled</string>
+    <string name="no_results">No results returned</string>
 
 </resources>
