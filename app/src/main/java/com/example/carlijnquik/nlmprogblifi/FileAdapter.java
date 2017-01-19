@@ -136,6 +136,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             if (fileObject.getType().equals(".jpg")) {
                 bivType.setImageResource(R.drawable.jpg_icon);
             }
+            if (fileObject.getType().equals(".png")) {
+                bivType.setImageResource(R.drawable.png_icon);
+            }
 
         }
 
@@ -152,11 +155,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                     File list = new File(file.getAbsolutePath());
                     File[] files = list.listFiles();
 
-                    if(file.isDirectory() && !files[0].getName().isEmpty()){
+                    if(file.isDirectory()){
 
                         Log.d("string folder onclick", file.getAbsolutePath());
                         // Instantiate a new fragment
-                        RetrieveInternalFilesFragment frag = new RetrieveInternalFilesFragment();
+                        InternalFilesFragment frag = new InternalFilesFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("filePath", file.getAbsolutePath());
                         bundle.putString("fileLocation", fileObject.getLocation());
@@ -164,9 +167,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                         switchContent(R.id.drawer_content_shown, frag);
 
                     }
-                    else {
+                    else if(file.isFile()){
+                        Log.d("string open", file.getAbsolutePath());
                         openFile(fileObject);
                     }
+
 
                 }
                 else{
@@ -223,12 +228,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         }
     }
 
-    public void switchContent(int id, RetrieveInternalFilesFragment retrieveInternalFilesFragment) {
+    public void switchContent(int id, InternalFilesFragment internalFilesFragment) {
         if (context == null)
             return;
         if (context instanceof NavigationActivity) {
             NavigationActivity navigationActivity = (NavigationActivity) context;
-            navigationActivity.switchContent(id, retrieveInternalFilesFragment);
+            navigationActivity.switchContent(id, internalFilesFragment);
         }
 
     }

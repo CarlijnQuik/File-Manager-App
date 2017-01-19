@@ -1,36 +1,26 @@
 package com.example.carlijnquik.nlmprogblifi;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-
-import static java.util.Collections.*;
 
 /**
  * Enables the user to view and open files
  */
 
-public class RetrieveInternalFilesFragment extends Fragment {
+public class InternalFilesFragment extends Fragment {
 
     ArrayList<FileObject> fileList;
+    ArrayList<FileObject> driveFileList;
     FileAdapter adapter;
     RecyclerView rvFiles;
     String path;
@@ -46,6 +36,7 @@ public class RetrieveInternalFilesFragment extends Fragment {
         if (bundle.getString("filePath") != null) {
             path = bundle.getString("filePath");
             location = bundle.getString("fileLocation");
+            Log.d("filePath", path);
         }
     }
 
@@ -54,7 +45,8 @@ public class RetrieveInternalFilesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_file_list, container, false);
 
         // create an array list to put the file objects in
-        fileList = new ArrayList<>();
+        fileList = AllInternalFiles.getInstance().getFileList();
+        driveFileList = AllDriveFiles.getInstance().getFileList();
 
         if(path == null || location == null){
             // get files from device storage via path
@@ -65,8 +57,11 @@ public class RetrieveInternalFilesFragment extends Fragment {
                 getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
             }
 
+            fileList.addAll(driveFileList);
         }
         else{
+            // create an array list to put the file objects in
+            fileList = new ArrayList<>();
             getFiles(path, location);
         }
 

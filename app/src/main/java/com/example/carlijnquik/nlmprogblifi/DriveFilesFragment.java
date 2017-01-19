@@ -29,7 +29,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,14 +44,13 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class RetrieveDriveFilesFragment extends Fragment
+public class DriveFilesFragment extends Fragment
         implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
     GoogleAccountCredential mCredential;
     Button bSignIn;
     ProgressDialog mProgress;
     TextView tvStatus;
     ArrayList<FileObject> driveFiles;
-    int counter = 0;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -64,14 +62,14 @@ public class RetrieveDriveFilesFragment extends Fragment
     private static final String[] SCOPES = { DriveScopes.DRIVE_METADATA_READONLY };
 
     /**
-     * Create the main activity.
-     * @param savedInstanceState previously saved instance data.
+     * Create the main activity
+     * @param savedInstanceState previously saved instance data
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_accounts, container, false);
 
-        driveFiles = new ArrayList<FileObject>();
+        driveFiles = AllDriveFiles.getInstance().getFileList();
 
         tvStatus = (TextView) view.findViewById(R.id.tvStatus);
         bSignIn = (Button) view.findViewById(R.id.bSignIn);
@@ -80,12 +78,21 @@ public class RetrieveDriveFilesFragment extends Fragment
         mProgress = new ProgressDialog(getActivity());
         mProgress.setMessage("Loading your files...");
 
-        // Initialize credentials and service object.
+        // Initialize credentials and service object
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getActivity(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!driveFiles.isEmpty()) {
+            bSignIn.setVisibility(View.INVISIBLE);
+            tvStatus.setText(R.string.enabled);
+        }
     }
 
     /**
@@ -288,23 +295,16 @@ public class RetrieveDriveFilesFragment extends Fragment
 
     @Override
     public void onClick(View view) {
-       if(counter == 0){
-           getResultsFromApi();
-           counter++;
-       }
-       else{
-           // Instantiate a new fragment
-           RetrieveDriveFilesFragment frag = new RetrieveDriveFilesFragment();
-           restartFragment(R.id.drawer_content_shown, frag);
-       }
+        getResultsFromApi();
+
     }
 
-    public void restartFragment(int id, RetrieveDriveFilesFragment retrieveDriveFilesFragment) {
+    public void restartFragment(int id, DriveFilesFragment driveFilesFragment) {
         if (getContext() == null)
             return;
         if (getContext() instanceof NavigationActivity) {
             NavigationActivity navigationActivity = (NavigationActivity) getContext();
-            navigationActivity.restartFragment(id, retrieveDriveFilesFragment);
+            navigationActivity.restartFragment(id, driveFilesFragment);
         }
 
     }
@@ -375,7 +375,7 @@ public class RetrieveDriveFilesFragment extends Fragment
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
-            bSignIn.setText(R.string.string_sign_out);
+            bSignIn.setVisibility(View.INVISIBLE);
             if (output == null || output.size() == 0) {
                 tvStatus.setText(R.string.no_results);
             } else {
@@ -394,7 +394,7 @@ public class RetrieveDriveFilesFragment extends Fragment
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            RetrieveDriveFilesFragment.REQUEST_AUTHORIZATION);
+                            DriveFilesFragment.REQUEST_AUTHORIZATION);
                 } else {
                     tvStatus.setText("The following error occurred:\n"
                             + mLastError.getMessage());
