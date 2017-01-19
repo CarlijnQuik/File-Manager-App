@@ -47,6 +47,9 @@
 - https://guides.codepath.com/android/using-the-recyclerview
 - http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif
 
+*Singleton*
+- http://stackoverflow.com/questions/24643789/why-is-a-singleton-arraylist-affected-when-indirectly-changing-one-of-its-items
+
 *Debugging*
 - http://stackoverflow.com/questions/18578356/classcastexception-android-widget-button-to-com-google-android-gms-common-signin
 - http://stackoverflow.com/questions/11741270/android-sharedpreferences-in-fragment
