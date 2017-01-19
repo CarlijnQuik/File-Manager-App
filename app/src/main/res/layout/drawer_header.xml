@@ -17,8 +17,10 @@
     <ImageView
         android:contentDescription="@string/image_display"
         android:id="@+id/ivHeader"
+        android:scaleType="centerCrop"
         android:layout_width="91dp"
         android:layout_height="74dp"
+        android:background="@android:color/transparent"
         app:srcCompat="?android:attr/actionModeCopyDrawable" />
 
     <TextView

@@ -22,7 +22,7 @@
     <item
         android:id="@+id/become_batman"
         android:orderInCategory="100"
-        android:title="Become Batman"
+        android:title="Change Character"
         app:showAsAction="never"/>
 
 </menu>

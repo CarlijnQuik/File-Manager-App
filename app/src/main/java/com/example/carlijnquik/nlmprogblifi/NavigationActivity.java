@@ -115,7 +115,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
             builder.setNeutralButton("Batman on vacation", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    ivHeader.setImageResource(R.drawable.batman_vacation);
+                    ivHeader.setImageResource(R.drawable.batman_on_vacation);
                     tvHeader.setText("Batman On Vacation");
 
                 }});
