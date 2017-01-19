@@ -38,13 +38,16 @@
 - https://developers.google.com/drive/v3/web/quickstart/android
 - http://stackoverflow.com/questions/38730055/pass-arraylist-object-to-fragment
 
-*List view*
+*List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
+- https://guides.codepath.com/android/using-the-recyclerview
+- http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif
 
 *Debugging*
 - http://stackoverflow.com/questions/18578356/classcastexception-android-widget-button-to-com-google-android-gms-common-signin
 - http://stackoverflow.com/questions/11741270/android-sharedpreferences-in-fragment
 - http://stackoverflow.com/questions/15588981/google-drive-account-picker-onactivityresult-resultcode-is-always-1
+- http://stackoverflow.com/questions/37347326/errorconflict-with-dependency-com-google-code-findbugsjsr305
 
 #### Images
 *Google Drive Logo*
