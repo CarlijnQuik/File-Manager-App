@@ -1,14 +1,22 @@
 package com.example.carlijnquik.nlmprogblifi;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,6 +34,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         public TextView tvType;
         public ImageView ivType;
         public ImageView ivLocation;
+        public ImageButton ibToolbar;
+        public CheckBox checkBox;
 
         public ViewHolder(View itemView){
             super(itemView);
@@ -35,6 +45,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             tvType = (TextView) itemView.findViewById(R.id.tvType);
             ivType = (ImageView) itemView.findViewById(R.id.ivType);
             ivLocation = (ImageView) itemView.findViewById(R.id.ivLocation);
+            ibToolbar = (ImageButton) itemView.findViewById(R.id.ibToolbar);
+            checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);
 
         }
     }
@@ -57,10 +69,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.file_list_item, parent, false);
+        View fileView = inflater.inflate(R.layout.file_list_item, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
+        ViewHolder viewHolder = new ViewHolder(fileView);
         return viewHolder;
     }
 
@@ -68,7 +80,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(FileAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        FileObject fileObject = files.get(position);
+        final FileObject fileObject = files.get(position);
 
         TextView btvFilename = viewHolder.tvFilename;
         TextView btvType = viewHolder.tvType;
@@ -94,58 +106,86 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             }
             if (file != null) {
                 btvFilename.setText(file.getName());
+
+                if (file.getName().contains(".")){
+                    fileObject.type = file.getName().substring(file.getName().lastIndexOf("."));
+                }
+                if (file.isDirectory()){
+                    fileObject.type = "folder";
+                }
+                btvType.setText(fileObject.getType());
             }
             if (driveFile != null) {
                 btvFilename.setText(driveFile.getName());
             }
-            if (fileObject.getType() != null) {
-                String fileType = fileObject.getType();
-                btvType.setText(fileType);
-
-                if (fileType.equals("folder")) {
-                    bivType.setImageResource(R.drawable.folder_icon);
-                }
-                if (fileType.equals(".doc")) {
-                    bivType.setImageResource(R.drawable.doc_icon);
-                }
-                if (fileType.equals(".txt")) {
-                    bivType.setImageResource(R.drawable.txt_icon);
-                }
-                if (fileType.equals(".xls")) {
-                    bivType.setImageResource(R.drawable.xls_icon);
-                }
-                if (fileType.equals(".pdf")) {
-                    bivType.setImageResource(R.drawable.pdf_icon);
-                }
-                if (fileType.equals(".ppt")) {
-                    bivType.setImageResource(R.drawable.ppt_icon);
-                }
-                if (fileType.equals(".jpg")) {
-                    bivType.setImageResource(R.drawable.jpg_icon);
-                }
+            if (fileObject.getType().equals("folder")) {
+                bivType.setImageResource(R.drawable.folder_icon);
             }
+            if (fileObject.getType().equals(".doc")) {
+                bivType.setImageResource(R.drawable.doc_icon);
+            }
+            if (fileObject.getType().equals(".txt")) {
+                bivType.setImageResource(R.drawable.txt_icon);
+            }
+            if (fileObject.getType().equals(".xls")) {
+                bivType.setImageResource(R.drawable.xls_icon);
+            }
+            if (fileObject.getType().equals(".pdf")) {
+                bivType.setImageResource(R.drawable.pdf_icon);
+            }
+            if (fileObject.getType().equals(".ppt")) {
+                bivType.setImageResource(R.drawable.ppt_icon);
+            }
+            if (fileObject.getType().equals(".jpg")) {
+                bivType.setImageResource(R.drawable.jpg_icon);
+            }
+
         }
 
         // decide what clicking a file does
         viewHolder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                File file = fileObject.getFile();
+                Log.d("string file onclick", file.getAbsolutePath());
+
+                if(file != null) {
+                    File list = new File(file.getAbsolutePath());
+                    File[] files = list.listFiles();
+
+                    if(file.isDirectory() && !files[0].getName().isEmpty()){
+
+                        Log.d("string folder onclick", file.getAbsolutePath());
+
+                    }
+                    else {
+                        openFile(fileObject);
+                    }
+
+                }
+                else{
+                    Toast.makeText(getContext(), "File is empty!", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
-                /*FileObject fileObject = (FileObject) parent.getAdapter().getItem(position);
-                File file = fileObject.getFile();
-                File list = new File(file.getAbsolutePath());
-                File[] files = list.listFiles();
 
-                if(file.isDirectory() && !files[0].getName().isEmpty()){
-                    fileList = new ArrayList<>();
-                    Log.d("string path folder", file.getAbsolutePath());
-                    getFiles(file.getAbsolutePath(), fileObject.getLocation());
-                }
-                else{
-                    openFile(file, fileObject);
-                }*/
+    }
+
+    /* Opens the file in default extension and otherwise lets the user pick one */
+    public void openFile(FileObject fileObject){
+        MimeTypeMap myMime = MimeTypeMap.getSingleton();
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+
+        String mimeType = myMime.getMimeTypeFromExtension(fileExt(fileObject.getType()));
+        newIntent.setDataAndType(Uri.fromFile(fileObject.getFile()),mimeType);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            getContext().startActivity(newIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getContext(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
+        }
+
 
 
     }
@@ -154,6 +194,27 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return files.size();
+    }
+
+    /* Gets the file's extension*/
+    public String fileExt(String fileType) {
+        if (fileType.indexOf("?") > -1) {
+            fileType = fileType.substring(0, fileType.indexOf("?"));
+        }
+        if (fileType.lastIndexOf(".") == -1) {
+            return null;
+        } else {
+            String ext = fileType.substring(fileType.lastIndexOf(".") + 1);
+            if (ext.indexOf("%") > -1) {
+                ext = ext.substring(0, ext.indexOf("%"));
+            }
+            if (ext.indexOf("/") > -1) {
+                ext = ext.substring(0, ext.indexOf("/"));
+            }
+            Log.d("String extension", ext.toLowerCase());
+            return ext.toLowerCase();
+
+        }
     }
 
 

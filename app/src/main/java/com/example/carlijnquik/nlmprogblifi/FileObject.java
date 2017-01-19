@@ -27,11 +27,6 @@ public class FileObject {
         this.type = type;
     }
 
-    protected FileObject(Parcel in) {
-        location = in.readString();
-        type = in.readString();
-    }
-
     public com.google.api.services.drive.model.File getDriveFile(){ return this.driveFile; }
 
     public File getFile(){
@@ -42,9 +37,6 @@ public class FileObject {
         return this.location;
     }
 
-    public String getType(){
-        return this.type;
-    }
-
+    public String getType(){return this.type; }
 
 }

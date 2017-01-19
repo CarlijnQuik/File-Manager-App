@@ -340,12 +340,9 @@ public class AccountsFragment extends Fragment
                 for (File file : files) {
                     fileInfo.add(String.format("%s (%s)\n",
                             file.getName(), file.getId()));
-                    String fileType = "file";
                     Log.d("string driveFile", file.getName());
-                    if (file.getName().contains(".")){
-                        fileType = file.getName().substring(file.getName().lastIndexOf("."));
-                    }
-                    driveFiles.add(new FileObject(file, null, "DRIVE", fileType));
+
+                    driveFiles.add(new FileObject(file, null, "DRIVE", "file"));
                 }
 
             }

@@ -41,14 +41,6 @@ public class FileListFragment extends Fragment {
         // create an array list to put the file objects in
         fileList = new ArrayList<>();
 
-        // set the adapter
-        rvFiles = (RecyclerView) view.findViewById(R.id.rvFiles);
-        adapter = new FileAdapter(getContext(), fileList);
-        rvFiles.setAdapter(adapter);
-
-        // Set layout manager to position the items
-        rvFiles.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         // get files from device storage via path
         getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
 
@@ -56,6 +48,14 @@ public class FileListFragment extends Fragment {
         if(isExternalStorageWritable()){
             getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
         }
+
+        // set the adapter
+        rvFiles = (RecyclerView) view.findViewById(R.id.rvFiles);
+        adapter = new FileAdapter(getContext(), fileList);
+        rvFiles.setAdapter(adapter);
+
+        // Set layout manager to position the items
+        rvFiles.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
     }
@@ -76,67 +76,16 @@ public class FileListFragment extends Fragment {
 
         // loop over the files and folders
         for (File file : files) {
-
             Log.d("string file", file.getName());
+            fileList.add(new FileObject(null, file, location, "file"));
 
-            // check whether the file is a folder
-            if (file.isDirectory()) {
-                Log.d("string folder", file.getName());
-                fileList.add(new FileObject(null, file, location, "folder"));
-
-            } else {
-                String fileType = "file";
-                Log.d("string file is file", file.getName());
-                if (file.getName().contains(".")){
-                    fileType = file.getName().substring(file.getName().lastIndexOf("."));
-                }
-
-                Log.d("string test", fileType);
-                fileList.add(new FileObject(null, file, location, fileType));
-            }
         }
-
-        // set the adapter with new array list
-        adapter = new FileAdapter(getContext(), fileList);
-        rvFiles.setAdapter(adapter);
-        rvFiles.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
     }
 
-    /* Opens the file in default extension and otherwise lets the user pick one */
-    private void openFile(File file, FileObject fileObject){
-        MimeTypeMap myMime = MimeTypeMap.getSingleton();
-        Intent newIntent = new Intent(Intent.ACTION_VIEW);
-        String mimeType = myMime.getMimeTypeFromExtension(fileExt(fileObject.getType()));
-        newIntent.setDataAndType(Uri.fromFile(file),mimeType);
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        try {
-            getContext().startActivity(newIntent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(getContext(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
-        }
-    }
 
-    /* Gets the file's extension*/
-    private String fileExt(String fileType) {
-        if (fileType.indexOf("?") > -1) {
-            fileType = fileType.substring(0, fileType.indexOf("?"));
-        }
-        if (fileType.lastIndexOf(".") == -1) {
-            return null;
-        } else {
-            String ext = fileType.substring(fileType.lastIndexOf(".") + 1);
-            if (ext.indexOf("%") > -1) {
-                ext = ext.substring(0, ext.indexOf("%"));
-            }
-            if (ext.indexOf("/") > -1) {
-                ext = ext.substring(0, ext.indexOf("/"));
-            }
-            Log.d("String extension", ext.toLowerCase());
-            return ext.toLowerCase();
 
-        }
-    }
+
 
 }
