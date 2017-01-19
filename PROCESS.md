@@ -83,3 +83,4 @@
 - Right now I create a fragment to manage the Google Drive account, in which I pass the files through a parcable array to a file fragment I create: this is not the right way to do it because fragments should be reusable, have to look into how to do this in a different way
 - Found out that if I want more functionality within my list view, I need to convert it to a recycler view, so I did
 - Back button functions with internal files and the list is converted to a recyclerview
+- Drive files are in the same list, yet cannot be opened yet
