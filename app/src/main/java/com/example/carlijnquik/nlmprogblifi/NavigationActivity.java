@@ -1,6 +1,9 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -8,11 +11,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 
 /**
  * Controls the navigation drawer
@@ -21,17 +30,13 @@ import android.view.View;
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DriveFilesFragment driveFilesFragment;
+    ImageView ivHeader;
+    TextView tvHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_navigation);
-
-        // set the fragment initially
-        driveFilesFragment = new DriveFilesFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.drawer_content_shown, driveFilesFragment);
-        fragmentTransaction.commit();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,6 +49,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // set the fragment initially
+        driveFilesFragment = new DriveFilesFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.drawer_content_shown, driveFilesFragment);
+        fragmentTransaction.commit();
 
     }
 
@@ -70,10 +81,48 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        tvHeader = (TextView) findViewById(R.id.tvHeader);
+        ivHeader = (ImageView) findViewById(R.id.ivHeader);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_sort_by) {
             return true;
+        }
+        if (id == R.id.action_select) {
+            return true;
+        }
+        if (id == R.id.action_select_all) {
+            return true;
+        }
+        if (id == R.id.become_batman){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Choose a character");
+            builder.setMessage("Which character do you want to be?");
+
+            builder.setPositiveButton("Batman", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    ivHeader.setImageResource(R.drawable.batman);
+                    tvHeader.setText("Batman");
+
+                } });
+
+            builder.setNegativeButton("Batman fairy", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    ivHeader.setImageResource(R.drawable.fairy_batman);
+                    tvHeader.setText("Batman Fairy");
+
+                }});
+
+            builder.setNeutralButton("Batman on vacation", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    ivHeader.setImageResource(R.drawable.batman_vacation);
+                    tvHeader.setText("Batman On Vacation");
+
+                }});
+
+            builder.show();
+            return true;
+
         }
 
         return super.onOptionsItemSelected(item);
