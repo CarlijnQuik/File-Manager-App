@@ -17,6 +17,10 @@
 - http://stackoverflow.com/questions/10609268/difference-between-fragment-and-fragmentactivity
 - https://developer.android.com/guide/components/activities/activity-lifecycle.html
 - https://developer.android.com/guide/components/fragments.html
+- https://developer.android.com/reference/android/app/Fragment.html
+- http://stackoverflow.com/questions/7992216/android-fragment-handle-back-button-press
+- http://stackoverflow.com/questions/5425568/how-to-use-setarguments-and-getarguments-methods-in-fragments
+- http://stackoverflow.com/questions/28984879/how-to-open-a-different-fragment-on-recyclerview-onclick
 
 *ArrayList with files*
 - http://stackoverflow.com/questions/7149802/how-to-transfer-some-data-to-another-fragment
