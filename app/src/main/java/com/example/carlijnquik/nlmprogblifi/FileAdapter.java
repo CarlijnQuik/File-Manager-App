@@ -2,6 +2,7 @@ package com.example.carlijnquik.nlmprogblifi;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,106 +13,148 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.ArrayList;
 
+import static com.example.carlijnquik.nlmprogblifi.R.id.rvFiles;
+
 /**
  * The adapter of the list view, handles all changes made to the file objects
  */
 
-public class FileAdapter extends BaseAdapter {
+public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
-    Activity activity;
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        public TextView tvFilename;
+        public TextView tvType;
+        public ImageView ivType;
+        public ImageView ivLocation;
+
+        public ViewHolder(View itemView){
+            super(itemView);
+
+            // initialize layout components for the list item
+            tvFilename = (TextView) itemView.findViewById(R.id.tvFilename);
+            tvType = (TextView) itemView.findViewById(R.id.tvType);
+            ivType = (ImageView) itemView.findViewById(R.id.ivType);
+            ivLocation = (ImageView) itemView.findViewById(R.id.ivLocation);
+
+        }
+    }
+
     Context context;
     ArrayList<FileObject> files;
 
-    public FileAdapter(Activity activity, ArrayList<FileObject> files) {
-        this.activity = activity;
-        this.context = activity.getApplicationContext();
+    public FileAdapter(Context context, ArrayList<FileObject> files) {
+        this.context = context;
         this.files = files;
     }
 
+    private Context getContext(){
+        return this.context;
+    }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public FileAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.file_list_item, null);
-        }
+        // Inflate the custom layout
+        View contactView = inflater.inflate(R.layout.file_list_item, parent, false);
 
-        // initialize layout components for the list item
-        TextView tvFilename = (TextView) convertView.findViewById(R.id.tvFilename);
-        TextView tvType = (TextView) convertView.findViewById(R.id.tvType);
-        ImageView ivType = (ImageView) convertView.findViewById(R.id.ivType);
-        ImageView ivLocation = (ImageView) convertView.findViewById(R.id.ivLocation);
+        // Return a new holder instance
+        ViewHolder viewHolder = new ViewHolder(contactView);
+        return viewHolder;
+    }
 
-
-        // iterate over the items in achievement array list
+    // Involves populating data into the item through holder
+    @Override
+    public void onBindViewHolder(FileAdapter.ViewHolder viewHolder, int position) {
+        // Get the data model based on position
         FileObject fileObject = files.get(position);
+
+        TextView btvFilename = viewHolder.tvFilename;
+        TextView btvType = viewHolder.tvType;
+        ImageView bivLocation = viewHolder.ivLocation;
+        ImageView bivType = viewHolder.ivType;
+
+        // Set item views based on views and data model
         File file = fileObject.getFile();
         com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
-        if (files != null) {
 
+        if (files != null) {
             // set views according to file properties
             if (fileObject.getLocation() != null) {
-                if (fileObject.getLocation().equals("SD")){
-                    ivLocation.setImageResource(R.drawable.sd_card);
+                if (fileObject.getLocation().equals("SD")) {
+                    bivLocation.setImageResource(R.drawable.sd_card);
                 }
-                if (fileObject.getLocation().equals("PHONE")){
-                    ivLocation.setImageResource(R.drawable.phone);
+                if (fileObject.getLocation().equals("PHONE")) {
+                    bivLocation.setImageResource(R.drawable.phone);
                 }
-                if (fileObject.getLocation().equals("DRIVE")){
-                    ivLocation.setImageResource(R.drawable.google_drive_logo);
+                if (fileObject.getLocation().equals("DRIVE")) {
+                    bivLocation.setImageResource(R.drawable.google_drive_logo);
                 }
             }
             if (file != null) {
-                tvFilename.setText(file.getName());
+                btvFilename.setText(file.getName());
             }
             if (driveFile != null) {
-                tvFilename.setText(driveFile.getName());
+                btvFilename.setText(driveFile.getName());
             }
-            if (fileObject.getType() != null){
+            if (fileObject.getType() != null) {
                 String fileType = fileObject.getType();
-                tvType.setText(fileType);
+                btvType.setText(fileType);
 
-                if (fileType.equals("folder")){
-                    ivType.setImageResource(R.drawable.folder_icon);
+                if (fileType.equals("folder")) {
+                    bivType.setImageResource(R.drawable.folder_icon);
                 }
-                if (fileType.equals(".doc")){
-                    ivType.setImageResource(R.drawable.doc_icon);
+                if (fileType.equals(".doc")) {
+                    bivType.setImageResource(R.drawable.doc_icon);
                 }
-                if (fileType.equals(".txt")){
-                    ivType.setImageResource(R.drawable.txt_icon);
+                if (fileType.equals(".txt")) {
+                    bivType.setImageResource(R.drawable.txt_icon);
                 }
-                if (fileType.equals(".xls")){
-                    ivType.setImageResource(R.drawable.xls_icon);
+                if (fileType.equals(".xls")) {
+                    bivType.setImageResource(R.drawable.xls_icon);
                 }
-                if (fileType.equals(".pdf")){
-                    ivType.setImageResource(R.drawable.pdf_icon);
+                if (fileType.equals(".pdf")) {
+                    bivType.setImageResource(R.drawable.pdf_icon);
                 }
-                if (fileType.equals(".ppt")){
-                    ivType.setImageResource(R.drawable.ppt_icon);
+                if (fileType.equals(".ppt")) {
+                    bivType.setImageResource(R.drawable.ppt_icon);
                 }
-                if (fileType.equals(".jpg")){
-                    ivType.setImageResource(R.drawable.jpg_icon);
+                if (fileType.equals(".jpg")) {
+                    bivType.setImageResource(R.drawable.jpg_icon);
                 }
             }
-
         }
 
-        return convertView;
+        // decide what clicking a file does
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+            }
+        });
+                /*FileObject fileObject = (FileObject) parent.getAdapter().getItem(position);
+                File file = fileObject.getFile();
+                File list = new File(file.getAbsolutePath());
+                File[] files = list.listFiles();
+
+                if(file.isDirectory() && !files[0].getName().isEmpty()){
+                    fileList = new ArrayList<>();
+                    Log.d("string path folder", file.getAbsolutePath());
+                    getFiles(file.getAbsolutePath(), fileObject.getLocation());
+                }
+                else{
+                    openFile(file, fileObject);
+                }*/
+
 
     }
 
+    // Returns the total count of items in the list
     @Override
-    public int getCount(){
+    public int getItemCount() {
         return files.size();
     }
 
-    public Object getItem(int position){
-        return files.get(position);
-    }
-
-    public long getItemId(int i){
-        return files.indexOf(getItem(i));
-    }
 
 }

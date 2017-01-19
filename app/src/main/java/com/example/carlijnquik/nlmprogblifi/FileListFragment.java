@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ public class FileListFragment extends Fragment {
 
     ArrayList<FileObject> fileList;
     FileAdapter adapter;
-    ListView lvFiles;
+    RecyclerView rvFiles;
     ArrayList<FileObject> driveFiles;
 
     @Override
@@ -40,9 +42,12 @@ public class FileListFragment extends Fragment {
         fileList = new ArrayList<>();
 
         // set the adapter
-        lvFiles = (ListView) view.findViewById(R.id.lvFiles);
-        adapter = new FileAdapter(getActivity(), fileList);
-        lvFiles.setAdapter(adapter);
+        rvFiles = (RecyclerView) view.findViewById(R.id.rvFiles);
+        adapter = new FileAdapter(getContext(), fileList);
+        rvFiles.setAdapter(adapter);
+
+        // Set layout manager to position the items
+        rvFiles.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // get files from device storage via path
         getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
@@ -51,27 +56,6 @@ public class FileListFragment extends Fragment {
         if(isExternalStorageWritable()){
             getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
         }
-
-        // decide what clicking a file does
-        lvFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long i) {
-                FileObject fileObject = (FileObject) parent.getAdapter().getItem(position);
-                File file = fileObject.getFile();
-                File list = new File(file.getAbsolutePath());
-                File[] files = list.listFiles();
-
-                if(file.isDirectory() && !files[0].getName().isEmpty()){
-                    fileList = new ArrayList<>();
-                    Log.d("string path folder", file.getAbsolutePath());
-                    getFiles(file.getAbsolutePath(), fileObject.getLocation());
-                }
-                else{
-                    openFile(file, fileObject);
-                }
-
-            }
-        });
 
         return view;
     }
@@ -113,8 +97,10 @@ public class FileListFragment extends Fragment {
         }
 
         // set the adapter with new array list
-        adapter = new FileAdapter(getActivity(), fileList);
-        lvFiles.setAdapter(adapter);
+        adapter = new FileAdapter(getContext(), fileList);
+        rvFiles.setAdapter(adapter);
+        rvFiles.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
     }
 
@@ -147,6 +133,7 @@ public class FileListFragment extends Fragment {
             if (ext.indexOf("/") > -1) {
                 ext = ext.substring(0, ext.indexOf("/"));
             }
+            Log.d("String extension", ext.toLowerCase());
             return ext.toLowerCase();
 
         }
