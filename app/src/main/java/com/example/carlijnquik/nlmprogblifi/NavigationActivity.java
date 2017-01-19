@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,14 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.api.services.drive.model.FileList;
+
 /**
  * Controls the navigation drawer
  */
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    FileListFragment fileListFragment;
-    AccountsFragment googleAccountFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +28,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         setContentView(R.layout.drawer_navigation);
 
         // set the fragment initially
-        fileListFragment = new FileListFragment();
+        FileListFragment fileListFragment = new FileListFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("filePath", null);
+        bundle.putString("fileLocation", null);
+        fileListFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.drawer_content_shown, fileListFragment);
         fragmentTransaction.commit();
 
@@ -89,6 +93,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             // set the fragment
             FileListFragment fragment = new FileListFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            Bundle bundle = new Bundle();
+            bundle.putString("filePath", null);
+            bundle.putString("fileLocation", null);
+            fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.drawer_content_shown, fragment);
             fragmentTransaction.commit();
         }
@@ -112,6 +120,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void switchContent(int id, FileListFragment fileListFragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(id, fileListFragment, fileListFragment.toString());
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
 

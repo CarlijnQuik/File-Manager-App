@@ -5,6 +5,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,8 +24,6 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import static com.example.carlijnquik.nlmprogblifi.R.id.rvFiles;
 
 /**
  * The adapter of the list view, handles all changes made to the file objects
@@ -59,7 +61,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         this.files = files;
     }
 
-    private Context getContext(){
+    public Context getContext(){
         return this.context;
     }
 
@@ -78,7 +80,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(FileAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final FileAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
         final FileObject fileObject = files.get(position);
 
@@ -146,6 +148,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                int positionClick = viewHolder.getAdapterPosition();
+                final FileObject fileObject = files.get(positionClick);
                 File file = fileObject.getFile();
                 Log.d("string file onclick", file.getAbsolutePath());
 
@@ -156,6 +160,13 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                     if(file.isDirectory() && !files[0].getName().isEmpty()){
 
                         Log.d("string folder onclick", file.getAbsolutePath());
+                        // Instantiate a new fragment
+                        FileListFragment frag = new FileListFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("filePath", file.getAbsolutePath());
+                        bundle.putString("fileLocation", fileObject.getLocation());
+                        frag.setArguments(bundle);
+                        switchContent(R.id.drawer_content_shown, frag);
 
                     }
                     else {
@@ -217,5 +228,18 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         }
     }
 
+    public void switchContent(int id, FileListFragment fileListFragment) {
+        if (context == null)
+            return;
+        if (context instanceof NavigationActivity) {
+            NavigationActivity navigationActivity = (NavigationActivity) context;
+            FileListFragment fragment = fileListFragment;
+            navigationActivity.switchContent(id, fragment);
+        }
+
+    }
+
 
 }
+
+

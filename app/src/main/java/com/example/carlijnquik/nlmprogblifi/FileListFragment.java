@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,21 @@ public class FileListFragment extends Fragment {
     FileAdapter adapter;
     RecyclerView rvFiles;
     ArrayList<FileObject> driveFiles;
+    String path;
+    String location;
+
+    /**
+     * When creating, retrieve this instance's number from its arguments.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle.getString("filePath") != null) {
+            path = bundle.getString("filePath");
+            location = bundle.getString("fileLocation");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,12 +57,18 @@ public class FileListFragment extends Fragment {
         // create an array list to put the file objects in
         fileList = new ArrayList<>();
 
-        // get files from device storage via path
-        getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
+        if(path == null || location == null){
+            // get files from device storage via path
+            getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
 
-        // get files from sd card if present
-        if(isExternalStorageWritable()){
-            getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
+            // get files from sd card if present
+            if(isExternalStorageWritable()){
+                getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
+            }
+
+        }
+        else{
+            getFiles(path, location);
         }
 
         // set the adapter
