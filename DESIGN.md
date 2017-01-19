@@ -47,4 +47,4 @@
 
 **Flow of activities**
 
-<img src="https://cloud.githubusercontent.com/assets/22945709/21922991/e8b55236-d971-11e6-8307-d48c9f8b4ad6.png" width="300">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22124525/7d96cbdc-de90-11e6-9843-6cc6f69fc15d.png" width="300">
