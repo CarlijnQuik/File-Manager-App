@@ -84,3 +84,6 @@
 - Found out that if I want more functionality within my list view, I need to convert it to a recycler view, so I did
 - Back button functions with internal files and the list is converted to a recyclerview
 - Drive files are in the same list, yet cannot be opened yet
+
+<img src="https://cloud.githubusercontent.com/assets/22945709/22123486/0f6d31fe-de8c-11e6-8f26-7624fe6ad8ff.png" width="200">
+<img src= "https://cloud.githubusercontent.com/assets/22945709/22123485/0f633a8c-de8c-11e6-95b2-1a6b1a2d08d2.png" width="200">
