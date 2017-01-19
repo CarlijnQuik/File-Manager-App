@@ -43,7 +43,7 @@
 - The UI looks like the Google Drive UI
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/21816695/5259cfb8-d761-11e6-930b-fdab08e85a54.png" width="500">
-<img src="https://cloud.githubusercontent.com/assets/22945709/22123486/0f6d31fe-de8c-11e6-8f26-7624fe6ad8ff.png" width="500">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22123486/0f6d31fe-de8c-11e6-8f26-7624fe6ad8ff.png" width="200">
 
 **Flow of activities**
 
