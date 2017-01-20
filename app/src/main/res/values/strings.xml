@@ -30,5 +30,7 @@
     <string name="select_dot">Select...</string>
     <string name="enabled">Google account enabled</string>
     <string name="no_results">No results returned</string>
+    <string name="network_available">No network connection available</string>
+    <string name="dialog_access">This app needs to access your Google account (via Contacts).</string>
 
 </resources>

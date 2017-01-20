@@ -7,13 +7,6 @@
             android:icon="@drawable/file_icon"
             android:title="@string/file_list"/>
 
-        <item
-            android:id="@+id/nav_accounts"
-            android:icon="@drawable/google_drive_logo"
-            android:title="@string/accounts" />
-
-
-
     </group>
 
 </menu>

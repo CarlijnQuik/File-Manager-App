@@ -17,18 +17,23 @@
     <ImageView
         android:contentDescription="@string/image_display"
         android:id="@+id/ivHeader"
-        android:scaleType="centerCrop"
-        android:layout_width="91dp"
-        android:layout_height="74dp"
+        android:scaleType="fitCenter"
+        android:layout_width="94dp"
+        android:layout_height="82dp"
         android:background="@android:color/transparent"
-        app:srcCompat="?android:attr/actionModeCopyDrawable" />
+        android:src="@drawable/batman" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvHeader"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:paddingTop="5dp"
         android:text="Blind File Find"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:id="@+id/spinner" />
 
 </LinearLayout>

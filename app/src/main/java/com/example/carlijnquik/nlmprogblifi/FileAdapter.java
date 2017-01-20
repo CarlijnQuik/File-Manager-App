@@ -104,39 +104,48 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             if (file != null) {
                 btvFilename.setText(file.getName());
 
-                if (file.getName().contains(".")){
-                    fileObject.type = file.getName().substring(file.getName().lastIndexOf("."));
-                }
-                if (file.isDirectory()){
+                fileObject.type = fileExt(file.getName());
+                if(file.isDirectory()){
                     fileObject.type = "folder";
                 }
+
+                Log.d("string filename", file.getName());
+                Log.d("string filetype", fileObject.getType());
+
                 btvType.setText(fileObject.getType());
             }
             if (driveFile != null) {
                 btvFilename.setText(driveFile.getName());
+
+                fileObject.type = fileExt(driveFile.getName());
+
+                Log.d("string drivefilename", driveFile.getName());
+                Log.d("string drivefiletype", fileObject.getType());
+
+                btvType.setText(fileObject.getType());
             }
             if (fileObject.getType().equals("folder")) {
                 bivType.setImageResource(R.drawable.folder_icon);
             }
-            if (fileObject.getType().equals(".doc")) {
+            if (fileObject.getType().equals("doc")) {
                 bivType.setImageResource(R.drawable.doc_icon);
             }
-            if (fileObject.getType().equals(".txt")) {
+            if (fileObject.getType().equals("txt")) {
                 bivType.setImageResource(R.drawable.txt_icon);
             }
-            if (fileObject.getType().equals(".xls")) {
+            if (fileObject.getType().equals("xls")) {
                 bivType.setImageResource(R.drawable.xls_icon);
             }
-            if (fileObject.getType().equals(".pdf")) {
+            if (fileObject.getType().equals("pdf")) {
                 bivType.setImageResource(R.drawable.pdf_icon);
             }
-            if (fileObject.getType().equals(".ppt")) {
+            if (fileObject.getType().equals("ppt")) {
                 bivType.setImageResource(R.drawable.ppt_icon);
             }
-            if (fileObject.getType().equals(".jpg")) {
+            if (fileObject.getType().equals("jpg")) {
                 bivType.setImageResource(R.drawable.jpg_icon);
             }
-            if (fileObject.getType().equals(".png")) {
+            if (fileObject.getType().equals("png")) {
                 bivType.setImageResource(R.drawable.png_icon);
             }
 
@@ -149,6 +158,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 int positionClick = viewHolder.getAdapterPosition();
                 final FileObject fileObject = files.get(positionClick);
                 File file = fileObject.getFile();
+                com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
                 Log.d("string file onclick", file.getAbsolutePath());
 
                 if(file != null) {
@@ -164,7 +174,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                         bundle.putString("filePath", file.getAbsolutePath());
                         bundle.putString("fileLocation", fileObject.getLocation());
                         frag.setArguments(bundle);
-                        switchContent(R.id.drawer_content_shown, frag);
+                        switchContent(R.id.drawer_content_shown_3, frag);
 
                     }
                     else if(file.isFile()){
@@ -174,9 +184,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
 
                 }
-                else{
-                    Toast.makeText(getContext(), "File is empty!", Toast.LENGTH_SHORT).show();
-                }
+
+
 
             }
         });
@@ -185,6 +194,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
     /* Opens the file in default extension and otherwise lets the user pick one */
     public void openFile(FileObject fileObject){
+        // http://stackoverflow.com/questions/14320527/android-should-i-use-mimetypemap-getfileextensionfromurl-bugs
         MimeTypeMap myMime = MimeTypeMap.getSingleton();
         Intent newIntent = new Intent(Intent.ACTION_VIEW);
 
@@ -213,7 +223,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             fileType = fileType.substring(0, fileType.indexOf("?"));
         }
         if (fileType.lastIndexOf(".") == -1) {
-            return null;
+            return "file";
         } else {
             String ext = fileType.substring(fileType.lastIndexOf(".") + 1);
             if (ext.indexOf("%") > -1) {
@@ -224,7 +234,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             }
             Log.d("String extension", ext.toLowerCase());
             return ext.toLowerCase();
-
         }
     }
 

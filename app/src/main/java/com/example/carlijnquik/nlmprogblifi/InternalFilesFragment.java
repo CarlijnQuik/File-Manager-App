@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -51,6 +52,7 @@ public class InternalFilesFragment extends Fragment {
         if(path == null || location == null){
             // get files from device storage via path
             getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
+
 
             // get files from sd card if present
             if(isExternalStorageWritable()){

@@ -1,9 +1,8 @@
 package com.example.carlijnquik.nlmprogblifi;
 
-import android.content.DialogInterface;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -11,16 +10,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
 
 
 /**
@@ -29,38 +28,85 @@ import android.widget.TextView;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    DriveFilesFragment driveFilesFragment;
-    ImageView ivHeader;
-    TextView tvHeader;
+    DrawerLayout drawer;
+    ArrayList<String> spinnerMenu;
+    String accountName;
+    ArrayAdapter<String> adapter;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawer_navigation);
+        setContentView(R.layout.drawer_navigation_1);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_2);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        accountName = this.getPreferences(Context.MODE_PRIVATE).getString("accountName", null);
+
+        // set spinner menu
+        spinnerMenu = new ArrayList<>();
+        spinnerMenu.add("Add Account Here");
+
+        if (accountName != null){
+            spinnerMenu.add(accountName);
+        }
+        spinnerMenu.add("+ Add Account");
+
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+
+            public void onDrawerOpened(View drawerView){
+                super.onDrawerOpened(drawerView);
+
+                spinner = (Spinner) findViewById(R.id.spinner);
+                adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, spinnerMenu);
+                spinner.setAdapter(adapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        String item = spinner.getSelectedItem().toString();
+                        if(item.equals("+ Add Account")){
+                            forwardUser();
+                        }
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                        // do nothing
+                    }
+                });
+                spinner.setVisibility(View.INVISIBLE);
+
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_1);
         navigationView.setNavigationItemSelectedListener(this);
 
         // set the fragment initially
-        driveFilesFragment = new DriveFilesFragment();
+        InternalFilesFragment fragment = new InternalFilesFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.drawer_content_shown, driveFilesFragment);
+        Bundle bundle = new Bundle();
+        bundle.putString("filePath", null);
+        bundle.putString("fileLocation", null);
+        fragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.drawer_content_shown_3, fragment);
         fragmentTransaction.commit();
 
     }
 
+    public void forwardUser(){
+        Intent intent = new Intent(this, DriveFilesActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -81,8 +127,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        tvHeader = (TextView) findViewById(R.id.tvHeader);
-        ivHeader = (ImageView) findViewById(R.id.ivHeader);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_sort_by) {
@@ -94,36 +138,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         if (id == R.id.action_select_all) {
             return true;
         }
-        if (id == R.id.become_batman){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Choose a character");
-            builder.setMessage("Which character do you want to be?");
 
-            builder.setPositiveButton("Batman", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    ivHeader.setImageResource(R.drawable.batman);
-                    tvHeader.setText("Batman");
-
-                } });
-
-            builder.setNegativeButton("Batman fairy", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    ivHeader.setImageResource(R.drawable.fairy_batman);
-                    tvHeader.setText("Batman Fairy");
-
-                }});
-
-            builder.setNeutralButton("Batman on vacation", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    ivHeader.setImageResource(R.drawable.batman_on_vacation);
-                    tvHeader.setText("Batman On Vacation");
-
-                }});
-
-            builder.show();
-            return true;
-
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -135,6 +150,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         int id = item.getItemId();
 
         if(id == R.id.nav_file_list){
+            // clear the array list to prevent duplicates
+            ArrayList<FileObject> fileList = AllInternalFiles.getInstance().getFileList();
+            fileList.clear();
+
             // set the fragment
             InternalFilesFragment fragment = new InternalFilesFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -142,16 +161,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             bundle.putString("filePath", null);
             bundle.putString("fileLocation", null);
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.drawer_content_shown, fragment);
-            fragmentTransaction.commit();
-        }
-        else if(id == R.id.nav_accounts){
-            // set the fragment
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.drawer_content_shown, driveFilesFragment);
+            fragmentTransaction.replace(R.id.drawer_content_shown_3, fragment);
             fragmentTransaction.commit();
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_2);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -161,7 +174,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             });
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -170,12 +183,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(id, internalFilesFragment, internalFilesFragment.toString());
         ft.addToBackStack(null);
-        ft.commit();
-    }
-
-    public void restartFragment(int id, DriveFilesFragment driveFilesFragment){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(id, driveFilesFragment, driveFilesFragment.toString());
         ft.commit();
     }
 
