@@ -92,3 +92,4 @@
 - Presentations in the morning, no particular feedback, yet I asked about the check boxes in the recycler view and how to display them and decided together to only show them on "Select" clicked
 - Looked into Google Drive documentation and found it very difficult to make sense of the data type retreived
 - Wanted to enable the user to choose a character and switch the Drive menu button by a spinner, got too caught up in it so I wasted some time, then decided to let go of the idea and move on to understanding the Drive Files
+- It probably was not the best idea to look into the layouts and controls, yet have to make a decision before it is too late
