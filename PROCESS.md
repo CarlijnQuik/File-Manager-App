@@ -93,3 +93,6 @@
 - Looked into Google Drive documentation and found it very difficult to make sense of the data type retreived
 - Wanted to enable the user to choose a character and switch the Drive menu button by a spinner, got too caught up in it so I wasted some time, then decided to let go of the idea and move on to understanding the Drive Files
 - It probably was not the best idea to look into the layouts and controls, yet have to make a decision before it is too late
+- Enabled the user to sign in in different activity, for now the best way to handle this, because only one account can be added, and in the future because this activity does not need the settings menu
+- Challenge for next week: fully understand the Google Drive API
+- In the last week the design can be changed if that turns out to be better, now focus on functionality!
