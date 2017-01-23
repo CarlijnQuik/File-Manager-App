@@ -110,6 +110,9 @@ TODO list;
 
 #### Day 4
 - Created a week 3 and 4 TODO list
+- Discovered the scope was set to READ_ONLY which should be DRIVE
+- Discovered how to get all file info instead of only id and name
+- Discovered I do not need the REST API but the actual API I began with, so I am back at the beginning
 
 *Week 4*
 TODO list;
