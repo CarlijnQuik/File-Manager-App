@@ -1,1 +1,48 @@
-{"installed":{"client_id":"615429528636-unmkbg0t8b9g37kb69f6itsl4hlmng3j.apps.googleusercontent.com","project_id":"norse-voice-156011","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}
+{
+  "project_info": {
+    "project_number": "615429528636",
+    "project_id": "norse-voice-156011"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615429528636:android:788525e27d3f15dc",
+        "android_client_info": {
+          "package_name": "com.example.carlijnquik.nlmprogblifi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615429528636-unmkbg0t8b9g37kb69f6itsl4hlmng3j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.carlijnquik.nlmprogblifi",
+            "certificate_hash": "B8426EE611E0DA7F88DD202701D71B9929B1AE12"
+          }
+        },
+        {
+          "client_id": "615429528636-j5ooii7vh470mm2m7iaoqcv8d9a0os90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQT0SbKXjmyw4dZmnfe_4K4AZ1oesqBlQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

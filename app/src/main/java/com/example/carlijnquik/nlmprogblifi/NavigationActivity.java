@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.google.android.gms.drive.DriveFile;
+
 import java.util.ArrayList;
 
 
@@ -29,10 +31,6 @@ import java.util.ArrayList;
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
-    ArrayList<String> spinnerMenu;
-    String accountName;
-    ArrayAdapter<String> adapter;
-    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,45 +40,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_2);
         setSupportActionBar(toolbar);
 
-        accountName = this.getPreferences(Context.MODE_PRIVATE).getString("accountName", null);
-
-        // set spinner menu
-        spinnerMenu = new ArrayList<>();
-        spinnerMenu.add("Add Account Here");
-
-        if (accountName != null){
-            spinnerMenu.add(accountName);
-        }
-        spinnerMenu.add("+ Add Account");
-
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
-
-            public void onDrawerOpened(View drawerView){
-                super.onDrawerOpened(drawerView);
-
-                spinner = (Spinner) findViewById(R.id.spinner);
-                adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, spinnerMenu);
-                spinner.setAdapter(adapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        String item = spinner.getSelectedItem().toString();
-                        if(item.equals("+ Add Account")){
-                            forwardUser();
-                        }
-                    }
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-                        // do nothing
-                    }
-                });
-                spinner.setVisibility(View.INVISIBLE);
-
-            }
-        };
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -97,11 +59,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         fragmentTransaction.replace(R.id.drawer_content_shown_3, fragment);
         fragmentTransaction.commit();
 
-    }
-
-    public void forwardUser(){
-        Intent intent = new Intent(this, DriveFilesActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -172,6 +129,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                             .setAction("Action", null).show();
                 }
             });
+        }
+        if(id == R.id.nav_accounts){
+            // set the fragment
+            DriveFragment fragment = new DriveFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.drawer_content_shown_3, fragment);
+            fragmentTransaction.commit();
+
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);

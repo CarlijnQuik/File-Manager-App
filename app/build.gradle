@@ -48,4 +48,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.0'
 }
 
+apply plugin: 'com.google.gms.google-services'
+
 

@@ -31,9 +31,4 @@
         android:text="Blind File Find"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:id="@+id/spinner" />
-
 </LinearLayout>
