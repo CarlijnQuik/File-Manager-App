@@ -114,6 +114,7 @@ TODO list;
 - Discovered how to get all file info instead of only id and name
 - Discovered I do not need the REST API but the actual API I began with, so have to convert everything again, yet learned a lot by trial and error so expect to progress quicker, had this API installed earlier
 - Connected to Drive and it seems I can finally edit the files
+- After 5 more attempts finally: I can create a new file!!
 
 *Week 4*
 TODO list;
