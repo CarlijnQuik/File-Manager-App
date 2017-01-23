@@ -96,3 +96,32 @@
 - Enabled the user to sign in in different activity, for now the best way to handle this, because only one account can be added, and in the future because this activity does not need the settings menu
 - Challenge for next week: fully understand the Google Drive API
 - In the last week the design can be changed if that turns out to be better, now focus on functionality!
+
+*Week 3*
+TODO list;
+- Enable the user to download Drive files
+- Enable the user to "open with" Drive Files
+- Enable the user to remove files
+- Enable the user to rename files
+- Enable the user to select (all) files 
+- Enable the user to move files
+- Enable the user to create a file
+
+
+#### Day 4
+- Created a week 3 and 4 TODO list
+- Discovered the scope was set to READ_ONLY which should be DRIVE
+- Discovered how to get all file info instead of only id and name
+- Discovered I do not need the REST API but the actual API I began with, so have to convert everything again, yet learned a lot by trial and error so expect to progress quicker, had this API installed earlier
+- Connected to Drive and it seems I can finally edit the files
+
+*Week 4*
+TODO list;
+- Design / code style (week 4)
+- Make the spinner functional as in the Google Drive App (week 4)
+- Be able to show the character and username (week 4)
+- Enable the user to sort files (week 4)
+- Show the trash can of files (week 4)
+- Show the right file type of Drive files (week 4)
+- Enable the user to search through files (week 4)
+
