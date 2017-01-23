@@ -110,3 +110,7 @@ TODO list;
 - Enable the user to move files
 - Enable the user to sort files (week 4)
 - Show the trash can of files (week 4)
+- Show the right file type of Drive files
+- Enable the user to search through files (week 4)
+- Enable the user to create a file
+
