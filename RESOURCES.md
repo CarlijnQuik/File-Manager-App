@@ -43,7 +43,6 @@
 - http://stackoverflow.com/questions/38730055/pass-arraylist-object-to-fragment
 - https://developers.google.com/resources/api-libraries/documentation/drive/v2/java/latest/com/google/api/services/drive/Drive.Builder.html
 - http://stackoverflow.com/questions/41475427/file-object-methods-throws-nullpointerexception-google-drive-api
-- https://www.numetriclabz.com/integrate-google-drive-in-android-tutorial/
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
