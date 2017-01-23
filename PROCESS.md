@@ -113,4 +113,5 @@ TODO list;
 - Show the right file type of Drive files
 - Enable the user to search through files (week 4)
 - Enable the user to create a file
+- Design / code style
 
