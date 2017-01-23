@@ -98,20 +98,25 @@
 - In the last week the design can be changed if that turns out to be better, now focus on functionality!
 
 *Week 3*
-#### Day 11
 TODO list;
-- Make the spinner functional as in the Google Drive App (week 4)
-- Be able to show the character and username (week 4)
 - Enable the user to download Drive files
 - Enable the user to "open with" Drive Files
 - Enable the user to remove files
 - Enable the user to rename files
 - Enable the user to select (all) files 
 - Enable the user to move files
+- Enable the user to create a file
+
+
+#### Day 4
+
+*Week 4*
+TODO list;
+- Design / code style (week 4)
+- Make the spinner functional as in the Google Drive App (week 4)
+- Be able to show the character and username (week 4)
 - Enable the user to sort files (week 4)
 - Show the trash can of files (week 4)
 - Show the right file type of Drive files (week 4)
 - Enable the user to search through files (week 4)
-- Enable the user to create a file
-- Design / code style (week 4)
 
