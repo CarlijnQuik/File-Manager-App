@@ -109,6 +109,7 @@ TODO list;
 
 
 #### Day 4
+- Created a week 3 and 4 TODO list
 
 *Week 4*
 TODO list;
