@@ -5,15 +5,19 @@ package com.example.carlijnquik.nlmprogblifi;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,12 +29,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.CredentialRequest;
+import com.google.android.gms.auth.api.credentials.CredentialRequestResult;
+import com.google.android.gms.auth.api.credentials.IdentityProviders;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.Result;
@@ -85,7 +94,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
     public GoogleApiClient driveGoogleApiClient;
     GoogleAccountCredential driveCredential;
     SharedPreferences prefs;
-    AccountManager am = AccountManager.get(getContext());
 
     private TextView tvStatus;
     private Button bSignIn;
@@ -182,6 +190,7 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
         driveGoogleApiClient.connect();
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+
         if (opr.isDone()) {
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
@@ -230,11 +239,15 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
 
                 new MakeRequestTask(driveCredential).execute();
             }
+
+
         }
 
 
     }
     // [END onActivityResult]
+
+
 
     // [START handleSignInResult]
     private void handleSignInResult(GoogleSignInResult result) {
@@ -371,14 +384,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
                 }
             };
 
-
-    public GoogleApiClient getDriveGoogleApiClient() {
-        return driveGoogleApiClient;
-    }
-
-    public GoogleApiClient getGoogleApiClient() {
-        return googleApiClient;
-    }
 
 
     final private ResultCallback<DriveContentsResult> driveContentsCallback = new
