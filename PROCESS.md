@@ -117,6 +117,9 @@ TODO list;
 - After 5 more attempts finally: I can create a new file!!
 - Now have to log in twice, once with the rest api and once with the normal api to use the different functionalities
 
+#### Day 5
+- Tried all morning to enable the user to only log in once, then decided to just continue and look into that later
+
 *Week 4*
 TODO list;
 - Design / code style (week 4)
@@ -126,4 +129,6 @@ TODO list;
 - Show the trash can of files (week 4)
 - Show the right file type of Drive files (week 4)
 - Enable the user to search through files (week 4)
+
+
 
