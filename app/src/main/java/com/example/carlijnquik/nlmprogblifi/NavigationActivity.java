@@ -199,10 +199,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                                 writer.write("Hello World!");
                                 writer.close();
                             } catch (IOException e) {
+                                //
                             }
 
                             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                    .setTitle("Test")
+                                    .setTitle("New file")
                                     .setMimeType("text/plain")
                                     .setStarred(true).build();
 

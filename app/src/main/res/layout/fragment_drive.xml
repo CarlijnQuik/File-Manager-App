@@ -50,14 +50,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" />
 
-    <Button
-        android:text="bCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bSignIn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="123dp"
-        android:id="@+id/bCreate" />
-
 
 </RelativeLayout>

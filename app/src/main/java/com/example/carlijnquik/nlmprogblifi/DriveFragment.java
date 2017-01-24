@@ -94,24 +94,12 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
 
     public GoogleApiClient googleApiClient;
     public GoogleSignInOptions googleSignInOptions;
-    GoogleAccountCredential driveCredential;
-    SharedPreferences prefs;
+    public GoogleAccountCredential driveCredential;
 
     private TextView tvStatus;
     private Button bSignIn;
     private Button bSignOut;
-    Button bCreate;
-    String accountName;
     private ProgressDialog progressDialog;
-    private Bitmap bitmapToSave;
-    private static final int REQUEST_CODE_CAPTURE_IMAGE = 1;
-    private static final int REQUEST_CODE_CREATOR = 2;
-    private static final int REQUEST_CODE_RESOLUTION = 3;
-    static final int REQUEST_ACCOUNT_PICKER = 1000;
-    static final int REQUEST_AUTHORIZATION = 1001;
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-    static final int RESULT_OK = -1;
     private static final String[] SCOPES = {DriveScopes.DRIVE};
 
     ArrayList<FileObject> driveFiles;
@@ -119,9 +107,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // get the global array list with dive files
-        driveFiles = AllDriveFiles.getInstance().getFileList();
 
         if (googleSignInOptions == null) {
             googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -145,10 +130,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
                     .setBackOff(new ExponentialBackOff());
         }
 
-        prefs = this.getActivity().getPreferences(getContext().MODE_PRIVATE);
-
-        // get signed in account if there
-        accountName = prefs.getString("accountName", null);
 
     }
 
@@ -163,13 +144,10 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
         tvStatus = (TextView) view.findViewById(R.id.tvStatus);
         bSignIn = (Button) view.findViewById(R.id.bSignIn);
         bSignOut = (Button) view.findViewById(R.id.bSignOut);
-        bCreate = (Button) view.findViewById(R.id.bCreate);
 
         // Button listeners
         bSignIn.setOnClickListener(this);
         bSignOut.setOnClickListener(this);
-        bCreate.setOnClickListener(this);
-
 
         return view;
     }
@@ -263,7 +241,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
                     }
                 });
 
-        driveFiles.clear();
     }
     // [END signOut]
 

@@ -196,11 +196,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
     /* Opens the file in default extension and otherwise lets the user pick one */
     public void openFile(FileObject fileObject){
-        // http://stackoverflow.com/questions/14320527/android-should-i-use-mimetypemap-getfileextensionfromurl-bugs
+
         MimeTypeMap myMime = MimeTypeMap.getSingleton();
         Intent newIntent = new Intent(Intent.ACTION_VIEW);
 
-        String mimeType = myMime.getMimeTypeFromExtension(fileExt(fileObject.getType()));
+        String mimeType = myMime.getMimeTypeFromExtension(fileObject.getType());
         newIntent.setDataAndType(Uri.fromFile(fileObject.getFile()),mimeType);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
