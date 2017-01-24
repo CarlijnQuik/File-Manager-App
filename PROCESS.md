@@ -107,7 +107,6 @@ TODO list;
 - Enable the user to move files
 - Enable the user to create a file
 
-
 #### Day 4
 - Created a week 3 and 4 TODO list
 - Discovered the scope was set to READ_ONLY which should be DRIVE
@@ -121,6 +120,7 @@ TODO list;
 - Tried all morning to enable the user to only log in once, which worked in the end but still buggy
 - Enabled user to log in once, but now the "create file" button is not working, probably because the api client is in another fragment
 - Creating files works again with the floating action button in the file fragment
+- Trying to get the search function right, still struggling with retaining the signed in user and his or her files
 
 *Week 4*
 TODO list;
