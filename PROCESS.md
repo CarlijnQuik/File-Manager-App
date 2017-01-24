@@ -118,9 +118,9 @@ TODO list;
 - Now have to log in twice, once with the rest api and once with the normal api to use the different functionalities
 
 #### Day 5
-- Tried all morning to enable the user to only log in once, then decided to just continue and look into that later
+- Tried all morning to enable the user to only log in once, which worked in the end but still buggy
 - Enabled user to log in once, but now the "create file" button is not working, probably because the api client is in another fragment
-
+- Creating files works again with the floating action button in the file fragment
 
 *Week 4*
 TODO list;
