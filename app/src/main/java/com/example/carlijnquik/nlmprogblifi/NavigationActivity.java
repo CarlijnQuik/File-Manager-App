@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
+    DriveFragment driveFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,16 +127,15 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    driveFragment.createFile();
                 }
             });
         }
         if(id == R.id.nav_accounts){
             // set the fragment
-            DriveFragment fragment = new DriveFragment();
+            driveFragment = new DriveFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.drawer_content_shown_3, fragment);
+            fragmentTransaction.replace(R.id.drawer_content_shown_3, driveFragment);
             fragmentTransaction.commit();
 
         }
