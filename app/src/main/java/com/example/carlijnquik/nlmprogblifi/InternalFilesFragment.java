@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +48,9 @@ public class InternalFilesFragment extends Fragment {
 
         // create an array list to put the file objects in
         fileList = AllInternalFiles.getInstance().getFileList();
+        fileList.clear();
         driveFileList = AllDriveFiles.getInstance().getFileList();
+        fileList.addAll(driveFileList);
 
         if(path == null || location == null){
             // get files from device storage via path
@@ -59,11 +62,10 @@ public class InternalFilesFragment extends Fragment {
                 getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
             }
 
-            fileList.addAll(driveFileList);
         }
         else{
             // create an array list to put the file objects in
-            fileList = new ArrayList<>();
+            fileList.clear();
             getFiles(path, location);
         }
 

@@ -21,8 +21,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/drawer_content_3"
-        android:id="@+id/include" />
+    <SearchView
+        android:layout_width="174dp"
+        android:id="@+id/searchView"
+        app:layout_anchorGravity="right"
+        android:layout_marginRight="50dp"
+        android:layout_marginEnd="50dp"
+        app:layout_anchor="@+id/toolbar_2"
+        android:layout_height="wrap_content" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_2"
@@ -33,5 +39,8 @@
         app:srcCompat="@android:drawable/ic_menu_add"
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="bottom|right" />
+
+    <include layout="@layout/drawer_content_3"
+        android:id="@+id/include" />
 
 </android.support.design.widget.CoordinatorLayout>
