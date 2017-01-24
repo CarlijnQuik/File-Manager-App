@@ -43,6 +43,9 @@
 - http://stackoverflow.com/questions/38730055/pass-arraylist-object-to-fragment
 - https://developers.google.com/resources/api-libraries/documentation/drive/v2/java/latest/com/google/api/services/drive/Drive.Builder.html
 - http://stackoverflow.com/questions/41475427/file-object-methods-throws-nullpointerexception-google-drive-api
+- https://github.com/googledrive/android-demos/blob/master/app/src/main/java/com/google/android/gms/drive/sample/demo/CreateFileActivity.java
+- https://developers.google.com/drive/android/intro
+- http://stackoverflow.com/questions/12164024/android-open-and-save-files-to-from-google-drive-sdk
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
