@@ -119,7 +119,8 @@ TODO list;
 
 #### Day 5
 - Tried all morning to enable the user to only log in once, then decided to just continue and look into that later
-- "Sorry for reviving this, but the new Google Drive Android API doesn't support full Drive access, only drive.file and drive.appdata authorization scopes, so if you need full access you have to go back to the good 'ol Google API's Client for Java (which the DrEdit example uses)."
+- Enabled user to log in once, but now the "create file" button is not working, probably because the api client is in another fragment
+
 
 *Week 4*
 TODO list;
