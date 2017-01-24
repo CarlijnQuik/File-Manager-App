@@ -57,13 +57,16 @@ import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.query.Query;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+
 import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.drive.DriveRequest;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
@@ -91,7 +94,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
 
     public GoogleApiClient googleApiClient;
     public GoogleSignInOptions googleSignInOptions;
-    public GoogleApiClient driveGoogleApiClient;
     GoogleAccountCredential driveCredential;
     SharedPreferences prefs;
 
@@ -137,16 +139,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
         }
         googleApiClient.connect();
 
-        if (driveGoogleApiClient == null) {
-            driveGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .addApi(Drive.API)
-                    .addScope(Drive.SCOPE_FILE)
-                    .addOnConnectionFailedListener(this)
-                    .addConnectionCallbacks(this)
-                    .build();
-        }
-        driveGoogleApiClient.connect();
-
         if (driveCredential == null) {
             driveCredential = GoogleAccountCredential.usingOAuth2(
                     this.getActivity(), Arrays.asList(SCOPES))
@@ -187,7 +179,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
         super.onStart();
 
         googleApiClient.connect();
-        driveGoogleApiClient.connect();
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
 
@@ -215,7 +206,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
         super.onStop();
         googleApiClient.stopAutoManage(getActivity());
         googleApiClient.disconnect();
-        driveGoogleApiClient.disconnect();
     }
 
     // [START onActivityResult]
@@ -226,28 +216,16 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-
+            GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
+            driveCredential.setSelectedAccount(googleSignInAccount != null ? googleSignInAccount.getAccount() : null);
+            new ListDriveFiles(driveCredential).execute();
             handleSignInResult(result);
         }
-        if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
-            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-            if (accountName != null) {
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("accountName", accountName);
-                editor.apply();
-                driveCredential.setSelectedAccountName(accountName);
 
-                new MakeRequestTask(driveCredential).execute();
-            }
-
-
-        }
 
 
     }
     // [END onActivityResult]
-
-
 
     // [START handleSignInResult]
     private void handleSignInResult(GoogleSignInResult result) {
@@ -266,7 +244,8 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
 
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
-        startActivityForResult(driveCredential.newChooseAccountIntent(),REQUEST_ACCOUNT_PICKER);
+
+
 
 
     }
@@ -283,6 +262,8 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
                         // [END_EXCLUDE]
                     }
                 });
+
+        driveFiles.clear();
     }
     // [END signOut]
 
@@ -346,92 +327,8 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
             case R.id.bSignOut:
                 signOut();
                 break;
-            case R.id.bCreate:
-                createFile();
-                Query query = new Query.Builder().build();
-                Drive.DriveApi.query(driveGoogleApiClient, query).setResultCallback(metadataBufferCallback);
-                break;
         }
     }
-
-    public void createFile(){
-        Drive.DriveApi.newDriveContents(driveGoogleApiClient).setResultCallback(driveContentsCallback);
-    }
-
-    /**
-     * Appends the retrieved results to the result buffer.
-     */
-    private final ResultCallback<MetadataBufferResult> metadataBufferCallback = new
-            ResultCallback<MetadataBufferResult>() {
-                @Override
-                public void onResult(MetadataBufferResult result) {
-                    if (!result.getStatus().isSuccess()) {
-                        return;
-                    }
-                    MetadataBuffer mdb = null;
-                    try {
-                        mdb = result.getMetadataBuffer();
-                        if (mdb != null) for (Metadata md : mdb) {
-                            if (md == null || !md.isDataValid()) continue;
-                            md.getDriveId();
-                            Log.d("string driveid buffer", md.getDriveId().toString());
-                        }
-                    } finally {
-                        if (mdb != null) mdb.close();
-                    }
-
-
-                }
-            };
-
-
-
-    final private ResultCallback<DriveContentsResult> driveContentsCallback = new
-            ResultCallback<DriveContentsResult>() {
-                @Override
-                public void onResult(DriveContentsResult result) {
-                    if (!result.getStatus().isSuccess()) {
-                        return;
-                    }
-                    final DriveContents driveContents = result.getDriveContents();
-
-                    // Perform I/O off the UI thread.
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            // write content to DriveContents
-                            OutputStream outputStream = driveContents.getOutputStream();
-                            Writer writer = new OutputStreamWriter(outputStream);
-                            try {
-                                writer.write("Hello World!");
-                                writer.close();
-                            } catch (IOException e) {
-                            }
-
-                            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                    .setTitle("New file")
-                                    .setMimeType("text/plain")
-                                    .setStarred(true).build();
-
-                            // create a file on root folder
-                            Drive.DriveApi.getRootFolder(driveGoogleApiClient)
-                                    .createFile(driveGoogleApiClient, changeSet, driveContents)
-                                    .setResultCallback(fileCallback);
-                        }
-                    }.start();
-                }
-            };
-
-    final private ResultCallback<DriveFileResult> fileCallback = new
-            ResultCallback<DriveFileResult>() {
-                @Override
-                public void onResult(DriveFileResult result) {
-                    if (!result.getStatus().isSuccess()) {
-                        return;
-                    }
-                    tvStatus.setText(result.getDriveFile().getDriveId().toString());
-                }
-            };
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -443,74 +340,7 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
 
     }
 
-    /**
-     * An asynchronous task that handles the Drive API call.
-     * Placing the API calls in their own task ensures the UI stays responsive.
-     */
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.drive.Drive mService = null;
-        private Exception mLastError = null;
 
-        MakeRequestTask(GoogleAccountCredential credential) {
-            HttpTransport transport = AndroidHttp.newCompatibleTransport();
-            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-            mService = new com.google.api.services.drive.Drive.Builder(transport, jsonFactory, credential)
-                    .setApplicationName("BliFi")
-                    .build();
-        }
-
-        /**
-         * Background task to call Drive API, no parameters needed for this task.
-         */
-        @Override
-        protected List<String> doInBackground(Void... params) {
-            try {
-                return getDataFromApi();
-            } catch (Exception e) {
-                mLastError = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        /**
-         * Retrieve the files from Google Drive.
-         */
-        public List<String> getDataFromApi() throws IOException {
-            List<String> fileInfo = new ArrayList<>();
-
-            FileList result = mService.files().list()
-                    .setFields("nextPageToken, files")
-                    .execute();
-            List<File> files = result.getFiles();
-
-            if (files != null) {
-
-
-                for (File file : files) {
-                    fileInfo.add(String.format("%s (%s)\n", file.getName(), file.getId()));
-                    Log.d("string driveFile", file.getId());
-                    Log.d("string driveFile", file.getName());
-
-                    driveFiles.add(new FileObject(file, null, "DRIVE", "file"));
-
-                }
-
-
-            }
-
-            return fileInfo;
-        }
-
-        @Override
-        protected void onPostExecute(List<String> output) {
-            Log.d("string yes", "yes");
-
-
-        }
-
-
-    }
 }
 
 

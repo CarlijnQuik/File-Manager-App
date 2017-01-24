@@ -6,50 +6,6 @@
     android:layout_height="100dp">
 
     <TextView
-        android:text="@string/name_availability"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:id="@+id/tvFilename"
-        android:layout_marginTop="12dp"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/ivType"
-        android:layout_above="@+id/tvType" />
-
-    <ImageButton
-        android:contentDescription="@string/image_display"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:padding="5dp"
-        android:id="@+id/ibToolbar"
-        android:background="@drawable/menu_moreoverflow_normal_holo_light"
-        android:layout_alignBottom="@+id/checkBox"
-        android:layout_toRightOf="@+id/ivLocation"
-        android:layout_toEndOf="@+id/ivLocation" />
-
-    <CheckBox
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:id="@+id/checkBox"
-        android:visibility="visible"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/ibToolbar"
-        android:layout_toEndOf="@+id/ibToolbar" />
-
-    <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@drawable/question_mark"
-        android:contentDescription="@string/image_display"
-        android:id="@+id/ivLocation"
-        android:background="@null"
-        android:padding="5dp"
-        android:layout_alignTop="@+id/ibToolbar"
-        android:layout_toRightOf="@+id/tvFilename"
-        android:layout_toEndOf="@+id/tvFilename" />
-
-    <TextView
         android:text="@string/filetype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,5 +28,53 @@
         android:layout_alignLeft="@+id/tvType"
         android:layout_alignStart="@+id/tvType"
         android:layout_above="@+id/tvType" />
+
+    <CheckBox
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/checkBox"
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/ibToolbar"
+        android:layout_toEndOf="@+id/ibToolbar" />
+
+    <TextView
+        android:text="@string/name_availability"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:id="@+id/tvFilename"
+        android:layout_above="@+id/tvType"
+        android:layout_toLeftOf="@+id/ivLocation"
+        android:layout_toRightOf="@+id/ivType"
+        android:layout_toEndOf="@+id/ivType" />
+
+    <ImageButton
+        android:contentDescription="@string/image_display"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="5dp"
+        android:id="@+id/ibToolbar"
+        android:background="@drawable/menu_moreoverflow_normal_holo_light"
+        android:layout_alignTop="@+id/checkBox"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="14dp"
+        android:layout_marginEnd="14dp" />
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/question_mark"
+        android:contentDescription="@string/image_display"
+        android:id="@+id/ivLocation"
+        android:background="@null"
+        android:padding="5dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginEnd="23dp"
+        android:layout_alignTop="@+id/ibToolbar"
+        android:layout_toLeftOf="@+id/ibToolbar"
+        android:layout_toStartOf="@+id/ibToolbar" />
 
 </RelativeLayout>
