@@ -1,10 +1,14 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,17 +34,21 @@ import com.google.api.services.drive.DriveScopes;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
  * profile, which also adds a request dialog to access the user's Google Drive.
  */
-public class DriveFragment extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class SignInFragment extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private static final int RC_SIGN_IN = 9001;
 
     public GoogleApiClient googleApiClient;
     public GoogleSignInOptions googleSignInOptions;
     public GoogleAccountCredential driveCredential;
+    SharedPreferences prefs;
+    String accountName;
 
     private TextView tvStatus;
     private Button bSignIn;
@@ -48,35 +56,31 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
     private ProgressDialog progressDialog;
     private static final String[] SCOPES = {DriveScopes.DRIVE};
 
-    ArrayList<FileObject> driveFiles;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (googleSignInOptions == null) {
-            googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestScopes(new Scope(Scopes.DRIVE_FILE))
-                    .requestEmail()
-                    .build();
-        }
+        prefs = this.getActivity().getSharedPreferences("Accounts", MODE_PRIVATE);
 
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .enableAutoManage(this.getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                    .build();
+        // get signed in account if there
+        accountName = prefs.getString("accountName", null);
 
-        }
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope(Scopes.DRIVE_FILE))
+                .requestEmail()
+                .build();
+
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                .build();
+
+        driveCredential = GoogleAccountCredential.usingOAuth2(
+                this.getActivity(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
+
         googleApiClient.connect();
 
-        if (driveCredential == null) {
-            driveCredential = GoogleAccountCredential.usingOAuth2(
-                    this.getActivity(), Arrays.asList(SCOPES))
-                    .setBackOff(new ExponentialBackOff());
-        }
 
-        new ListDriveFiles(driveCredential).execute();
 
 
     }
@@ -104,15 +108,12 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
     public void onStart() {
         super.onStart();
 
-        googleApiClient.connect();
-
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
 
         if (opr.isDone()) {
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
             GoogleSignInResult result = opr.get();
-            new ListDriveFiles(driveCredential).execute();
             handleSignInResult(result);
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
@@ -129,12 +130,6 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
         }
     }
 
-    public void onDestroy() {
-        super.onDestroy();
-        googleApiClient.stopAutoManage(getActivity());
-        googleApiClient.disconnect();
-    }
-
     // [START onActivityResult]
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -144,8 +139,15 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
-            driveCredential.setSelectedAccount(googleSignInAccount != null ? googleSignInAccount.getAccount() : null);
-            new ListDriveFiles(driveCredential).execute();
+            if(accountName == null){
+                accountName = googleSignInAccount != null ? googleSignInAccount.getEmail() : null;
+                Log.d("string accountname", accountName);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("accountName", accountName);
+                editor.apply();
+                driveCredential.setSelectedAccountName(accountName);
+                new ListDriveFiles(driveCredential).execute();
+            }
             handleSignInResult(result);
         }
 

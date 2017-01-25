@@ -1,10 +1,13 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,8 +31,16 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpGet;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 /**
  * The adapter of the list view, handles all changes made to the file objects
@@ -40,11 +51,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     GoogleApiClient driveGoogleApiClient;
     GoogleAccountCredential driveCredential;
     private static final String[] SCOPES = {DriveScopes.DRIVE};
-    public com.google.api.services.drive.Drive mService;
+    String accountName;
     TextView btvFilename;
     TextView btvType;
     ImageView bivLocation;
     ImageView bivType;
+    SharedPreferences prefs;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView tvFilename;
@@ -68,10 +80,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         }
     }
 
+    Activity activity;
     Context context;
     ArrayList<FileObject> files;
 
-    public FileAdapter(Context context, ArrayList<FileObject> files) {
+    public FileAdapter(Activity activity, Context context, ArrayList<FileObject> files) {
+        this.activity = activity;
         this.context = context;
         this.files = files;
     }
@@ -102,6 +116,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         // Get the data model based on position
         final FileObject fileObject = files.get(position);
 
+        prefs = activity.getPreferences(getContext().MODE_PRIVATE);
+
+        // get signed in account if there
+        accountName = prefs.getString("accountName", null);
+
         if (driveGoogleApiClient == null) {
             driveGoogleApiClient = new GoogleApiClient.Builder(getContext())
                     .addApi(Drive.API)
@@ -113,13 +132,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         if (driveCredential == null) {
             driveCredential = GoogleAccountCredential.usingOAuth2(
                     getContext(), Arrays.asList(SCOPES))
+                    .setSelectedAccountName(accountName)
                     .setBackOff(new ExponentialBackOff());
         }
-        HttpTransport transport = AndroidHttp.newCompatibleTransport();
-        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        mService = new com.google.api.services.drive.Drive.Builder(transport, jsonFactory, driveCredential)
-                .setApplicationName("BliFi")
-                .build();
+        new ListDriveFiles(driveCredential);
 
         btvFilename = viewHolder.tvFilename;
         btvType = viewHolder.tvType;
@@ -185,10 +201,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 final FileObject fileObject = files.get(positionClick);
                 File file = fileObject.getFile();
                 com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
-                Log.d("string menu onclick", file.getAbsolutePath());
                 if (driveFile != null) {
-                  //download
-
+                    //download
+                    java.io.File folder = new java.io.File(System.getenv("EXTERNAL_STORAGE"));
+                    new DownloadAsyncTask(driveFile, folder);
+                    Log.d("string downloaded", "downloaded" + driveFile.getName());
 
                 }
 
@@ -274,7 +291,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         File file = fileObject.getFile();
         com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
 
-        if (this.files != null) {
+        if (files != null) {
             // set views according to file properties
             if (fileObject.getLocation() != null) {
                 if (fileObject.getLocation().equals("SD")) {
@@ -357,6 +374,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         }
 
     }
+
+
 
 
 }

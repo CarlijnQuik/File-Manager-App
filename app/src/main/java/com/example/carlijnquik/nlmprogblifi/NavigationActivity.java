@@ -1,48 +1,34 @@
 package com.example.carlijnquik.nlmprogblifi;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.credentials.CredentialsApi;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -54,9 +40,11 @@ import java.util.Arrays;
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
-    DriveFragment driveFragment;
+    SignInFragment signInFragment;
     GoogleApiClient driveGoogleApiClient;
     FloatingActionButton fab;
+    String accountName;
+    SharedPreferences prefs;
     android.widget.SearchView searchView;
     GoogleAccountCredential driveCredential;
     private static final String[] SCOPES = {DriveScopes.DRIVE};
@@ -65,6 +53,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_navigation_1);
+
+        prefs = this.getSharedPreferences("Accounts", MODE_PRIVATE);
+        accountName = prefs.getString("accountName", null);
 
         searchView = (android.widget.SearchView) findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
@@ -95,11 +86,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                     .addScope(Drive.SCOPE_FILE)
                     .build();
         }
-        driveGoogleApiClient.connect();
+        if(!driveGoogleApiClient.isConnected()) {
+            driveGoogleApiClient.connect();
+        }
 
         if (driveCredential == null) {
             driveCredential = GoogleAccountCredential.usingOAuth2(
                     this, Arrays.asList(SCOPES))
+                    .setSelectedAccountName(accountName)
                     .setBackOff(new ExponentialBackOff());}
 
         new ListDriveFiles(driveCredential).execute();
@@ -118,13 +112,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         // set the fragment initially
         InternalFilesFragment fragment = new InternalFilesFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putString("filePath", null);
         bundle.putString("fileLocation", null);
         fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.drawer_content_shown_3, fragment);
-        fragmentTransaction.commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
+
+        signInFragment = new SignInFragment();
 
     }
 
@@ -150,7 +144,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
         if (!adapterList.isEmpty()) {
 
-            FileAdapter searchAdapter = new FileAdapter(getApplicationContext(), adapterList);
+            FileAdapter searchAdapter = new FileAdapter(this, getApplicationContext(), adapterList);
             recyclerView.setAdapter(searchAdapter);
         }
         else {
@@ -211,13 +205,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
             // set the fragment
             InternalFilesFragment fragment = new InternalFilesFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             Bundle bundle = new Bundle();
             bundle.putString("filePath", null);
             bundle.putString("fileLocation", null);
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.drawer_content_shown_3, fragment);
-            fragmentTransaction.commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
 
             fab = (FloatingActionButton) findViewById(R.id.fab_2);
             fab.setVisibility(View.VISIBLE);
@@ -234,10 +226,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             // in the future this will be a "add account" button
             fab.setVisibility(View.GONE);
             searchView.setVisibility(View.GONE);
-            driveFragment = new DriveFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.drawer_content_shown_3, driveFragment);
-            fragmentTransaction.commit();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, signInFragment).commit();
 
         }
 
@@ -319,8 +309,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                             }
                         };
 
-
             };
+
+
 
 
 }

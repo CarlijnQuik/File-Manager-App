@@ -86,7 +86,7 @@ public class InternalFilesFragment extends Fragment {
 
         // set the adapter
         rvFiles = (RecyclerView) view.findViewById(R.id.rvFiles);
-        adapter = new FileAdapter(getContext(), fileList);
+        adapter = new FileAdapter(getActivity(), getContext(), fileList);
         rvFiles.setAdapter(adapter);
 
         // Set layout manager to position the items

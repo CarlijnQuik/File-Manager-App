@@ -4,6 +4,9 @@ package com.example.carlijnquik.nlmprogblifi;
  * Created by Carlijn Quik on 1/24/2017.
  */
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -38,13 +41,11 @@ public class ListDriveFiles extends AsyncTask<Void, Void, List<String>> {
     private com.google.api.services.drive.Drive mService = null;
     private Exception mLastError = null;
     ArrayList<FileObject> driveFiles;
-    String token = "615429528636-unmkbg0t8b9g37kb69f6itsl4hlmng3j.apps.googleusercontent.com";
     String id;
     String name;
     File downloadFile;
 
     ListDriveFiles(GoogleAccountCredential credential) {
-
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         mService = new com.google.api.services.drive.Drive.Builder(transport, jsonFactory, credential)
@@ -57,6 +58,7 @@ public class ListDriveFiles extends AsyncTask<Void, Void, List<String>> {
      */
     @Override
     protected List<String> doInBackground(Void... params) {
+
         try {
             return getDataFromApi();
         } catch (Exception e) {
@@ -100,8 +102,7 @@ public class ListDriveFiles extends AsyncTask<Void, Void, List<String>> {
 
 
         }
-        java.io.File folder = new java.io.File(System.getenv("EXTERNAL_STORAGE"));
-        download(mService, token, downloadFile, folder);
+
 
         return fileInfo;
     }
@@ -111,41 +112,11 @@ public class ListDriveFiles extends AsyncTask<Void, Void, List<String>> {
         Log.d("string yes", "yes");
 
 
+
     }
 
-    private java.io.File download(Drive drive, String token, File gFile, java.io.File jFolder) throws IOException {
-        if (gFile.getWebContentLink() != null && gFile.getWebContentLink().length() > 0) {
-            if (jFolder == null) {
-                jFolder = Environment.getExternalStorageDirectory();
-            }
-            try {
 
-                HttpClient client = new DefaultHttpClient();
-                HttpGet get = new HttpGet(gFile.getWebContentLink());
-                get.setHeader("Authorization", "Bearer " + token);
-                HttpResponse response = client.execute(get);
 
-                InputStream inputStream = response.getEntity().getContent();
-                java.io.File jFile = new java.io.File(jFolder.getAbsolutePath() + "/" + gFile.getName()); // getGFileName() is my own method... it just grabs originalFilename if it exists or title if it doesn't.
-                FileOutputStream fileStream = new FileOutputStream(jFile);
-                byte buffer[] = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) > 0) {
-                    fileStream.write(buffer, 0, length);
-                }
-                fileStream.close();
-                inputStream.close();
-                Log.d("string dFile", jFile.getName());
-                return jFile;
-            } catch (IOException e) {
-                // Handle IOExceptions here...
-                return null;
-            }
-        } else {
-            // Handle the case where the file on Google Drive has no length here.
-            return null;
-        }
-    }
 }
 
 
