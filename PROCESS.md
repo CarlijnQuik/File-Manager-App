@@ -122,6 +122,9 @@ TODO list;
 - Creating files works again with the floating action button in the file fragment
 - Trying to get the search function right, still struggling with retaining the signed in user and his or her files
 
+#### Day 6
+- The problem is that the Google Drive API only lets you work with the files or folders the user has created within your App and not the ones they create via the Drive itself, now looking for a way to list files within a folder created somewhere else
+
 *Week 4*
 TODO list;
 - Design / code style (week 4)
