@@ -8,6 +8,7 @@
 - http://stackoverflow.com/questions/7053738/what-is-meant-by-ems-android-textview
 - http://stackoverflow.com/questions/26346727/android-material-design-button-styles
 - https://www.codeproject.com/Tips/845894/How-to-make-EditText-With-Border-and-Gradient-Back
+- https://github.com/futurice/android-best-practices#deephierarchy
 
 *Navigation drawer and fragments*
 - http://www.vogella.com/tutorials/AndroidActionBar/article.html
@@ -46,6 +47,8 @@
 - https://github.com/googledrive/android-demos/blob/master/app/src/main/java/com/google/android/gms/drive/sample/demo/CreateFileActivity.java
 - https://developers.google.com/drive/android/intro
 - http://stackoverflow.com/questions/12164024/android-open-and-save-files-to-from-google-drive-sdk
+- https://github.com/googledrive/android-demos/tree/master/app/src/main/java/com/google/android/gms/drive/sample/demo
+- https://www.numetriclabz.com/integrate-google-drive-in-android-tutorial/
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
@@ -88,3 +91,8 @@ https://www.google.nl/search?q=file+format+icons&client=firefox-b-ab&source=lnms
 
 *Sign out button*
 https://pixabay.com/p-297018/?no_redirect
+
+*Google icons*
+http://icons.iconarchive.com/icons/dtafalonso/android-lollipop/512/Docs-icon.png
+
+
