@@ -100,13 +100,12 @@
 *Week 3*
 TODO list;
 - Enable the user to download Drive files
-- Enable the user to "open with" Drive Files
+- Enable the user to "open with" Drive Files (done for url in explorer or Drive App)
 - Enable the user to remove files
 - Enable the user to rename files
 - Enable the user to select (all) files 
 - Enable the user to move files
-- Enable the user to create a file
-
+- Enable the user to create a file (done)
 
 #### Day 4
 - Created a week 3 and 4 TODO list
@@ -121,15 +120,18 @@ TODO list;
 - Tried all morning to enable the user to only log in once, which worked in the end but still buggy
 - Enabled user to log in once, but now the "create file" button is not working, probably because the api client is in another fragment
 - Creating files works again with the floating action button in the file fragment
+- Trying to get the search function right, still struggling with retaining the signed in user and his or her files
+
+#### Day 6
+- The problem is that the Google Drive API only lets you work with the files or folders the user has created within your App and not the ones they create via the Drive itself, now looking for a way to list files within a folder created somewhere else
+- Filetype of Google files can be recognized
 
 *Week 4*
 TODO list;
 - Design / code style (week 4)
-- Make the spinner functional as in the Google Drive App (week 4)
 - Be able to show the character and username (week 4)
 - Enable the user to sort files (week 4)
 - Show the trash can of files (week 4)
-- Show the right file type of Drive files (week 4)
 - Enable the user to search through files (week 4)
 
 
