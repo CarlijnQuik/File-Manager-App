@@ -96,6 +96,8 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
     protected void onPostExecute(java.io.File result) {
         super.onPostExecute(result);
 
+        Log.d("string downloaded", "downloaded!");
+
 
 
     }

@@ -204,7 +204,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 if (driveFile != null) {
                     //download
                     java.io.File folder = new java.io.File(System.getenv("EXTERNAL_STORAGE"));
-                    new DownloadAsyncTask(driveFile, folder);
+                    new DownloadAsyncTask(driveFile, folder).execute();
                     Log.d("string downloaded", "downloaded" + driveFile.getName());
 
                 }
