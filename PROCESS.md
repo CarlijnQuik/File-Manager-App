@@ -129,11 +129,11 @@ TODO list;
 
 *Week 4*
 TODO list;
-- Design / code style (week 4)
-- Be able to show the character and username (week 4)
-- Enable the user to sort files (week 4)
-- Show the trash can of files (week 4)
-- Enable the user to search through files (week 4)
+- Design / code style 
+- Be able to show the character and username 
+- Enable the user to sort files 
+- Show the trash can of files 
+- Enable the user to search through files 
 - Debugging: think about what happens when a user for instance loses connection
 
 
