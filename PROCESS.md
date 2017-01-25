@@ -99,13 +99,14 @@
 
 *Week 3*
 TODO list;
-- Enable the user to download Drive files
+- Enable the user to download Drive files (done)
 - Enable the user to "open with" Drive Files (done for url in explorer or Drive App)
 - Enable the user to remove files
 - Enable the user to rename files
 - Enable the user to select (all) files 
 - Enable the user to move files
 - Enable the user to create a file (done)
+- Enable the user to open a folder
 
 #### Day 4
 - Created a week 3 and 4 TODO list
@@ -126,7 +127,7 @@ TODO list;
 - The problem is that the Google Drive API only lets you work with the files or folders the user has created within your App and not the ones they create via the Drive itself, now looking for a way to list files within a folder created somewhere else
 - Filetype of Google files can be recognized: so folders too
 - Auto sign in works, and getting the user from multiple activities
-- Opening Google Drive files in the Drive App or internet explorer works
+- Opening Google Drive files in the Drive App or internet explorer works (but folders give an error still to be resolved)
 - Downloading works!
 
 *Week 4*
