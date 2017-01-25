@@ -125,6 +125,7 @@ TODO list;
 #### Day 6
 - The problem is that the Google Drive API only lets you work with the files or folders the user has created within your App and not the ones they create via the Drive itself, now looking for a way to list files within a folder created somewhere else
 - Filetype of Google files can be recognized
+- Succeeded to download a file!
 
 *Week 4*
 TODO list;
@@ -133,6 +134,7 @@ TODO list;
 - Enable the user to sort files (week 4)
 - Show the trash can of files (week 4)
 - Enable the user to search through files (week 4)
+- Debugging: think about what happens when a user for instance loses connection
 
 
 
