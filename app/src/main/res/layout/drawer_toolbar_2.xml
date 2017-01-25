@@ -30,6 +30,9 @@
         app:layout_anchor="@+id/toolbar_2"
         android:layout_height="wrap_content" />
 
+    <include layout="@layout/drawer_content_3"
+        android:id="@+id/include" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_2"
         android:layout_width="wrap_content"
@@ -39,8 +42,5 @@
         app:srcCompat="@android:drawable/ic_menu_add"
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="bottom|right" />
-
-    <include layout="@layout/drawer_content_3"
-        android:id="@+id/include" />
 
 </android.support.design.widget.CoordinatorLayout>

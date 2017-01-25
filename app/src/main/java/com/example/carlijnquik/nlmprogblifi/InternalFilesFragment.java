@@ -11,9 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.drive.DriveScopes;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Enables the user to view and open files
@@ -27,6 +32,8 @@ public class InternalFilesFragment extends Fragment {
     RecyclerView rvFiles;
     String path;
     String location;
+    GoogleAccountCredential driveCredential;
+    private static final String[] SCOPES = {DriveScopes.DRIVE};
 
     /**
      * When creating, retrieve this instance's number from its arguments.
@@ -40,6 +47,15 @@ public class InternalFilesFragment extends Fragment {
             location = bundle.getString("fileLocation");
             Log.d("filePath", path);
         }
+
+        if (driveCredential == null) {
+            driveCredential = GoogleAccountCredential.usingOAuth2(
+                    getActivity(), Arrays.asList(SCOPES))
+                    .setBackOff(new ExponentialBackOff());}
+
+        new ListDriveFiles(driveCredential).execute();
+
+
     }
 
     @Override
@@ -64,8 +80,7 @@ public class InternalFilesFragment extends Fragment {
 
         }
         else{
-            // create an array list to put the file objects in
-            fileList.clear();
+
             getFiles(path, location);
         }
 

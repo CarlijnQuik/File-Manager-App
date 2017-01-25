@@ -76,6 +76,8 @@ public class DriveFragment extends Fragment implements View.OnClickListener, Goo
                     .setBackOff(new ExponentialBackOff());
         }
 
+        new ListDriveFiles(driveCredential).execute();
+
 
     }
 

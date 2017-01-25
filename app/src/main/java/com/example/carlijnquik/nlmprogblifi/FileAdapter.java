@@ -18,15 +18,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.drive.DriveScopes;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The adapter of the list view, handles all changes made to the file objects
  */
 
 public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
+
+    GoogleApiClient driveGoogleApiClient;
+    GoogleAccountCredential driveCredential;
+    private static final String[] SCOPES = {DriveScopes.DRIVE};
+    public com.google.api.services.drive.Drive mService;
+    TextView btvFilename;
+    TextView btvType;
+    ImageView bivLocation;
+    ImageView bivType;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView tvFilename;
@@ -61,6 +79,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     public Context getContext(){
         return this.context;
     }
+    public ArrayList<FileObject> getFiles(){
+        return this.files;
+    }
 
     @Override
     public FileAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -81,77 +102,31 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         // Get the data model based on position
         final FileObject fileObject = files.get(position);
 
-        TextView btvFilename = viewHolder.tvFilename;
-        TextView btvType = viewHolder.tvType;
-        ImageView bivLocation = viewHolder.ivLocation;
-        ImageView bivType = viewHolder.ivType;
-
-        // Set item views based on views and data model
-        File file = fileObject.getFile();
-        com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
-
-        if (files != null) {
-            // set views according to file properties
-            if (fileObject.getLocation() != null) {
-                if (fileObject.getLocation().equals("SD")) {
-                    bivLocation.setImageResource(R.drawable.sd_card);
-                }
-                if (fileObject.getLocation().equals("PHONE")) {
-                    bivLocation.setImageResource(R.drawable.phone);
-                }
-                if (fileObject.getLocation().equals("DRIVE")) {
-                    bivLocation.setImageResource(R.drawable.google_drive_logo);
-                }
-            }
-            if (file != null) {
-                btvFilename.setText(file.getName());
-
-                fileObject.type = fileExt(file.getName());
-                if(file.isDirectory()){
-                    fileObject.type = "folder";
-                }
-
-                Log.d("string filename", file.getName());
-                Log.d("string filetype", fileObject.getType());
-
-                btvType.setText(fileObject.getType());
-            }
-            if (driveFile != null) {
-                btvFilename.setText(driveFile.getName());
-
-                fileObject.type = fileExt(driveFile.getName());
-
-                Log.d("string drivefilename", driveFile.getName());
-                Log.d("string drivefiletype", fileObject.getType());
-
-                btvType.setText(fileObject.getType());
-            }
-            if (fileObject.getType().equals("folder")) {
-                bivType.setImageResource(R.drawable.folder_icon);
-            }
-            if (fileObject.getType().equals("doc")) {
-                bivType.setImageResource(R.drawable.doc_icon);
-            }
-            if (fileObject.getType().equals("txt")) {
-                bivType.setImageResource(R.drawable.txt_icon);
-            }
-            if (fileObject.getType().equals("xls")) {
-                bivType.setImageResource(R.drawable.xls_icon);
-            }
-            if (fileObject.getType().equals("pdf")) {
-                bivType.setImageResource(R.drawable.pdf_icon);
-            }
-            if (fileObject.getType().equals("ppt")) {
-                bivType.setImageResource(R.drawable.ppt_icon);
-            }
-            if (fileObject.getType().equals("jpg")) {
-                bivType.setImageResource(R.drawable.jpg_icon);
-            }
-            if (fileObject.getType().equals("png")) {
-                bivType.setImageResource(R.drawable.png_icon);
-            }
-
+        if (driveGoogleApiClient == null) {
+            driveGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addApi(Drive.API)
+                    .addScope(Drive.SCOPE_FILE)
+                    .build();
         }
+        driveGoogleApiClient.connect();
+
+        if (driveCredential == null) {
+            driveCredential = GoogleAccountCredential.usingOAuth2(
+                    getContext(), Arrays.asList(SCOPES))
+                    .setBackOff(new ExponentialBackOff());
+        }
+        HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        mService = new com.google.api.services.drive.Drive.Builder(transport, jsonFactory, driveCredential)
+                .setApplicationName("BliFi")
+                .build();
+
+        btvFilename = viewHolder.tvFilename;
+        btvType = viewHolder.tvType;
+        bivLocation = viewHolder.ivLocation;
+        bivType = viewHolder.ivType;
+
+        setLayout(fileObject);
 
         // decide what clicking a file does
         viewHolder.itemView.setOnClickListener(new View.OnClickListener(){
@@ -161,9 +136,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 final FileObject fileObject = files.get(positionClick);
                 File file = fileObject.getFile();
                 com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
-                Log.d("string file onclick", file.getAbsolutePath());
 
                 if(file != null) {
+                    Log.d("string file onclick", file.getAbsolutePath());
                     File list = new File(file.getAbsolutePath());
                     File[] files = list.listFiles();
 
@@ -186,11 +161,55 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
 
                 }
+                if(driveFile != null){
+                    Log.d("string file onclick", driveFile.getName());
+                    Log.d("string link", driveFile.getWebContentLink());
+                    openDriveFile(fileObject);
+
+                }
+                if(driveFile == null){
+                    //
+                }
+
+
 
 
 
             }
         });
+
+        viewHolder.ibToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int positionClick = viewHolder.getAdapterPosition();
+                final FileObject fileObject = files.get(positionClick);
+                File file = fileObject.getFile();
+                com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
+                Log.d("string menu onclick", file.getAbsolutePath());
+                if (driveFile != null) {
+                  //download
+
+
+                }
+
+            }
+        });
+
+    }
+
+    public void openDriveFile(FileObject fileObject){
+        com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
+        String url = "https://drive.google.com/open?id=" + driveFile.getId();
+       //&quot;https://drive.google.com/open?id=&quot;+ mFileId.getResourceId();
+
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        newIntent.setData(Uri.parse(url));
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            getContext().startActivity(newIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getContext(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -245,6 +264,96 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         if (context instanceof NavigationActivity) {
             NavigationActivity navigationActivity = (NavigationActivity) context;
             navigationActivity.switchContent(id, internalFilesFragment);
+        }
+
+    }
+
+    public void setLayout(FileObject fileObject){
+
+        // set item views based on views and data model
+        File file = fileObject.getFile();
+        com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
+
+        if (this.files != null) {
+            // set views according to file properties
+            if (fileObject.getLocation() != null) {
+                if (fileObject.getLocation().equals("SD")) {
+                    bivLocation.setImageResource(R.drawable.sd_card);
+                }
+                if (fileObject.getLocation().equals("PHONE")) {
+                    bivLocation.setImageResource(R.drawable.phone);
+                }
+                if (fileObject.getLocation().equals("DRIVE")) {
+                    bivLocation.setImageResource(R.drawable.google_drive_logo);
+                }
+            }
+            if (file != null) {
+                btvFilename.setText(file.getName());
+
+                fileObject.type = fileExt(file.getName());
+                if (file.isDirectory()) {
+                    fileObject.type = "folder";
+                }
+
+                Log.d("string filename", file.getName());
+                Log.d("string filetype", fileObject.getType());
+
+                btvType.setText(fileObject.getType());
+            }
+            if (driveFile != null) {
+                btvFilename.setText(driveFile.getName());
+
+                fileObject.type = driveFile.getMimeType();
+
+                Log.d("string drivefilename", driveFile.getName());
+                Log.d("string drivefiletype", fileObject.getType());
+
+                btvType.setText(fileObject.getType());
+            }
+            String type = fileObject.getType();
+            if (type.equals("folder") || type.equals("application/vnd.google-apps.folder")) {
+                bivType.setImageResource(R.drawable.folder_icon);
+            }
+            if (type.equals("doc") || type.equals("docx") || type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                bivType.setImageResource(R.drawable.doc_icon);
+            }
+            if (type.equals("txt") || type.equals("text/plain")) {
+                bivType.setImageResource(R.drawable.txt_icon);
+            }
+            if (type.equals("xls") || type.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+                bivType.setImageResource(R.drawable.xls_icon);
+            }
+            if (type.equals("pdf") || type.equals("application/pdf")) {
+                bivType.setImageResource(R.drawable.pdf_icon);
+            }
+            if (type.equals("ppt") || type.equals("application/vnd.openxmlformats-officedocument.presentationml.presentation") || type.equals("pptx")) {
+                bivType.setImageResource(R.drawable.ppt_icon);
+            }
+            if (type.equals("jpg") || type.equals("image/jpeg")) {
+                bivType.setImageResource(R.drawable.jpg_icon);
+            }
+            if (type.equals("png") || type.equals("image/png")) {
+                bivType.setImageResource(R.drawable.png_icon);
+            }
+            if (type.equals("zip") || type.equals("application/zip")){
+                bivType.setImageResource(R.drawable.zip_icon);
+            }
+            if (type.equals("mp4") || type.equals("video/mp4")){
+                bivType.setImageResource(R.drawable.mov_icon);
+            }
+            if (type.equals("application/vnd.google-apps.presentation")){
+                bivType.setImageResource(R.drawable.google_pres_icon);
+            }
+            if(type.equals("application/vnd.google-apps.spreadsheet")){
+                bivType.setImageResource(R.drawable.google_sheets_icon);
+            }
+            if(type.equals("application/vnd.google-apps.document")){
+                bivType.setImageResource(R.drawable.google_docs_icon);
+            }
+            if(type.equals("mp3")){
+                bivType.setImageResource(R.drawable.mp3_icon);
+            }
+
         }
 
     }
