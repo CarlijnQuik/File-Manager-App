@@ -49,6 +49,7 @@
 - http://stackoverflow.com/questions/12164024/android-open-and-save-files-to-from-google-drive-sdk
 - https://github.com/googledrive/android-demos/tree/master/app/src/main/java/com/google/android/gms/drive/sample/demo
 - https://www.numetriclabz.com/integrate-google-drive-in-android-tutorial/
+- https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/IdTokenActivity.java
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
@@ -57,6 +58,9 @@
 
 *Singleton*
 - http://stackoverflow.com/questions/24643789/why-is-a-singleton-arraylist-affected-when-indirectly-changing-one-of-its-items
+
+*Synchronizing*
+- https://medium.com/@haarman.niek/a-dive-into-async-await-on-android-5a6699029aa3#.skmmk2280
 
 *Debugging*
 - http://stackoverflow.com/questions/18578356/classcastexception-android-widget-button-to-com-google-android-gms-common-signin
