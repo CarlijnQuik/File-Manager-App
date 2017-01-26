@@ -53,6 +53,7 @@
 - http://stackoverflow.com/questions/34099208/google-sign-in-requestidtoken-returns-null/34146759#34146759
 - http://stackoverflow.com/questions/33546646/com-google-api-services-drive-or-com-google-android-gms-drive-feeling-confused
 - http://stackoverflow.com/questions/16115109/google-drive-on-android-error-java-lang-illegalargumentexception-the-name-must/41511391#41511391
+- https://developer.android.com/reference/android/app/Activity.html#RESULT_OK
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
