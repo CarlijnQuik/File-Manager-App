@@ -130,6 +130,10 @@ TODO list;
 - Opening Google Drive files in the Drive App or internet explorer works (but folders give an error still to be resolved)
 - Downloading works!
 
+#### Day 7
+- Found out downloading seemed to work but the files could not be opened/read
+- It turned out the auth token needed to be retreived using the web client ID instead of Android, now a token can be retreived to be sent with the HTTP request
+
 *Week 4*
 TODO list;
 - Design / code style 
