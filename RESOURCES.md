@@ -51,6 +51,7 @@
 - https://www.numetriclabz.com/integrate-google-drive-in-android-tutorial/
 - https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/IdTokenActivity.java
 - http://stackoverflow.com/questions/34099208/google-sign-in-requestidtoken-returns-null/34146759#34146759
+- http://stackoverflow.com/questions/33546646/com-google-api-services-drive-or-com-google-android-gms-drive-feeling-confused
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
