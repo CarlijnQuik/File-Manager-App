@@ -37,7 +37,7 @@
 - http://stackoverflow.com/questions/5414657/extract-substring-from-a-string
 - http://stackoverflow.com/questions/6265298/action-view-intent-for-a-file-with-unknown-mimetype
 
-*Google Drive API*
+*Google Drive (REST) API and authentication*
 - https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivityWithDrive.java
 - https://developers.google.com/fit/rest/
 - https://developers.google.com/drive/v3/web/quickstart/android
@@ -50,6 +50,7 @@
 - https://github.com/googledrive/android-demos/tree/master/app/src/main/java/com/google/android/gms/drive/sample/demo
 - https://www.numetriclabz.com/integrate-google-drive-in-android-tutorial/
 - https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/IdTokenActivity.java
+- http://stackoverflow.com/questions/34099208/google-sign-in-requestidtoken-returns-null/34146759#34146759
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
