@@ -147,6 +147,7 @@ TODO list;
 
 #### Extra day
 - Decided to code for an extra day, because some bugs took me a bit too long, yet I learned to solve problems more efficiently
+- Decided that it is best to start the app with a sign in activity which redirects to the navigation drawer activity on success, so for this project the app can only handle one account
 
 *Week 4*
 TODO list;
