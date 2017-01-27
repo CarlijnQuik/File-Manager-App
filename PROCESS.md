@@ -136,7 +136,7 @@ TODO list;
 - The table below sums up the differences of the APIs I found
 
 | GDAA (newest)                                           | REST V3                                           | 
-| ------------------------------------------------------- | ------------------------------------------------- | 
+| ------------------------------------------------------- | :-----------------------------------------------: | 
 | Google Play Services                                    | Different permissions due to deeper control       |
 | Login with Google API client and sign In Options        | Log in by Google Account Credential               |   
 | Can only work with files created in the app itself      | Can work with all files                           |    
