@@ -317,6 +317,7 @@ public class GoogleSignInActivity extends Activity implements EasyPermissions.Pe
                 try {
                     token = mCredential.getToken();
 
+
                 } catch (IOException transientEx) {
                     // Network or server error, try later
                     Log.e("string net", transientEx.toString());
@@ -338,6 +339,12 @@ public class GoogleSignInActivity extends Activity implements EasyPermissions.Pe
             @Override
             protected void onPostExecute(String token) {
                 Log.i("string no", "Access token retrieved:" + token);
+                SharedPreferences settings =
+                        getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("token", token);
+                editor.apply();
+
             }
 
         };

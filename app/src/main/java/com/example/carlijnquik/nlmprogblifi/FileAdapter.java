@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -26,6 +29,7 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,7 +39,6 @@ import java.util.Arrays;
 
 public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
-    GoogleApiClient driveGoogleApiClient;
     GoogleAccountCredential driveCredential;
     private static final String[] SCOPES = {DriveScopes.DRIVE};
     String accountName;
@@ -44,6 +47,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     ImageView bivLocation;
     ImageView bivType;
     SharedPreferences prefs;
+    String token;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView tvFilename;
@@ -103,18 +107,20 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         // Get the data model based on position
         final FileObject fileObject = files.get(position);
 
-        //prefs = activity.getPreferences(getContext().MODE_PRIVATE);
+        prefs = activity.getPreferences(Context.MODE_PRIVATE);
 
         // get signed in account if there
-        //accountName = prefs.getString("accountName", null);
+        accountName = prefs.getString("accountName", null);
+        token = prefs.getString("token", null);
 
-        /*if (driveCredential == null) {
+        if (driveCredential == null) {
             driveCredential = GoogleAccountCredential.usingOAuth2(
                     getContext(), Arrays.asList(SCOPES))
                     .setSelectedAccountName(accountName)
                     .setBackOff(new ExponentialBackOff());
         }
-        new ListDriveFilesAsyncTask(driveCredential).execute();*/
+
+        //getToken();
 
         btvFilename = viewHolder.tvFilename;
         btvType = viewHolder.tvType;
@@ -176,15 +182,22 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         viewHolder.ibToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 int positionClick = viewHolder.getAdapterPosition();
                 final FileObject fileObject = files.get(positionClick);
                 File file = fileObject.getFile();
                 com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
+                Log.d("string toolbarclick", "clicked");
                 if (driveFile != null) {
                     //download
+                    Log.d("string toolbarclick", "clickeddrive");
                     java.io.File folder = new java.io.File(System.getenv("EXTERNAL_STORAGE"));
 
-                    Log.d("string downloaded", "downloaded" + driveFile.getName());
+                    if (token != null) {
+                        Log.d("string token", token);
+                        new DownloadAsyncTask(driveCredential, driveFile, folder, token).execute();
+                        Log.d("string downloaded", "downloaded" + driveFile.getName());
+                    }
 
                 }
                 if (file != null){
