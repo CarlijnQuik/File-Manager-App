@@ -9,14 +9,13 @@
 <img src="https://cloud.githubusercontent.com/assets/22945709/21845853/a353540a-d7f4-11e6-83f9-5da9875df450.png" width="400">
 #### Day 2
 - Set my personal goal for this week to finding out how to link the App with Google Drive and create the overview of files in a list
-- Started the design document: decided to immediately turn the desired sign in activity into a prototype, to give an idea of the style of the App
 - Looked into how to create an activity with a menu, search and settings option in the toolbar
 - Created the design document
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/21811271/610f8794-d74f-11e6-9336-8ef359f75a76.png" width="300">
 <img src="https://cloud.githubusercontent.com/assets/22945709/21816695/5259cfb8-d761-11e6-930b-fdab08e85a54.png" width="400">
 #### Day 3
-- Had a meeting with my peer group
+- Had the first meeting with my peer group
 - Set my goal for the day to finding out how to put the files that are in the internal storage in a list, because the entire project falls or stands with being able to use the data as pleased
 - Found out how to get the path of files and reach them, still not sure how to open, edit and delete files from the App, but made the adapter of the listView anyway because I usually get stuck on the Adapter part
 - Did indeed get stuck, the Adapter did not want to show the images, after trying it multiple ways together with Renske, the adapter finally showed the right images after putting them in the mipmap folder instead of the drawable folder and calling android:scr= in the xml file
@@ -27,16 +26,13 @@
 
 #### Day 4
 - Continued editing the code to represent all files in an adapter and be able to click on folders to see the files in it
-- Spent 4 hours on fixing another weird adapter error, in the end decided to copy and paste the old working version to a new project, which showed the mistake was in the layout xml file
-- It is still not clear what the error was, but it works now, will try find out how to push to this Github location from the new project
-- Tomorrow: finish adapterview with fileType icons etcetera, find out how to regain access to Git from new project and hopefully find out how to edit and open files
+- Spent a lot of time on another adapter error, then decided to copy and paste the whole project in a new one which showed the mistake was in the layout xml file
+- Tomorrow: finish adapterview with fileType icons etcetera and hopefully find out how to edit and open files
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/21895785/3a6d364a-d8e4-11e6-8906-33f29664cd38.png" width="200">
 
 #### Day 5
 - Presentations in the morning, main comment I could not give a straight forward answer to was: "Can you name a concrete problem the app solves?", will think about this for the future
-- Made this new Git repository, saved the old at: https://github.com/carlijnq/nl.mprog.blifi.backup
-- Repository still not synchronizing with project, waiting for assistance on monday
 - Succeeded in letting the user view what's in a folder and open it, back button is not working yet though
 
 <img src="https://github.com/carlijnq/nl.mprog.blifi/blob/master/docs/file_open_1.png" width="200">
@@ -49,7 +45,6 @@
 #### Day 6
 - Decided to leave the back button not functioning and some other bugs within this implementation and to focus on creating a full version
 - Decided to create the menus first so the prototype is complete, then create the Google Drive component
-- Created a functioning Git repository by creating a new android studio project and copying everything to it to synchronize
 - Figured out how the navigation drawer works, next step is to figure out the differences between fragments and activities
 
 #### Day 7
@@ -91,43 +86,67 @@
 #### Day 10
 - Presentations in the morning, no particular feedback, yet I asked about the check boxes in the recycler view and how to display them and decided together to only show them on "Select" clicked
 - Looked into Google Drive documentation and found it very difficult to make sense of the data type retreived
-- Wanted to enable the user to choose a character and switch the Drive menu button by a spinner, got too caught up in it so I wasted some time, then decided to let go of the idea and move on to understanding the Drive Files
-- It probably was not the best idea to look into the layouts and controls, yet have to make a decision before it is too late
+- Got feedback on how to naviagte to sign in, so wanted to enable the user to switch account by a spinner in the menu, but because it turned out to be difficult decided to let go of the idea and move on to understanding the Drive Files
 - Enabled the user to sign in in different activity, for now the best way to handle this, because only one account can be added, and in the future because this activity does not need the settings menu
 - Challenge for next week: fully understand the Google Drive API
 - In the last week the design can be changed if that turns out to be better, now focus on functionality!
 
 *Week 3*
 TODO list;
-- Enable the user to download Drive files
+- Enable the user to download Drive files (done)
 - Enable the user to "open with" Drive Files (done for url in explorer or Drive App)
 - Enable the user to remove files
 - Enable the user to rename files
 - Enable the user to select (all) files 
 - Enable the user to move files
-- Enable the user to create a file (done)
+- Enable the user to create a file (done for GDAA)
 
 #### Day 4
 - Created a week 3 and 4 TODO list
-- Discovered the scope was set to READ_ONLY which should be DRIVE
+- Discovered the scope of the Google Account Credential was set to READ_ONLY which should be DRIVE
 - Discovered how to get all file info instead of only id and name
-- Discovered I do not need the REST API but the actual API I began with, so have to convert everything again, yet learned a lot by trial and error so expect to progress quicker, had this API installed earlier
+- Was misguided by the info on the Drive API site saying: "in the majority of cases production Drive apps will strongly benefit by making use of the Drive API for Android, which is integrated with Google Play Services and offers better performance." (https://developers.google.com/drive/v3/web/quickstart/android))
+- Discovered some differences between the Drive REST and GDAA API
 - Connected to Drive and it seems I can finally edit the files
-- After 5 more attempts finally: I can create a new file!!
-- Now have to log in twice, once with the rest api and once with the normal api to use the different functionalities
+- Now have to log in twice, once with the rest api and once with the normal api to use the different functionalities (creating a file is nicer with GDAA API)
 
 #### Day 5
 - Tried all morning to enable the user to only log in once, which worked in the end but still buggy
 - Enabled user to log in once, but now the "create file" button is not working, probably because the api client is in another fragment
-- Creating files works again with the floating action button in the file fragment
+- Creating files works again with the floating action button in the file fragment (GDAA)
 - Trying to get the search function right, still struggling with retaining the signed in user and his or her files
 
 #### Day 6
-- The problem is that the Google Drive API only lets you work with the files or folders the user has created within your App and not the ones they create via the Drive itself, now looking for a way to list files within a folder created somewhere else
+- The problem is that the Google Drive API (GDAA) only lets you work with the files or folders the user has created within your App and not the ones they create via the Drive itself, now looking for a way to list files within a folder created somewhere else
+- Also, it is not adviced to use both APIs in one project, so I need to choose one
 - Filetype of Google files can be recognized: so folders too
-- Succeeded to download a file!
-- Auto sign in works, and getting the user from multiple activities, yet download is not working yet for individual files
-- Opening Google Drive files in the Drive App or internet explorer works
+- Opening Google Drive files in the Drive App or internet explorer works (except for folders)
+
+#### Day 7
+- Found out downloading seemed to work but the files could not be opened/read
+- It turned out the auth token needed to be retreived using the web client ID instead of Android, now a token can be retreived to be sent with the HTTP request
+- The project broke down after retreiving the token, I tried to get the project back to the original and find the bug, which did not solve the problem
+- Copied the project to a new project and created this new repository, then fixed the error
+- Tried to get the project even further back to only the DRIVE REST V3 API demo which enables to list the files
+
+#### Day 8
+- Presented my struggles to the class and they brainstormed with me how to solve it, adviced me to go to VIA to ask a computer science student (because the token could not be retreived for Google Drive REST API)
+- Someone pointed out the SHA 1 key I use is probably only for testing purposes, will look into that if there is time
+- Together with the Computer Science student enabled retreiving a token for Google Drive REST by using an asynctask
+- With the token, enabled my old downloading code to download: and finally: it works!
+- The table below sums up the differences of the APIs I found, finally the differences are clear to me
+
+| GDAA (newest)                                           | REST V3                                           | 
+| ------------------------------------------------------- | ------------------------------------------------- | 
+| Google Play Services                                    | Different permissions due to deeper control       |
+| Login with Google API client and sign In Options        | Log in by Google Account Credential               |   
+| Can only work with files created in the app itself      | Can work with all files                           |    
+| RequestToken by Web Client ID (API console)             | Token by credential.getToken AsyncTask            |    
+| Log out is possible                                     | Log out / multiple accounts not clear             |    
+| Easier way to create files with its predefined intent   | Handle all connections yourself (asynctasks etc.) |
+
+#### Extra day
+- Decided to code for an extra day, because some bugs took me a bit too long, yet I learned to solve problems more efficiently
 
 *Week 4*
 TODO list;
@@ -136,7 +155,9 @@ TODO list;
 - Enable the user to sort files 
 - Show the trash can of files 
 - Enable the user to search through files 
+- Work with Drive folders (open)
 - Debugging: think about what happens when a user for instance loses connection
+- Extra: enable the user to edit a file
 
 
 

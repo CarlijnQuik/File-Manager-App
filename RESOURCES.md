@@ -37,7 +37,7 @@
 - http://stackoverflow.com/questions/5414657/extract-substring-from-a-string
 - http://stackoverflow.com/questions/6265298/action-view-intent-for-a-file-with-unknown-mimetype
 
-*Google Drive API*
+*Google Drive (REST) API and authentication*
 - https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivityWithDrive.java
 - https://developers.google.com/fit/rest/
 - https://developers.google.com/drive/v3/web/quickstart/android
@@ -49,6 +49,12 @@
 - http://stackoverflow.com/questions/12164024/android-open-and-save-files-to-from-google-drive-sdk
 - https://github.com/googledrive/android-demos/tree/master/app/src/main/java/com/google/android/gms/drive/sample/demo
 - https://www.numetriclabz.com/integrate-google-drive-in-android-tutorial/
+- https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/IdTokenActivity.java
+- http://stackoverflow.com/questions/34099208/google-sign-in-requestidtoken-returns-null/34146759#34146759
+- http://stackoverflow.com/questions/33546646/com-google-api-services-drive-or-com-google-android-gms-drive-feeling-confused
+- http://stackoverflow.com/questions/16115109/google-drive-on-android-error-java-lang-illegalargumentexception-the-name-must/41511391#41511391
+- https://developer.android.com/reference/android/app/Activity.html#RESULT_OK
+- http://stackoverflow.com/questions/12732422/adding-header-for-httpurlconnection
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
@@ -57,6 +63,9 @@
 
 *Singleton*
 - http://stackoverflow.com/questions/24643789/why-is-a-singleton-arraylist-affected-when-indirectly-changing-one-of-its-items
+
+*Synchronizing*
+- https://medium.com/@haarman.niek/a-dive-into-async-await-on-android-5a6699029aa3#.skmmk2280
 
 *Debugging*
 - http://stackoverflow.com/questions/18578356/classcastexception-android-widget-button-to-com-google-android-gms-common-signin
