@@ -32,5 +32,7 @@
     <string name="no_results">No results returned</string>
     <string name="network_available">No network connection available</string>
     <string name="dialog_access">This app needs to access your Google account</string>
+    <string name="server_client_id">409862790725-rtu7ennu6on94cgqrt800aa1em9vqh2r.apps.googleusercontent.com</string>
+    <string name="network_connection">No network connection available.</string>
 
 </resources>

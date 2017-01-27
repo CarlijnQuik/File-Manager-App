@@ -2,6 +2,7 @@ package com.example.carlijnquik.nlmprogblifi;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -13,15 +14,21 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.model.File;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Carlijn Quik on 1/25/2017.
@@ -32,15 +39,15 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
     File downloadFile;
     java.io.File folder;
     private Exception mLastError = null;
-    String token = "615429528636-unmkbg0t8b9g37kb69f6itsl4hlmng3j.apps.googleusercontent.com";
+    String token;
 
-    DownloadAsyncTask(File downloadFile, java.io.File folder) {
+    DownloadAsyncTask(GoogleAccountCredential credential, File downloadFile, java.io.File folder, String token) {
         this.downloadFile = downloadFile;
         this.folder = folder;
+        this.token = token;
+
 
     }
-
-
 
     /**
      * Background task to call Drive API, no parameters needed for this task.
@@ -48,6 +55,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
     @Override
     protected java.io.File doInBackground(Void... params) {
         try {
+            Log.d("check1", "check2");
             return download(downloadFile, folder);
         } catch (Exception e) {
             mLastError = e;
@@ -57,30 +65,56 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
     }
 
 
-    private java.io.File download(com.google.api.services.drive.model.File gFile, java.io.File jFolder) throws IOException {
-        if (gFile.getWebContentLink() != null && gFile.getWebContentLink().length() > 0) {
+    private java.io.File download(File downloadFile, java.io.File jFolder) throws IOException {
+        if (downloadFile.getId() != null && downloadFile.getWebContentLink().length() > 0) {
             if (jFolder == null) {
                 jFolder = Environment.getExternalStorageDirectory();
             }
             try {
+                Log.d("check1", "check3");
 
-                HttpClient client = new DefaultHttpClient();
-                HttpGet get = new HttpGet(gFile.getWebContentLink());
-                get.setHeader("Authorization", "Bearer " + token);
-                HttpResponse response = client.execute(get);
+                URL url = new URL("https://www.googleapis.com/drive/v2/files/" + downloadFile.getId() + "?alt=media");
+                Log.d("string webview", url.toString());
+                Log.d("string type", downloadFile.getMimeType());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Authorization", "Bearer " + token);
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-Type", downloadFile.getMimeType());
+                connection.connect();
 
-                InputStream inputStream = response.getEntity().getContent();
-                java.io.File jFile = new java.io.File(jFolder.getAbsolutePath() + "/" + gFile.getName()); // getGFileName() is my own method... it just grabs originalFilename if it exists or title if it doesn't.
-                FileOutputStream fileStream = new FileOutputStream(jFile);
-                byte buffer[] = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) > 0) {
-                    fileStream.write(buffer, 0, length);
+
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    Log.d("string fault", connection.getResponseMessage());
                 }
-                fileStream.close();
-                inputStream.close();
-                Log.d("string dFile", jFile.getName());
+
+                int fileLength = connection.getContentLength();
+
+                java.io.File jFile = new java.io.File(jFolder.getAbsolutePath() + "/" + downloadFile.getName());
+
+                InputStream inputStream = connection.getInputStream();
+                FileOutputStream fileOutput = new FileOutputStream(jFile);
+
+                byte[] buffer = new byte[4096];
+                long total = 0;
+                int count;
+
+                while ((count = inputStream.read(buffer)) != -1) {
+                    if (isCancelled()) {
+                        inputStream.close();
+                        return null;
+                    }
+                    total += count;
+                    //if(fileLength > 0) {
+                    //  publishProgress((int) (total * 100 / fileLength));
+                    //}
+                    fileOutput.write(buffer, 0, count);
+
+                }
+
+                fileOutput.close();
+                Log.d("string path", jFile.getAbsolutePath());
                 return jFile;
+
             } catch (IOException e) {
                 // Handle IOExceptions here...
                 return null;
@@ -91,15 +125,19 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
         }
     }
 
+
     @Override
     //onPostExecute()
-    protected void onPostExecute(java.io.File result) {
+    protected void onPostExecute (java.io.File result){
         super.onPostExecute(result);
 
-        Log.d("string downloaded", "downloaded!");
-
+        if (result != null) {
+            Log.d("string downloaded", "downloaded!");
+        }
 
 
     }
 
+
 }
+

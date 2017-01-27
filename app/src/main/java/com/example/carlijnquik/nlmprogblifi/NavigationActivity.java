@@ -29,8 +29,10 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -40,22 +42,13 @@ import java.util.Arrays;
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
-    SignInFragment signInFragment;
-    GoogleApiClient driveGoogleApiClient;
     FloatingActionButton fab;
-    String accountName;
-    SharedPreferences prefs;
     android.widget.SearchView searchView;
-    GoogleAccountCredential driveCredential;
-    private static final String[] SCOPES = {DriveScopes.DRIVE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_navigation_1);
-
-        prefs = this.getSharedPreferences("Accounts", MODE_PRIVATE);
-        accountName = prefs.getString("accountName", null);
 
         searchView = (android.widget.SearchView) findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
@@ -73,30 +66,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         fab = (FloatingActionButton) findViewById(R.id.fab_2);
         fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createFile();
-            }
-        });
-
-        if (driveGoogleApiClient == null) {
-            driveGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(Drive.API)
-                    .addScope(Drive.SCOPE_FILE)
-                    .build();
-        }
-        if(!driveGoogleApiClient.isConnected()) {
-            driveGoogleApiClient.connect();
-        }
-
-        if (driveCredential == null) {
-            driveCredential = GoogleAccountCredential.usingOAuth2(
-                    this, Arrays.asList(SCOPES))
-                    .setSelectedAccountName(accountName)
-                    .setBackOff(new ExponentialBackOff());}
-
-        new ListDriveFiles(driveCredential).execute();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_2);
         setSupportActionBar(toolbar);
@@ -111,14 +80,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         navigationView.setNavigationItemSelectedListener(this);
 
         // set the fragment initially
-        InternalFilesFragment fragment = new InternalFilesFragment();
+        FileListFragment fragment = new FileListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("filePath", null);
         bundle.putString("fileLocation", null);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
 
-        signInFragment = new SignInFragment();
 
     }
 
@@ -127,7 +95,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvFiles);
 
-        ArrayList<FileObject> fileList = AllInternalFiles.getInstance().getFileList();
+        ArrayList<FileObject> fileList = InternalFilesSingleton.getInstance().getFileList();
 
         ArrayList<FileObject> adapterList = new ArrayList<>();
         for (int i = 0; i < fileList.size(); i++){
@@ -200,11 +168,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         if (id == R.id.nav_file_list) {
             // clear the array list to prevent duplicates
-            ArrayList<FileObject> fileList = AllInternalFiles.getInstance().getFileList();
+            ArrayList<FileObject> fileList = InternalFilesSingleton.getInstance().getFileList();
             fileList.clear();
 
             // set the fragment
-            InternalFilesFragment fragment = new InternalFilesFragment();
+            FileListFragment fragment = new FileListFragment();
             Bundle bundle = new Bundle();
             bundle.putString("filePath", null);
             bundle.putString("fileLocation", null);
@@ -217,100 +185,23 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 @Override
                 public void onClick(View view) {
                     Log.d("string fab", "fab works");
-                    createFile();
                 }
             });
             searchView.setVisibility(View.VISIBLE);
         }
-        if (id == R.id.nav_accounts) {
-            // in the future this will be a "add account" button
-            fab.setVisibility(View.GONE);
-            searchView.setVisibility(View.GONE);
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, signInFragment).commit();
-
-        }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void switchContent(int id, InternalFilesFragment internalFilesFragment) {
+    public void switchContent(int id, FileListFragment fileListFragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(id, internalFilesFragment, internalFilesFragment.toString());
+        ft.replace(id, fileListFragment, fileListFragment.toString());
         ft.addToBackStack(null);
         ft.commit();
     }
-
-    public void createFile() {
-        Drive.DriveApi.newDriveContents(driveGoogleApiClient).setResultCallback(driveContentsCallback);
-        Log.d("string create", "starting");
-    }
-
-    final private ResultCallback<DriveApi.DriveContentsResult> driveContentsCallback = new
-            ResultCallback<DriveApi.DriveContentsResult>() {
-                @Override
-                public void onResult(DriveApi.DriveContentsResult result) {
-                    if (!result.getStatus().isSuccess()) {
-                        return;
-                    }
-                    final DriveContents driveContents = result.getDriveContents();
-                    Log.d("string create2", "creating");
-
-                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                            .setTitle("Testing")
-                            .setMimeType("text/plain")
-                            .build();
-
-                    // create a file on root folder
-                    Drive.DriveApi.getRootFolder(driveGoogleApiClient)
-                            .createFile(driveGoogleApiClient, changeSet, driveContents)
-                            .setResultCallback(fileCallback);
-
-                    /*
-
-                    // Perform I/O off the UI thread.
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            // write content to DriveContents
-                            OutputStream outputStream = driveContents.getOutputStream();
-                            Writer writer = new OutputStreamWriter(outputStream);
-                            try {
-                                writer.write("Hello World!");
-                                writer.close();
-                            } catch (IOException e) {
-                                //
-                            }
-
-                            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                    .setTitle("New file")
-                                    .setMimeType("text/plain")
-                                    .build();
-
-                            // create a file on root folder
-                            Drive.DriveApi.getRootFolder(driveGoogleApiClient)
-                                    .createFile(driveGoogleApiClient, changeSet, driveContents)
-                                    .setResultCallback(fileCallback);
-                        }
-                    }.start();
-                }*/
-                };
-
-                final private ResultCallback<DriveFolder.DriveFileResult> fileCallback = new
-                        ResultCallback<DriveFolder.DriveFileResult>() {
-                            @Override
-                            public void onResult(DriveFolder.DriveFileResult result) {
-                                if (!result.getStatus().isSuccess()) {
-                                    return;
-                                }
-                                Toast.makeText(getApplicationContext(), result.getDriveFile().getDriveId().toString(), Toast.LENGTH_SHORT).show();
-                            }
-                        };
-
-            };
-
 
 
 

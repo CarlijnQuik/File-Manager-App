@@ -6,23 +6,23 @@ import java.util.ArrayList;
  * Created by Carlijn Quik on 1/19/2017.
  */
 
-public class AllDriveFiles {
+public class DriveFilesSingleton {
 
-    private static AllDriveFiles allDriveFiles;
+    private static DriveFilesSingleton driveFilesSingleton;
     private ArrayList<FileObject> driveFilesList;
 
-    private AllDriveFiles(){
+    private DriveFilesSingleton(){
 
         driveFilesList = new ArrayList<>();
 
     }
 
-    public static AllDriveFiles getInstance(){
-        if(allDriveFiles == null){
-            allDriveFiles = new AllDriveFiles();
+    public static DriveFilesSingleton getInstance(){
+        if(driveFilesSingleton == null){
+            driveFilesSingleton = new DriveFilesSingleton();
         }
 
-        return allDriveFiles;
+        return driveFilesSingleton;
     }
 
     public ArrayList<FileObject> getFileList(){

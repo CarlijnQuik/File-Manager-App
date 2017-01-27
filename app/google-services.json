@@ -1,19 +1,19 @@
 {
   "project_info": {
-    "project_number": "615429528636",
-    "project_id": "norse-voice-156011"
+    "project_number": "409862790725",
+    "project_id": "mprog-156813"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:615429528636:android:788525e27d3f15dc",
+        "mobilesdk_app_id": "1:409862790725:android:788525e27d3f15dc",
         "android_client_info": {
           "package_name": "com.example.carlijnquik.nlmprogblifi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "615429528636-unmkbg0t8b9g37kb69f6itsl4hlmng3j.apps.googleusercontent.com",
+          "client_id": "409862790725-2vsajc2boi75sodvi1gbl4f0uut2rmic.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.carlijnquik.nlmprogblifi",
@@ -21,13 +21,13 @@
           }
         },
         {
-          "client_id": "615429528636-j5ooii7vh470mm2m7iaoqcv8d9a0os90.apps.googleusercontent.com",
+          "client_id": "409862790725-rtu7ennu6on94cgqrt800aa1em9vqh2r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCQT0SbKXjmyw4dZmnfe_4K4AZ1oesqBlQ"
+          "current_key": "AIzaSyAhF1eCBnWtNHMcbouxvEhUROHZeD3qY-k"
         }
       ],
       "services": {

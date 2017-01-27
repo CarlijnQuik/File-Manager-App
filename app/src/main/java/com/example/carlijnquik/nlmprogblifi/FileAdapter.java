@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,25 +21,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.methods.HttpGet;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 /**
  * The adapter of the list view, handles all changes made to the file objects
@@ -116,26 +103,18 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         // Get the data model based on position
         final FileObject fileObject = files.get(position);
 
-        prefs = activity.getPreferences(getContext().MODE_PRIVATE);
+        //prefs = activity.getPreferences(getContext().MODE_PRIVATE);
 
         // get signed in account if there
-        accountName = prefs.getString("accountName", null);
+        //accountName = prefs.getString("accountName", null);
 
-        if (driveGoogleApiClient == null) {
-            driveGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                    .addApi(Drive.API)
-                    .addScope(Drive.SCOPE_FILE)
-                    .build();
-        }
-        driveGoogleApiClient.connect();
-
-        if (driveCredential == null) {
+        /*if (driveCredential == null) {
             driveCredential = GoogleAccountCredential.usingOAuth2(
                     getContext(), Arrays.asList(SCOPES))
                     .setSelectedAccountName(accountName)
                     .setBackOff(new ExponentialBackOff());
         }
-        new ListDriveFiles(driveCredential);
+        new ListDriveFilesAsyncTask(driveCredential).execute();*/
 
         btvFilename = viewHolder.tvFilename;
         btvType = viewHolder.tvType;
@@ -162,7 +141,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
                         Log.d("string folder onclick", file.getAbsolutePath());
                         // Instantiate a new fragment
-                        InternalFilesFragment frag = new InternalFilesFragment();
+                        FileListFragment frag = new FileListFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("filePath", file.getAbsolutePath());
                         bundle.putString("fileLocation", fileObject.getLocation());
@@ -204,9 +183,13 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 if (driveFile != null) {
                     //download
                     java.io.File folder = new java.io.File(System.getenv("EXTERNAL_STORAGE"));
-                    new DownloadAsyncTask(driveFile, folder).execute();
+
                     Log.d("string downloaded", "downloaded" + driveFile.getName());
 
+                }
+                if (file != null){
+
+                    Log.d("string startup", "upload" + file.getName());
                 }
 
             }
@@ -275,12 +258,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         }
     }
 
-    public void switchContent(int id, InternalFilesFragment internalFilesFragment) {
+    public void switchContent(int id, FileListFragment fileListFragment) {
         if (context == null)
             return;
         if (context instanceof NavigationActivity) {
             NavigationActivity navigationActivity = (NavigationActivity) context;
-            navigationActivity.switchContent(id, internalFilesFragment);
+            navigationActivity.switchContent(id, fileListFragment);
         }
 
     }
