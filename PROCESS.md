@@ -133,6 +133,16 @@ TODO list;
 #### Day 7
 - Found out downloading seemed to work but the files could not be opened/read
 - It turned out the auth token needed to be retreived using the web client ID instead of Android, now a token can be retreived to be sent with the HTTP request
+- The table below sums up the differences of the APIs I found
+
+| GDAA (newest)                                           | REST V3                                           | 
+| ------------------------------------------------------- | ------------------------------------------------- | 
+| Google Play Services                                    | Different permissions due to deeper control       |
+| Login with Google API client and sign In Options        | Log in by Google Account Credential               |   
+| Can only work with files created in the app itself      | Can work with all files                           |    
+| RequestToken by Web Client ID (API console)             | Token by credential.getToken AsyncTask            |    
+| Log out is possible                                     | Log out / multiple accounts not clear             |    
+| Easier way to create files with its predefined intent   | Handle all connections yourself (asynctasks etc.) |
 
 *Week 4*
 TODO list;
