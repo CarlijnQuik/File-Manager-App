@@ -141,7 +141,9 @@
 - Decided to code for an extra day, because some bugs took me a bit too long, yet I learned to solve problems more efficiently
 - Decided that it is best to start the app with a sign in activity which redirects to the navigation drawer activity on success, so for this project the app can only handle one account
 - Downloading is now working in the recyclerview by pressing the toolbar on the right
+- The page can be refreshed by swipe
 - Getting the code style and efficiency right for this version of the App, so next week there is still time to add some features
+
 <img src= "https://cloud.githubusercontent.com/assets/22945709/22400728/892f444a-e5bd-11e6-8894-0dad84bb614e.png" width="200">
 
 *Week 4*
