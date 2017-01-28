@@ -118,7 +118,7 @@
 - Found out downloading seemed to work but the files could not be opened/read
 - It turned out the auth token needed to be retreived using the web client ID instead of Android, now a token can be retreived to be sent with the HTTP request
 - The project broke down after retreiving the token, I tried to get the project back to the original and find the bug, which did not solve the problem
-- Copied the project to a new project and created this new repository, then fixed the error
+- Copied the project to a new project and created this new repository, then fixed the error 
 - Tried to get the project even further back to only the DRIVE REST V3 API demo which enables to list the files
 
 #### Day 8
@@ -140,23 +140,31 @@
 #### Extra day
 - Decided to code for an extra day, because some bugs took me a bit too long, yet I learned to solve problems more efficiently
 - Decided that it is best to start the app with a sign in activity which redirects to the navigation drawer activity on success, so for this project the app can only handle one account
-- Downloading is now working in the recyclerview
+- Downloading is now working in the recyclerview by pressing the toolbar on the right
+- Getting the code style and efficiency right for this version of the App, so next week there is still time to add some features
+<img src= "https://cloud.githubusercontent.com/assets/22945709/22400728/892f444a-e5bd-11e6-8894-0dad84bb614e.png" width="200">
 
 *Week 4*
 TODO list;
 - Design / code style 
 - Debugging: think about what happens when a user for instance loses connection
 
+- Better authentication, logging in and out and token
+
 - Enable the user to sort files 
-- Show the trash can of files 
 - Enable the user to search through files 
+- Enable the user to select (all) files 
+- Let the user know when downloading finishes and a file is empty
+
+- Create and remove Java files
+
+- Show the trash can of files 
 - Work with Drive folders
 - Extra: enable the user to edit a file
 - Extra: enable the user to upload 
 - Enable user to create
 - Enable the user to remove files 
 - Enable the user to rename files
-- Enable the user to select (all) files 
-- Stay signed in / log out
+
 
 
