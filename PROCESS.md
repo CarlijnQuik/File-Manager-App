@@ -92,12 +92,6 @@
 - In the last week the design can be changed if that turns out to be better, now focus on functionality!
 
 *Week 3*
-TODO list;
-- Enable the user to download Drive files (done)
-- Enable the user to "open with" Drive Files (done)
-- Enable the user to remove files 
-- Enable the user to rename files
-- Enable the user to select (all) files 
 
 #### Day 4
 - Created a week 3 and 4 TODO list
@@ -151,14 +145,18 @@ TODO list;
 *Week 4*
 TODO list;
 - Design / code style 
-- Be able to show the character and username 
+- Debugging: think about what happens when a user for instance loses connection
+
 - Enable the user to sort files 
 - Show the trash can of files 
 - Enable the user to search through files 
 - Work with Drive folders
-- Debugging: think about what happens when a user for instance loses connection
 - Extra: enable the user to edit a file
-- Extra: enable the user to upload and create
+- Extra: enable the user to upload 
+- Enable user to create
+- Enable the user to remove files 
+- Enable the user to rename files
+- Enable the user to select (all) files 
 
 
 
