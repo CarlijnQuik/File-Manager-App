@@ -94,12 +94,10 @@
 *Week 3*
 TODO list;
 - Enable the user to download Drive files (done)
-- Enable the user to "open with" Drive Files (done for url in explorer or Drive App)
-- Enable the user to remove files
+- Enable the user to "open with" Drive Files (done)
+- Enable the user to remove files 
 - Enable the user to rename files
 - Enable the user to select (all) files 
-- Enable the user to move files
-- Enable the user to create a file (done for GDAA)
 
 #### Day 4
 - Created a week 3 and 4 TODO list
@@ -148,6 +146,7 @@ TODO list;
 #### Extra day
 - Decided to code for an extra day, because some bugs took me a bit too long, yet I learned to solve problems more efficiently
 - Decided that it is best to start the app with a sign in activity which redirects to the navigation drawer activity on success, so for this project the app can only handle one account
+- Downloading is now working in the recyclerview
 
 *Week 4*
 TODO list;
@@ -156,9 +155,10 @@ TODO list;
 - Enable the user to sort files 
 - Show the trash can of files 
 - Enable the user to search through files 
-- Work with Drive folders (open)
+- Work with Drive folders
 - Debugging: think about what happens when a user for instance loses connection
 - Extra: enable the user to edit a file
+- Extra: enable the user to upload and create
 
 
 
