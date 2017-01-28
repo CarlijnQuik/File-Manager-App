@@ -19,6 +19,7 @@ import com.google.api.services.drive.model.*;
 import com.google.api.services.drive.model.File;
 
 import android.Manifest;
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
@@ -56,13 +57,15 @@ public class GoogleSignInActivity extends Activity implements EasyPermissions.Pe
     String token;
     File downloadFile;
     Button mCallApiButton;
+    AccountManager accountManager;
+    String accountName;
+    SharedPreferences prefs;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final int REQUEST_CODE_TOKEN_AUTH = 100;
     private static final String[] SCOPES = {DriveScopes.DRIVE};
 
@@ -85,10 +88,27 @@ public class GoogleSignInActivity extends Activity implements EasyPermissions.Pe
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Drive API ...");
 
+        prefs = getSharedPreferences("accounts", Context.MODE_PRIVATE);
+
         // initialize credentials and service object
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
+
+
+    }
+
+    public void onResume(){
+        super.onResume();
+
+        accountName = prefs.getString("accountName", accountName);
+
+        if (accountName != null){
+            mCredential.setSelectedAccountName(accountName);
+        }
+
+        getResultsFromApi();
 
     }
 
@@ -111,10 +131,9 @@ public class GoogleSignInActivity extends Activity implements EasyPermissions.Pe
         }
         // check token
         else {
-            getToken();
-            new ListDriveFilesAsyncTask(mCredential).execute();
 
-            Log.d("check1", "checkc");
+            new ListDriveFilesAsyncTask(mCredential).execute();
+            getToken();
 
             Intent intent = new Intent(this, NavigationActivity.class);
             startActivity(intent);
@@ -136,10 +155,10 @@ public class GoogleSignInActivity extends Activity implements EasyPermissions.Pe
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
                 this, Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getPreferences(Context.MODE_PRIVATE)
-                    .getString(PREF_ACCOUNT_NAME, null);
+            accountName = prefs.getString("accountName", null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
+                Log.d("string acc", accountName);
                 getResultsFromApi();
             } else {
                 // Start a dialog from which the user can choose an account
@@ -185,14 +204,10 @@ public class GoogleSignInActivity extends Activity implements EasyPermissions.Pe
             case REQUEST_ACCOUNT_PICKER:
                 if (resultCode == RESULT_OK && data != null &&
                         data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
-                        SharedPreferences settings =
-                                getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
+
+                        prefs.edit().putString("accountName", accountName).apply();
                         mCredential.setSelectedAccountName(accountName);
                         getResultsFromApi();
                     }
@@ -338,19 +353,17 @@ public class GoogleSignInActivity extends Activity implements EasyPermissions.Pe
 
             @Override
             protected void onPostExecute(String token) {
-                Log.i("string no", "Access token retrieved:" + token);
-                SharedPreferences settings =
-                        getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("token", token);
-                editor.apply();
-
+                Log.i("string adaptertoken", "Access token retrieved:" + token);
+                prefs.edit().putString("token", token).apply();
             }
 
         };
         task.execute();
 
     }
+
+
+
 
 }
 

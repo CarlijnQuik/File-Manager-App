@@ -3,7 +3,7 @@ package com.example.carlijnquik.nlmprogblifi;
 import java.util.ArrayList;
 
 /**
- * Created by Carlijn Quik on 1/19/2017.
+ * A singleton to retrieve the list of Drive files globally.
  */
 
 public class DriveFilesSingleton {
@@ -12,7 +12,6 @@ public class DriveFilesSingleton {
     private ArrayList<FileObject> driveFilesList;
 
     private DriveFilesSingleton(){
-
         driveFilesList = new ArrayList<>();
 
     }
@@ -21,11 +20,13 @@ public class DriveFilesSingleton {
         if(driveFilesSingleton == null){
             driveFilesSingleton = new DriveFilesSingleton();
         }
-
         return driveFilesSingleton;
+
     }
 
     public ArrayList<FileObject> getFileList(){
         return driveFilesList;
+
     }
+
 }

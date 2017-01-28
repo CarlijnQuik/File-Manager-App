@@ -82,7 +82,7 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, List<String>>
                 fileInfo.add(String.format("%s (%s)\n",
                         file.getName(), file.getWebContentLink()));
                 Log.d("string driveFile", file.getName());
-                driveFiles.add(new FileObject(file, null, "DRIVE", "file"));
+                driveFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
 
 
 

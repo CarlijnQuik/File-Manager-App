@@ -3,7 +3,7 @@ package com.example.carlijnquik.nlmprogblifi;
 import java.util.ArrayList;
 
 /**
- * Created by Carlijn Quik on 1/19/2017.
+ * A singleton to retrieve the list of internal and SD card files globally.
  */
 
 public class InternalFilesSingleton {
@@ -12,7 +12,6 @@ public class InternalFilesSingleton {
     private ArrayList<FileObject> internalFilesList;
 
     private InternalFilesSingleton(){
-
         internalFilesList = new ArrayList<>();
 
     }
@@ -21,11 +20,13 @@ public class InternalFilesSingleton {
         if(internalFilesSingleton == null){
             internalFilesSingleton = new InternalFilesSingleton();
         }
-
         return internalFilesSingleton;
+
     }
 
     public ArrayList<FileObject> getFileList(){
         return internalFilesList;
+
     }
+
 }

@@ -1,6 +1,8 @@
 package com.example.carlijnquik.nlmprogblifi;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,7 +10,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +20,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +50,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     DrawerLayout drawer;
     FloatingActionButton fab;
     android.widget.SearchView searchView;
+    SwipeRefreshLayout swipeRefreshLayout;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +87,18 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_1);
         navigationView.setNavigationItemSelectedListener(this);
 
+        prefs = this.getSharedPreferences("accounts", Context.MODE_PRIVATE);
+        String accountName = prefs.getString("accountName", null);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView mUsernameView = (TextView) headerView.findViewById(R.id.tvHeader);
+        ImageView ivDriveLogo = (ImageView) headerView.findViewById(R.id.ivHeader);
+        if (accountName != null) {
+            Log.d("string accountName", accountName);
+            mUsernameView.setText(accountName);
+            ivDriveLogo.setVisibility(View.VISIBLE);
+        }
+
         // set the fragment initially
         FileListFragment fragment = new FileListFragment();
         Bundle bundle = new Bundle();
@@ -88,7 +108,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
 
 
+
     }
+
 
     // search files function (not finished)
     public void searchFiles(String query){
@@ -150,6 +172,27 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             return true;
         }
         if (id == R.id.action_select) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Add the buttons
+            builder.setPositiveButton("Files on phone", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                }
+            });
+            builder.setNeutralButton("Files on SD", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                }
+            });
+            builder.setNegativeButton("Files on Drive", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+
+            // Create the AlertDialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
             return true;
         }
         if (id == R.id.action_select_all) {

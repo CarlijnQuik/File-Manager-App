@@ -21,14 +21,17 @@
         android:layout_width="94dp"
         android:layout_height="82dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/batman" />
+        android:visibility="gone"
+        android:src="@drawable/google_drive_logo" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvHeader"
         android:paddingTop="5dp"
-        android:text="Blind File Find"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        android:text="File Manager"
+        android:textSize="15sp" />
 
 </LinearLayout>
