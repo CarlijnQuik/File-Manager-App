@@ -157,6 +157,6 @@ TODO list;
 - Enable the user to remove files 
 - Enable the user to rename files
 - Enable the user to select (all) files 
-
+- Stay signed in / log out
 
 
