@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,11 +95,21 @@ public class FileListFragment extends Fragment {
 
             // get the current list of Drive files and add it to the list
             driveFiles = DriveFilesSingleton.getInstance().getFileList();
-
-            // function to compare the file list with the drive file list
-            // in order to only add the new files still needs to be written
-
             fileList.addAll(driveFiles);
+
+            // remove duplicates from list
+            ArrayList<FileObject> duplicates = new ArrayList<>();
+
+            for (int i = 0; i < fileList.size(); i++){
+                for (int j = 0; j < driveFiles.size(); j++){
+                    Log.d("string compare", fileList.get(i).getDriveFile().getName());
+                    Log.d("string compare", driveFiles.get(j).getDriveFile().getName());
+                    if (fileList.get(i).getDriveFile() == driveFiles.get(j).getDriveFile()){
+                        duplicates.add(fileList.get(i));
+                    }
+                }
+            }
+            fileList.removeAll(duplicates);
 
         } else {
             // get files from folder

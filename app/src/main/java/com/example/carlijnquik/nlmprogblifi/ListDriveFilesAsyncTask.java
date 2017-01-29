@@ -110,7 +110,7 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, List<String>>
             } else if (mLastError instanceof UserRecoverableAuthIOException) {
                 //startActivityForResult(
                   //      ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                    //    GoogleSignInActivity.REQUEST_AUTHORIZATION);
+                    //    CredentialActivity.REQUEST_AUTHORIZATION);
             } else {
                 //mOutputText.setText("The following error occurred:\n"
                   //      + mLastError.getMessage());

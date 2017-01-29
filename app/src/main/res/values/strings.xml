@@ -34,5 +34,12 @@
     <string name="dialog_access">This app needs to access your Google account</string>
     <string name="server_client_id">409862790725-rtu7ennu6on94cgqrt800aa1em9vqh2r.apps.googleusercontent.com</string>
     <string name="network_connection">No network connection available.</string>
+    <string name="log_out">Log Out</string>
+    <string name="trashcan">Trashcan</string>
+    <string name="files">Files</string>
+    <string name="file_manager">Welcome to File Manager!</string>
+    <string name="file_manager_welcome">Welcome to File Manager</string>
+    <string name="access_google_account">This app needs to access your Google account.</string>
+    <string name="install_play_services">"This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app. "</string>
 
 </resources>

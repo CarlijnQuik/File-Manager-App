@@ -8,11 +8,38 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.carlijnquik.nlmprogblifi.GoogleSignInActivity">
+    tools:context="com.example.carlijnquik.nlmprogblifi.CredentialActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="200dp">
+
+        <TextView
+            android:text="@string/file_manager_welcome"
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvWelcome"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp" />
+
+        <TextView
+            android:text="@string/sign_in"
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvStatus"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tvWelcome"
+            android:layout_centerHorizontal="true" />
 
         <Button
             android:id="@+id/bSignIn"
@@ -20,6 +47,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:gravity="center"
+            android:onClick="onClick"
             android:drawableLeft="@drawable/google_drive_logo_small"
             android:drawableStart="@drawable/google_drive_logo_small"
             android:drawablePadding="10dp"
@@ -27,20 +55,7 @@
             android:textSize="20sp"
             android:background="@drawable/box_style"
             android:textColor="@color/common_google_signin_btn_text_light_default"
-            android:layout_below="@+id/tvStatus"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp" />
-
-        <TextView
-            android:text="@string/sign_in"
-            android:textColor="?attr/colorControlNormal"
-            android:textSize="20sp"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvStatus"
-            android:padding="10dp"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />
 
     </RelativeLayout>

@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".GoogleSignInActivity"
+            android:name=".CredentialActivity"
             android:label="File Manager"
             android:theme="@style/AppTheme">
             <intent-filter>
