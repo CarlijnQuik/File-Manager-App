@@ -6,22 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.services.drive.DriveScopes;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
 
 /**
- * Enables the user to view and open files
+ * Retrieves the files from SD, phone and Drive singleton and puts them in a list together.
  */
 
 public class FileListFragment extends Fragment {
@@ -35,7 +28,7 @@ public class FileListFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
 
     /**
-     * When creating, retrieve this instance's number from its arguments.
+     * Retrieve the file's location from its arguments.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,94 +38,104 @@ public class FileListFragment extends Fragment {
         if (bundle.getString("filePath") != null) {
             path = bundle.getString("filePath");
             location = bundle.getString("fileLocation");
-            Log.d("filePath", path);
+
         }
-
-
 
     }
 
+    /**
+     * Create the recycler (list) view.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_file_list, container, false);
 
+        // initialize views
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         rvFiles = (RecyclerView) view.findViewById(R.id.rvFiles);
 
+        // enable the user to refresh the view by swiping
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Refresh items
-                refreshItems();
+                // retrieve the files again to detect changes
+                getAllFiles();
+
             }
         });
 
-        // Set layout manager to position the items
+        // set the layout manager to position the items
         rvFiles.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        // get the files
         getAllFiles();
 
         return view;
+
     }
 
-    void refreshItems() {
-        // set the fragment initially
-        getAllFiles();
-    }
-
-    void onItemsLoadComplete() {
-
-        swipeRefreshLayout.setRefreshing(false);
-    }
-
-    /* Checks if external storage is available for read and write */
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
-    public void getAllFiles(){
-        // create an array list to put the file objects in
+    /**
+     * Retrieve all the files, put them in a list and set the adapter with it.
+     */
+    public void getAllFiles() {
+        // get the current list of internal files and clear it to avoid duplicates
         fileList = InternalFilesSingleton.getInstance().getFileList();
         fileList.clear();
 
-        if(path == null || location == null){
+        // check if a path and location are given so whether the file is a folder
+        if (path == null || location == null) {
             // get files from device storage via path
             getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
 
             // get files from sd card if present
-            if(isExternalStorageWritable()){
+            if (isExternalStorageWritable()) {
                 getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
             }
 
+            // get the current list of Drive files and add it to the list
             driveFiles = DriveFilesSingleton.getInstance().getFileList();
+
+            // function to compare the file list with the drive file list
+            // in order to only add the new files still needs to be written
+
             fileList.addAll(driveFiles);
 
-        }
-        else{
-
+        } else {
+            // get files from folder
             getFiles(path, location);
+
         }
 
         // set the adapter
         adapter = new FileAdapter(getActivity(), getContext(), fileList);
         rvFiles.setAdapter(adapter);
-        onItemsLoadComplete();
+
+        // the layout is set, loading icon needs to be removed
+        swipeRefreshLayout.setRefreshing(false);
+
     }
 
-    /* Adds the files from the given path to the array list */
+    /**
+     * Checks if external storage is present and writable.
+     */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+
+    }
+
+    /**
+     * Adds the files from the given path to the array list.
+     */
     public void getFiles(String path, String location){
         File list = new File(path);
         File[] files = list.listFiles();
 
-        // loop over the files and folders
+        // loop over the files and folders in the given location
         for (File file : files) {
-
             fileList.add(new FileObject(null, file, location, "file"));
-            Log.d("string path", file.getPath());
 
         }
-
 
     }
 

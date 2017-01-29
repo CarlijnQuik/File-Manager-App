@@ -17,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Carlijn Quik on 1/26/2017.
+ * Enables the user to upload files from phone to Drive (still needs to be rewritten in order to function).
  */
 
 public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
@@ -37,10 +37,14 @@ public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         mService = new com.google.api.services.drive.Drive.Builder(transport, jsonFactory, credential)
-                .setApplicationName("BliFi")
+                .setApplicationName("File Manager")
                 .build();
+
     }
 
+    /**
+     * Background task to call Drive API.
+     */
     @Override
     protected File doInBackground(Object... voids) {
         try {
@@ -52,6 +56,9 @@ public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
         }
     }
 
+    /**
+     * Upload the file.
+     */
     private File upload(File file) throws IOException {
         uploadFile = file;
         if (uploadFile != null && token != null) {
@@ -108,7 +115,6 @@ public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
             return null;
         }
 
-
     }
 
     protected void onPostExecute(File result){
@@ -118,8 +124,10 @@ public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
 
     }
 
+    /**
+     * Change the extension so it is compatible with Google Drive.
+     */
     public String changeExtension(String type) {
-
         if (type.equals("folder")) {
             type = "application/vnd.google-apps.folder";
         }
