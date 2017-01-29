@@ -137,7 +137,7 @@
 | Log out is possible                                     | Log out / multiple accounts not clear             |    
 | Easier way to create files with its predefined intent   | Handle all connections yourself (asynctasks etc.) |
 
-#### Extra day
+#### Extra day 1
 - Decided to code for an extra day, because some bugs took me a bit too long, yet I learned to solve problems more efficiently
 - Decided that it is best to start the app with a sign in activity which redirects to the navigation drawer activity on success, so for this project the app can only handle one account
 - Downloading is now working in the recyclerview by pressing the toolbar on the right
@@ -145,6 +145,9 @@
 - Getting the code style and efficiency right for this version of the App, so next week there is still time to add some features
 
 <img src= "https://cloud.githubusercontent.com/assets/22945709/22400728/892f444a-e5bd-11e6-8894-0dad84bb614e.png" width="200">
+
+#### Extra day 2
+- Putting sign in in an activity turns out to be more logical with working with a menu, because the activity does not need to use the menus and especially because for now the user can only add one account
 
 *Week 4*
 TODO list;
