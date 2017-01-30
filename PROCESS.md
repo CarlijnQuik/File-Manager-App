@@ -152,8 +152,13 @@
 #### Day 9
 - Finishing the app as it is, so if there is time left I can add uploading
 - Signing in and out works
-- Can let the user know when downloading finishes and a folder is empty
+- Can let the user know when downloading finishes and enables to open the file by notification
+- Can let the user know when a folder is empty
 - Can show the trash can of files and delete files
+
+<img src="https://cloud.githubusercontent.com/assets/22945709/22446406/bb08b24a-e74c-11e6-8abf-2c41c3385443.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22446404/bb03a64c-e74c-11e6-8dab-87cb31f96513.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22446405/bb07ea7c-e74c-11e6-9608-7cad71fc57f8.png" width="200">
 
 #### Day 10
 TODO;
