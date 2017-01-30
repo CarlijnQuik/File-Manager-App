@@ -169,6 +169,7 @@ TODO list;
 - Extra: Work with Drive folders
 - Extra: enable the user to upload / create Drive file
 - Extra: Enable the user to rename files
+- Extra: Enable the user to move files to a different folder (Drive)
 
 
 
