@@ -18,17 +18,17 @@
         android:contentDescription="@string/image_display"
         android:id="@+id/ivHeader"
         android:scaleType="fitCenter"
-        android:layout_width="94dp"
-        android:layout_height="82dp"
+        android:layout_width="74dp"
+        android:layout_height="53dp"
         android:background="@android:color/transparent"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:src="@drawable/google_drive_logo" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvHeader"
-        android:paddingTop="5dp"
+        android:paddingTop="20dp"
         android:textStyle="bold"
         android:textColor="@color/colorWhite"
         android:text="File Manager"

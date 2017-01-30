@@ -41,5 +41,6 @@
     <string name="file_manager_welcome">Welcome to File Manager</string>
     <string name="access_google_account">This app needs to access your Google account.</string>
     <string name="install_play_services">"This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app. "</string>
+    <string name="trash">Trash</string>
 
 </resources>

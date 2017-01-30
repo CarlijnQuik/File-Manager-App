@@ -10,7 +10,7 @@
         <item
             android:id="@+id/nav_trash_can"
             android:icon="@android:drawable/ic_menu_delete"
-            android:title="@string/trashcan"/>
+            android:title="@string/trash"/>
 
         <item
             android:id="@+id/nav_sing_out"

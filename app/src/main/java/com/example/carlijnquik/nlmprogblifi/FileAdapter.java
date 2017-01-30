@@ -136,6 +136,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                         Bundle bundle = new Bundle();
                         bundle.putString("filePath", file.getAbsolutePath());
                         bundle.putString("fileLocation", fileObject.getLocation());
+                        bundle.putBoolean("trashClicked", false);
                         frag.setArguments(bundle);
 
                         // switch the fragment (see function below)
@@ -268,35 +269,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     }
 
     /**
-     * Returns the file's extension.
-     */
-    public String fileExt(String fileType) {
-        if (fileType.indexOf("?") > -1) {
-            fileType = fileType.substring(0, fileType.indexOf("?"));
-        }
-        if (fileType.lastIndexOf(".") == -1) {
-            return "file";
-        } else {
-            String ext = fileType.substring(fileType.lastIndexOf(".") + 1);
-            if (ext.indexOf("%") > -1) {
-                ext = ext.substring(0, ext.indexOf("%"));
-            }
-            if (ext.indexOf("/") > -1) {
-                ext = ext.substring(0, ext.indexOf("/"));
-            }
-            Log.d("String extension", ext.toLowerCase());
-
-            return ext.toLowerCase();
-
-        }
-
-    }
-
-    /**
      * Set item views based on views and data model.
      */
     public void setLayout(FileObject fileObject){
-        // get both the file and drivefile to see which one is empty
+        // get both the file and Drive file to see which one is empty
         File file = fileObject.getFile();
         com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
 
@@ -314,30 +290,19 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
         }
 
-        // if the file is a Java file, set the type and view accordingly
+        // if the file is a Java file, set the view accordingly
         if (file != null) {
             btvFilename.setText(file.getName());
-
-            // set the type by extension (function fileExt above)
-            fileObject.type = fileExt(file.getName());
-
-            // if the file is a directory, change the type
-            if (file.isDirectory()) {
-                fileObject.type = "folder";
-            }
-
-            btvType.setText(fileObject.getType());
-
         }
 
         // if the file is a Drive file, set the view accordingly
         if (driveFile != null) {
             btvFilename.setText(driveFile.getName());
-            btvType.setText(fileObject.getType());
         }
 
         // set the type view
         String type = fileObject.getType();
+        btvType.setText(type);
         if (type.equals("folder") || type.equals("application/vnd.google-apps.folder")) {
             bivType.setImageResource(R.drawable.folder_icon);
         }

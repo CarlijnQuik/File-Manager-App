@@ -21,12 +21,12 @@ import java.util.List;
  * An asynchronous task that handles the Drive API call and puts the retrieved files in a list.
  */
 
-public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, List<String>> {
+public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<FileObject>> {
 
     private com.google.api.services.drive.Drive mService = null;
     private Exception mLastError = null;
     ArrayList<FileObject> driveFiles;
-
+    ArrayList<FileObject> trashedFiles;
     // constructor
     ListDriveFilesAsyncTask(GoogleAccountCredential credential) {
         // connect to the Drive service
@@ -42,7 +42,7 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, List<String>>
      * Background task to call Drive API.
      */
     @Override
-    protected List<String> doInBackground(Void... params) {
+    protected ArrayList<FileObject> doInBackground(Void... params) {
         try {
             return getDataFromApi();
         } catch (Exception e) {
@@ -56,37 +56,41 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, List<String>>
     /**
      * Retrieve the Drive files and put them in the Drive Files Singleton.
      */
-    private List<String> getDataFromApi() throws IOException {
-        // create a list to return and check
-        List<String> fileInfo = new ArrayList<>();
-
+    private ArrayList<FileObject> getDataFromApi() throws IOException {
         // get the Drive files from the API
         FileList result = mService.files().list()
                 .setFields("nextPageToken, files")
                 .execute();
         List<File> files = result.getFiles();
 
+        driveFiles = null;
+
         if (files != null) {
             // get the singleton
             driveFiles = DriveFilesSingleton.getInstance().getFileList();
+            trashedFiles = TrashedFilesSingleton.getInstance().getFileList();
 
             // loop over the files and add them to the singleton
             for (File file : files) {
-                fileInfo.add(String.format("%s (%s)\n", file.getName(), file.getWebContentLink()));
                 Log.d("string driveFile", file.getName());
-                driveFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
+                if (!file.getTrashed()) {
+                    driveFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
+                }
+                else {
+                    trashedFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
+                }
 
             }
 
         }
 
         // return type still to be changed for best practices
-        return fileInfo;
+        return driveFiles;
 
     }
 
     @Override
-    protected void onPostExecute(List<String> output) {
+    protected void onPostExecute(ArrayList<FileObject> output) {
         // check if there is output
         if (output == null || output.size() == 0) {
             Log.d("string no", "no results");

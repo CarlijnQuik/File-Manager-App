@@ -22,10 +22,12 @@ public class FileListFragment extends Fragment {
 
     ArrayList<FileObject> fileList;
     ArrayList<FileObject> driveFiles;
+    ArrayList<FileObject> trashedFiles;
     FileAdapter adapter;
     RecyclerView rvFiles;
     String path;
     String location;
+    Boolean trashClicked;
     SwipeRefreshLayout swipeRefreshLayout;
 
     /**
@@ -41,6 +43,8 @@ public class FileListFragment extends Fragment {
             location = bundle.getString("fileLocation");
 
         }
+
+        trashClicked = bundle.getBoolean("trashClicked");
 
     }
 
@@ -82,6 +86,7 @@ public class FileListFragment extends Fragment {
         // get the current list of internal files and clear it to avoid duplicates
         fileList = InternalFilesSingleton.getInstance().getFileList();
         fileList.clear();
+        trashedFiles = TrashedFilesSingleton.getInstance().getFileList();
 
         // check if a path and location are given so whether the file is a folder
         if (path == null || location == null) {
@@ -95,6 +100,7 @@ public class FileListFragment extends Fragment {
 
             // get the current list of Drive files and add it to the list if not already there
             driveFiles = DriveFilesSingleton.getInstance().getFileList();
+
             for (int i = 0; i < driveFiles.size(); i++){
                 if (!fileList.contains(driveFiles.get(i))){
                     fileList.add(driveFiles.get(i));
@@ -108,8 +114,15 @@ public class FileListFragment extends Fragment {
 
         }
 
-        // set the adapter
-        adapter = new FileAdapter(getActivity(), getContext(), fileList);
+        if (!trashClicked) {
+            // set the adapter with the file list
+            adapter = new FileAdapter(getActivity(), getContext(), fileList);
+        }
+        else {
+            // set the adapter with the trashed file list
+            adapter = new FileAdapter(getActivity(), getContext(), trashedFiles);
+        }
+
         rvFiles.setAdapter(adapter);
 
         // the layout is set, loading icon needs to be removed
@@ -133,9 +146,45 @@ public class FileListFragment extends Fragment {
         File list = new File(path);
         File[] files = list.listFiles();
 
-        // loop over the files and folders in the given location
+        // loop over the files and folders in the given location and add the relevant ones to the list
         for (File file : files) {
-            fileList.add(new FileObject(null, file, location, "file"));
+            FileObject fileObject = new FileObject(null, file, location, fileExt(file.getName()));
+
+            // if the file is a directory, change the type
+            if (file.isDirectory()){
+                fileObject.type = "folder";
+            }
+
+            if (!trashedFiles.contains(fileObject) && file.getAbsolutePath().equals("/storage/emulated/legacy/Trash")){
+                trashedFiles.add(fileObject);
+            }
+            else if (!file.getAbsolutePath().equals("/storage/emulated/legacy/Trash")) {
+                fileList.add(fileObject);
+            }
+
+        }
+
+    }
+
+    /**
+     * Returns the file's extension.
+     */
+    public String fileExt(String fileType) {
+        if (fileType.contains("?")) {
+            fileType = fileType.substring(0, fileType.indexOf("?"));
+        }
+        if (fileType.lastIndexOf(".") == -1) {
+            return "file";
+        } else {
+            String ext = fileType.substring(fileType.lastIndexOf(".") + 1);
+            if (ext.contains("%")) {
+                ext = ext.substring(0, ext.indexOf("%"));
+            }
+            if (ext.contains("/")) {
+                ext = ext.substring(0, ext.indexOf("/"));
+            }
+
+            return ext.toLowerCase();
 
         }
 

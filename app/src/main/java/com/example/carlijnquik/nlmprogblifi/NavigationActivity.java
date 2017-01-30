@@ -35,6 +35,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     FloatingActionButton fab;
     android.widget.SearchView searchView;
     SharedPreferences prefs;
+    Boolean trashClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +94,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
 
         // set the initial fragment
-        FileListFragment fragment = new FileListFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("filePath", null);
-        bundle.putString("fileLocation", null);
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
+        openFileList(trashClicked = false);
 
     }
 
@@ -214,12 +210,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         if (id == R.id.nav_file_list) {
             // set the fragment
-            FileListFragment fragment = new FileListFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("filePath", null);
-            bundle.putString("fileLocation", null);
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
+            openFileList(trashClicked = false);
 
             // initialize the floating action button
             fab = (FloatingActionButton) findViewById(R.id.fab_2);
@@ -232,6 +223,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 }
             });
             searchView.setVisibility(View.VISIBLE);
+        }
+        if (id == R.id.nav_trash_can){
+            // set the fragment
+            openFileList(trashClicked = true);
         }
         if (id == R.id.nav_sing_out){
             // remove the saved account name
@@ -249,7 +244,21 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     }
 
     /**
-     * Open the file list fragment.
+     * Set the file list fragment.
+     */
+    public void openFileList(Boolean trashClicked){
+        FileListFragment fragment = new FileListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("filePath", null);
+        bundle.putString("fileLocation", null);
+        bundle.putBoolean("trashClicked", trashClicked);
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
+
+    }
+
+    /**
+     * Open a folder (called from the adapter).
      */
     public void switchContent(int id, FileListFragment fileListFragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
