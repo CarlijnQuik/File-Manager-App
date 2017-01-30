@@ -180,7 +180,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                     if (token != null) {
                         Log.d("string downloadToken", token);
                         // download the file
-                        new DownloadAsyncTask(token, driveFile).execute();
+                        new DownloadAsyncTask(getContext(), token, driveFile).execute();
                     }
 
                 }

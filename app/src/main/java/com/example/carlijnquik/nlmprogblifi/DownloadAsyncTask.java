@@ -1,7 +1,15 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,17 +18,24 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 /**
  * Enables the user to download a file and saves it in the download folder.
  */
 
 public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
 
+    Context context;
     String token;
     com.google.api.services.drive.model.File downloadFile;
     private Exception mLastError = null;
+    private int NOTIFICATION_ID = 1;
+    private Notification notification;
+    private NotificationManager notificationManager;
 
-    public DownloadAsyncTask(String token, com.google.api.services.drive.model.File downloadFile){
+    public DownloadAsyncTask(Context context, String token, com.google.api.services.drive.model.File downloadFile){
+        this.context = context;
         this.token = token;
         this.downloadFile = downloadFile;
 
@@ -101,14 +116,25 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
 
     }
 
+    @Override
+    protected void onPreExecute(){
+        notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+
+        Notification.Builder builder = new Notification.Builder(context)
+                .setSmallIcon(R.drawable.file_icon)
+                .setAutoCancel(true)
+                .setContentTitle("Downloading...")
+                .setContentText(downloadFile.getName());
+
+        notificationManager.notify(NOTIFICATION_ID, builder.getNotification());
+
+    }
 
     @Override
     protected void onPostExecute(java.io.File result) {
         super.onPostExecute(result);
+        Log.d("string downloaded", "downloaded!");
 
-        if (result != null) {
-            Log.d("string downloaded", "downloaded!");
-        }
 
     }
 

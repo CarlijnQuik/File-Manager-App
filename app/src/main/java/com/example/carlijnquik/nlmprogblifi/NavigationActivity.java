@@ -202,7 +202,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     /**
      * Handles navigation view item clicks.
      */
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // get the item clicked
