@@ -93,23 +93,14 @@ public class FileListFragment extends Fragment {
                 getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
             }
 
-            // get the current list of Drive files and add it to the list
+            // get the current list of Drive files and add it to the list if not already there
             driveFiles = DriveFilesSingleton.getInstance().getFileList();
-            fileList.addAll(driveFiles);
-
-            // remove duplicates from list
-            ArrayList<FileObject> duplicates = new ArrayList<>();
-
-            for (int i = 0; i < fileList.size(); i++){
-                for (int j = 0; j < driveFiles.size(); j++){
-                    Log.d("string compare", fileList.get(i).getDriveFile().getName());
-                    Log.d("string compare", driveFiles.get(j).getDriveFile().getName());
-                    if (fileList.get(i).getDriveFile() == driveFiles.get(j).getDriveFile()){
-                        duplicates.add(fileList.get(i));
-                    }
+            for (int i = 0; i < driveFiles.size(); i++){
+                if (!fileList.contains(driveFiles.get(i))){
+                    fileList.add(driveFiles.get(i));
                 }
+
             }
-            fileList.removeAll(duplicates);
 
         } else {
             // get files from folder

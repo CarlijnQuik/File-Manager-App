@@ -10,7 +10,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -93,7 +92,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         }
 
-        // set the fragment initially
+        // set the initial fragment
         FileListFragment fragment = new FileListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("filePath", null);
@@ -140,71 +139,80 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
+        else{
+            super.onBackPressed();
+        }
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // inflate the menu; this adds items to the action bar if it is present
+        // inflate the menu: this adds items to the action bar if it is present
         getMenuInflater().inflate(R.menu.drawer_settings, menu);
         return true;
 
     }
 
+    /**
+     * Handles action/settings bar item clicks. ->what is meant by the home/up button?
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // get the item clicked
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_sort_by) {
             return true;
+
         }
         if (id == R.id.action_select) {
+            // popup with three options
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            // Add the buttons
             builder.setPositiveButton("Files on phone", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
+
+
                 }
             });
             builder.setNeutralButton("Files on SD", new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
+
+
                 }
             });
             builder.setNegativeButton("Files on Drive", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
+
+
                 }
             });
 
-            // Create the AlertDialog
+            // create the alert dialog/popup
             AlertDialog dialog = builder.create();
             dialog.show();
+
             return true;
+
         }
         if (id == R.id.action_select_all) {
             return true;
+
         }
 
-
         return super.onOptionsItemSelected(item);
+
     }
 
+    /**
+     * Handles navigation view item clicks.
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // get the item clicked
         int id = item.getItemId();
 
         if (id == R.id.nav_file_list) {
-            // clear the array list to prevent duplicates
-            ArrayList<FileObject> fileList = InternalFilesSingleton.getInstance().getFileList();
-            fileList.clear();
-
             // set the fragment
             FileListFragment fragment = new FileListFragment();
             Bundle bundle = new Bundle();
@@ -213,12 +221,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
 
+            // initialize the floating action button
             fab = (FloatingActionButton) findViewById(R.id.fab_2);
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.d("string fab", "fab works");
+
                 }
             });
             searchView.setVisibility(View.VISIBLE);
@@ -228,6 +238,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             prefs.edit().remove("accountName").apply();
             Intent intent = new Intent(this, CredentialActivity.class);
             startActivity(intent);
+            finish();
 
         }
 
@@ -237,13 +248,15 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
     }
 
+    /**
+     * Open the file list fragment.
+     */
     public void switchContent(int id, FileListFragment fileListFragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(id, fileListFragment, fileListFragment.toString());
         ft.addToBackStack(null);
         ft.commit();
+
     }
-
-
 
 }
