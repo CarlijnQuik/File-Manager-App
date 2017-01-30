@@ -108,4 +108,7 @@ https://pixabay.com/p-297018/?no_redirect
 *Google icons*
 http://icons.iconarchive.com/icons/dtafalonso/android-lollipop/512/Docs-icon.png
 
+*Upload icon*
+http://www.iconsplace.com/purple-icons/downloading-updates-icon
+
 
