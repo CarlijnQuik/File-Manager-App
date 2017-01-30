@@ -137,36 +137,38 @@
 | Log out is possible                                     | Log out / multiple accounts not clear             |    
 | Easier way to create files with its predefined intent   | Handle all connections yourself (asynctasks etc.) |
 
-#### Extra day
+#### Weekend
 - Decided to code for an extra day, because some bugs took me a bit too long, yet I learned to solve problems more efficiently
 - Decided that it is best to start the app with a sign in activity which redirects to the navigation drawer activity on success, so for this project the app can only handle one account
 - Downloading is now working in the recyclerview by pressing the toolbar on the right
 - The page can be refreshed by swipe
 - Getting the code style and efficiency right for this version of the App, so next week there is still time to add some features
+- Putting sign in in an activity turns out to be more logical with working with a menu, because the activity does not need to use the menus and especially because for now the user can only add one account
 
 <img src= "https://cloud.githubusercontent.com/assets/22945709/22400728/892f444a-e5bd-11e6-8894-0dad84bb614e.png" width="200">
 
 *Week 4*
+
+#### Day 9
+- Finishing the app as it is, so if there is time left I can add uploading
+- Signing in and out works
+
 TODO list;
-- Design / code style 
 - Debugging: think about what happens when a user for instance loses connection
 
-- Better authentication, logging in and out and token
+- Better authentication (SHA 1), handling credential over multiple activities and token
 
 - Enable the user to sort files 
 - Enable the user to search through files 
 - Enable the user to select (all) files 
 - Let the user know when downloading finishes and a file is empty
 
-- Create and remove Java files
-
+- Create Java files and remove files
 - Show the trash can of files 
-- Work with Drive folders
-- Extra: enable the user to edit a file
-- Extra: enable the user to upload 
-- Enable user to create
-- Enable the user to remove files 
-- Enable the user to rename files
+
+- Extra: Work with Drive folders
+- Extra: enable the user to upload / create Drive file
+- Extra: Enable the user to rename files
 
 
 
