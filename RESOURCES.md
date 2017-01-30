@@ -55,6 +55,9 @@
 - http://stackoverflow.com/questions/16115109/google-drive-on-android-error-java-lang-illegalargumentexception-the-name-must/41511391#41511391
 - https://developer.android.com/reference/android/app/Activity.html#RESULT_OK
 - http://stackoverflow.com/questions/12732422/adding-header-for-httpurlconnection
+- http://stackoverflow.com/questions/35143283/google-drive-api-v3-migration/35143284
+- https://developers.google.com/drive/v3/web/search-parameters
+- https://developers.google.com/drive/v3/web/migration
 
 *List view to recyler view*
 - https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
