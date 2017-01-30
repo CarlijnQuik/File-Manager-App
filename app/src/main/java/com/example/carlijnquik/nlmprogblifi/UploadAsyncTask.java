@@ -2,6 +2,7 @@ package com.example.carlijnquik.nlmprogblifi;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -79,14 +80,10 @@ public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
                     Log.d("string fault", connection.getResponseMessage());
                 }
 
-                int fileLength = connection.getContentLength();
-
-
                 FileInputStream fileInputStream = new FileInputStream(uploadFile);
                 OutputStream outputStream = connection.getOutputStream();
 
                 byte[] buffer = new byte[4096];
-                long total = 0;
                 int count;
 
                 while ((count = fileInputStream.read(buffer)) != -1) {
@@ -94,14 +91,9 @@ public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
                         fileInputStream.close();
                         return null;
                     }
-                    total += count;
-                    //if(fileLength > 0) {
-                    //  publishProgress((int) (total * 100 / fileLength));
-                    //}
                     outputStream.write(buffer, 0, count);
 
                 }
-
                 outputStream.close();
 
                 return uploadFile;
@@ -111,7 +103,8 @@ public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
                 return null;
             }
         } else {
-            // Handle the case where the file on Google Drive has no length here.
+            // notify user the file is empty
+            //Toast.makeText()
             return null;
         }
 
@@ -122,47 +115,6 @@ public class UploadAsyncTask extends AsyncTask<Object, Object, File> {
             Log.d("string uploaded", "uploaded!");
         }
 
-    }
-
-    /**
-     * Change the extension so it is compatible with Google Drive.
-     */
-    public String changeExtension(String type) {
-        if (type.equals("folder")) {
-            type = "application/vnd.google-apps.folder";
-        }
-        if (type.equals("doc")) {
-            type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document ";
-        }
-        if (type.equals("txt")) {
-            type = "text/plain";
-        }
-        if (type.equals("xls")) {
-            type = "pplication/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        }
-        if (type.equals("pdf")) {
-            type = "application/pdf";
-        }
-        if (type.equals("ppt")) {
-            type = "application/vnd.openxmlformats-officedocument.presentationml.presentation ";
-        }
-        if (type.equals("jpg")) {
-            type = "image/jpeg";
-        }
-        if (type.equals("png")) {
-            type = "image/png";
-        }
-        if (type.equals("zip")) {
-            type = "application/zip";
-        }
-        if (type.equals("mp4")) {
-            type = "video/mp4";
-        }
-        if (type.equals("mp3")) {
-            type = "music/mp3";
-        }
-
-        return type;
     }
 
 }

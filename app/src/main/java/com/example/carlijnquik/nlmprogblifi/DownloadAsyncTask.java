@@ -2,11 +2,16 @@ package com.example.carlijnquik.nlmprogblifi;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
@@ -61,7 +66,8 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
         if (downloadFile.getId() != null && token != null) {
             try {
                 // gets the download folder
-                File downloadsFolder = new File("/storage/emulated/legacy/Download");
+                File downloadsFolder = new File(System.getenv("EXTERNAL_STORAGE") + "/Download");
+                downloadsFolder.mkdirs();
 
                 // connect and set authorization by token
                 URL url = new URL("https://www.googleapis.com/drive/v2/files/" + downloadFile.getId() + "?alt=media");
@@ -76,16 +82,14 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
                     Log.d("string fault", connection.getResponseMessage());
                 }
 
-                int fileLength = connection.getContentLength();
-
                 // creates an empty file to put the downloaded file in
                 java.io.File javaFile = new java.io.File(downloadsFolder.getAbsolutePath() + "/" + downloadFile.getName());
+                Log.d("string dpath", javaFile.getAbsolutePath());
 
                 // start downloading
                 InputStream inputStream = connection.getInputStream();
                 FileOutputStream fileOutput = new FileOutputStream(javaFile);
                 byte[] buffer = new byte[4096];
-                long total = 0;
                 int count;
 
                 while ((count = inputStream.read(buffer)) != -1) {
@@ -93,24 +97,22 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
                         inputStream.close();
                         return null;
                     }
-                    total += count;
-                    //if(fileLength > 0) {
-                    //  publishProgress((int) (total * 100 / fileLength));
-                    //}
                     fileOutput.write(buffer, 0, count);
 
                 }
-
                 fileOutput.close();
-                Log.d("string path", javaFile.getAbsolutePath());
 
                 // return the downloaded file
                 return javaFile;
+
             } catch (IOException e) {
+                // file is empty
+                Toast.makeText(context, "The file is empty.", Toast.LENGTH_SHORT).show();
                 return null;
             }
         } else {
             // file ID or token is null
+            Toast.makeText(context, "Something went wrong :(", Toast.LENGTH_SHORT).show();
             return null;
         }
 
@@ -118,23 +120,52 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
 
     @Override
     protected void onPreExecute(){
-        notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-
-        Notification.Builder builder = new Notification.Builder(context)
-                .setSmallIcon(R.drawable.file_icon)
-                .setAutoCancel(true)
-                .setContentTitle("Downloading...")
-                .setContentText(downloadFile.getName());
-
-        notificationManager.notify(NOTIFICATION_ID, builder.getNotification());
+        Toast.makeText(context, "Downloading " + downloadFile.getName(), Toast.LENGTH_LONG).show();
 
     }
 
     @Override
     protected void onPostExecute(java.io.File result) {
         super.onPostExecute(result);
-        Log.d("string downloaded", "downloaded!");
 
+        // check if the file was downloaded
+        if (result != null) {
+            // notify the user the file was downloaded and enable to open it
+            Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+            // create the intent to show the "open with" picker by extension
+            Intent newIntent = NavigationActivity.openFile(result);
+            PendingIntent pIntent = PendingIntent.getActivity(context, 0, newIntent, 0);
+
+            // build the notification and sent it
+            Notification.Builder builder = new Notification.Builder(context)
+                    .setSmallIcon(R.drawable.file_icon)
+                    .setAutoCancel(true)
+                    .setSound(soundUri)
+                    .setContentText(downloadFile.getName())
+                    .setContentTitle("Downloaded!")
+                    .setContentIntent(pIntent);
+
+            notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(NOTIFICATION_ID, builder.getNotification());
+        }
+        else {
+            // notify the user that the file could not be downloaded and ask what to do
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Something went wrong with your download :(")
+            .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    new DownloadAsyncTask(context, token, downloadFile).execute();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Toast.makeText(context, "Download cancelled.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
 
     }
 

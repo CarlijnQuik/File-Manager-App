@@ -12,6 +12,7 @@ import com.google.api.services.drive.DriveScopes;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -122,7 +123,7 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
         // check token
         else {
             // list the files in Drive using the credential
-            new ListDriveFilesAsyncTask(driveCredential).execute();
+            new ListDriveFilesAsyncTask(driveCredential, this).execute();
 
             // get the token to sent with HTTP requests later on
             // (valid one hour, assuming a user does not use the App for more than that and this is only for testing purposes)
@@ -154,12 +155,10 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
                 getResultsFromApi();
 
             } else {
-
                 // start a dialog from which the user can choose an account
                 startActivityForResult(driveCredential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
             }
         } else {
-
             // request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     this,
@@ -236,7 +235,7 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
      */
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {
-        // Do nothing.
+        // do nothing
     }
 
     /**
@@ -267,7 +266,7 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         final int connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
+            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode, this);
         }
 
     }
@@ -276,10 +275,10 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
     /**
      * Display an error dialog showing that Google Play Services is missing or out of date.
      */
-    void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
+    static void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode, Activity activity) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                CredentialActivity.this,
+                activity,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();

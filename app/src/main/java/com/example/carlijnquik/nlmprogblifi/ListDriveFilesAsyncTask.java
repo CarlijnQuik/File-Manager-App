@@ -1,8 +1,12 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.credentials.CredentialRequest;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -26,9 +30,12 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
     private com.google.api.services.drive.Drive mService = null;
     private Exception mLastError = null;
     ArrayList<FileObject> driveFiles;
-    ArrayList<FileObject> trashedFiles;
+    Activity activity;
+
     // constructor
-    ListDriveFilesAsyncTask(GoogleAccountCredential credential) {
+    ListDriveFilesAsyncTask(GoogleAccountCredential credential, Activity activity) {
+        this.activity = activity;
+
         // connect to the Drive service
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -68,17 +75,11 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
         if (files != null) {
             // get the singleton
             driveFiles = DriveFilesSingleton.getInstance().getFileList();
-            trashedFiles = TrashedFilesSingleton.getInstance().getFileList();
 
             // loop over the files and add them to the singleton
             for (File file : files) {
                 Log.d("string driveFile", file.getName());
-                if (!file.getTrashed()) {
-                    driveFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
-                }
-                else {
-                    trashedFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
-                }
+                driveFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
 
             }
 
@@ -105,22 +106,20 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
      */
     @Override
     protected void onCancelled() {
-
         if (mLastError != null) {
             if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                //showGooglePlayServicesAvailabilityErrorDialog(
-                     //   ((GooglePlayServicesAvailabilityIOException) mLastError)
-                       //         .getConnectionStatusCode());
+                CredentialActivity.showGooglePlayServicesAvailabilityErrorDialog(
+                        ((GooglePlayServicesAvailabilityIOException) mLastError).getConnectionStatusCode(), activity);
             } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                //startActivityForResult(
-                  //      ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                    //    CredentialActivity.REQUEST_AUTHORIZATION);
+                activity.startActivityForResult(
+                        ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                        CredentialActivity.REQUEST_AUTHORIZATION);
             } else {
-                //mOutputText.setText("The following error occurred:\n"
-                  //      + mLastError.getMessage());
+                Toast.makeText(activity.getApplicationContext(), "The following error occurred:\n" + mLastError.getMessage(), Toast.LENGTH_LONG).show();
             }
         } else {
-            //mOutputText.setText("Request cancelled.");
+            Toast.makeText(activity.getApplicationContext(), "Request for Drive files was cancelled.", Toast.LENGTH_LONG).show();
+
         }
 
     }

@@ -3,10 +3,13 @@ package com.example.carlijnquik.nlmprogblifi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +22,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.api.services.drive.model.FileList;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
@@ -34,6 +44,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     ImageView bivType;
     SharedPreferences prefs;
     String token;
+    String pathTrashCan = "/FM-Trash/";
 
     /**
      * Initializes the view.
@@ -72,16 +83,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         this.activity = activity;
         this.context = context;
         this.files = files;
-
-    }
-
-    public Context getContext(){
-        return this.context;
-
-    }
-
-    public ArrayList<FileObject> getFiles(){
-        return this.files;
 
     }
 
@@ -134,8 +135,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
                         // pass it the path and location to retrieve the files from
                         Bundle bundle = new Bundle();
-                        bundle.putString("filePath", file.getAbsolutePath());
-                        bundle.putString("fileLocation", fileObject.getLocation());
+                        bundle.putString("folderPath", file.getAbsolutePath());
+                        bundle.putString("folderLocation", fileObject.getLocation());
                         bundle.putBoolean("trashClicked", false);
                         frag.setArguments(bundle);
 
@@ -145,7 +146,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                     }
                     else if(file.isFile()){
                         // enable the user to pick a program to open the file with (see function below)
-                        openFile(fileObject);
+                        Intent intent = NavigationActivity.openFile(file);
+                        openIntent(intent);
 
                     }
 
@@ -157,6 +159,53 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 }
 
                 // function to open Drive folders within the App still has to be written
+
+            }
+        });
+
+
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                // recognize the item clicked and get the Java and Google file
+                int positionClick = viewHolder.getAdapterPosition();
+                final FileObject fileObject = files.get(positionClick);
+                //files.remove(fileObject);
+
+                final File file = fileObject.getFile();
+                com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
+
+                if (file != null && !file.isDirectory()){
+                    if (file.getPath().contains("Trash")){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which){
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        // yes button clicked
+                                        file.delete();
+                                        break;
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                        // do nothing
+                                        break;
+                                }
+                            }
+                        };
+                        builder.setMessage("Are you sure you want to delete this file?").setPositiveButton("Yes", dialogClickListener)
+                                .setNegativeButton("No", dialogClickListener).show();
+                    }
+                    else {
+                        moveFile(file, pathTrashCan);
+                    }
+                    files.remove(fileObject);
+                    notifyDataSetChanged();
+
+                }
+
+
+
+                return true;
 
             }
         });
@@ -180,7 +229,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                     if (token != null) {
                         Log.d("string downloadToken", token);
                         // download the file
-                        new DownloadAsyncTask(getContext(), token, driveFile).execute();
+                        new DownloadAsyncTask(context, token, driveFile).execute();
                     }
 
                 }
@@ -205,45 +254,26 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         String url = "https://drive.google.com/open?id=" + driveFile.getId();
 
         // create the intent to show the "open with" picker
-        Intent newIntent = new Intent(Intent.ACTION_VIEW);
-        newIntent.setData(Uri.parse(url));
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        // try to start the new intent in the right context
-        try {
-            getContext().startActivity(newIntent);
-        } catch (ActivityNotFoundException e) {
-
-            // let the user know if the file can be opened
-            Toast.makeText(getContext(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
-
-        }
+        openIntent(intent);
 
     }
 
     /**
-     * Opens the file in default extension and otherwise lets the user pick one.
+     * Start the passed intent to open a file.
      */
-    public void openFile(FileObject fileObject){
-        // create mime type map to identify the right mime type by extension
-        MimeTypeMap myMime = MimeTypeMap.getSingleton();
-
-        // create the intent to show the "open with" picker by extension
-        Intent newIntent = new Intent(Intent.ACTION_VIEW);
-        String mimeType = myMime.getMimeTypeFromExtension(fileObject.getType());
-        newIntent.setDataAndType(Uri.fromFile(fileObject.getFile()), mimeType);
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        // try to start the new intent in the right context
+    public void openIntent(Intent intent){
         try {
-            getContext().startActivity(newIntent);
+            context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
 
             // let the user know if the file can be opened
-            Toast.makeText(getContext(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "No handler for this type of file.", Toast.LENGTH_LONG).show();
 
         }
-
     }
 
     /**
@@ -264,6 +294,40 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         if (context instanceof NavigationActivity) {
             NavigationActivity navigationActivity = (NavigationActivity) context;
             navigationActivity.switchContent(id, fileListFragment);
+        }
+
+    }
+
+    /**
+     * Moves the file to another location.
+     */
+    private void moveFile(File fileToMove, String outputPath) {
+
+        try {
+            File folder = new File(System.getenv("EXTERNAL_STORAGE") + "/Samsung", "Trash");
+
+            // creates an empty file to put the moved file in
+            java.io.File newLocation = new java.io.File(folder.getAbsolutePath() +  "/" + fileToMove.getName());
+            Log.d("string newPath", newLocation.getAbsolutePath());
+            Log.d("string newPath", newLocation.getPath());
+
+            InputStream inputStream = new FileInputStream(fileToMove);
+            FileOutputStream fileOutput = new FileOutputStream(newLocation);
+
+            byte[] buffer = new byte[4096];
+            int count;
+            while ((count = inputStream.read(buffer)) != -1) {
+                fileOutput.write(buffer, 0, count);
+            }
+            fileOutput.close();
+
+        }
+
+        catch (FileNotFoundException fnfe1) {
+            Log.e("tag", fnfe1.getMessage());
+        }
+        catch (Exception e) {
+            Log.e("tag", e.getMessage());
         }
 
     }

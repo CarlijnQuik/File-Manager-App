@@ -1,9 +1,11 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,10 +21,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -248,11 +252,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public void openFileList(Boolean trashClicked){
         FileListFragment fragment = new FileListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("filePath", null);
-        bundle.putString("fileLocation", null);
+        bundle.putString("folderPath", null);
+        bundle.putString("folderLocation", null);
         bundle.putBoolean("trashClicked", trashClicked);
         fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).addToBackStack(null).commit();
 
     }
 
@@ -264,6 +268,58 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         ft.replace(id, fileListFragment, fileListFragment.toString());
         ft.addToBackStack(null);
         ft.commit();
+
+    }
+
+
+    /**
+     * Opens the file in default extension and otherwise lets the user pick one.
+     */
+    public static Intent openFile(File file) {
+        // create the intent to show the "open with" picker by extension
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        newIntent.setDataAndType(Uri.fromFile(file), getMimeType(file));
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        return newIntent;
+
+    }
+
+    /**
+     * Returns the file's mime type.
+     */
+    public static String getMimeType(File file){
+        String ext = fileExt(file.getName());
+        if (ext != null) {
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+        }
+        else{
+            return null;
+        }
+
+    }
+
+    /**
+     * Returns the file's extension.
+     */
+    public static String fileExt(String fileType) {
+        if (fileType.contains("?")) {
+            fileType = fileType.substring(0, fileType.indexOf("?"));
+        }
+        if (fileType.lastIndexOf(".") == -1) {
+            return null;
+        } else {
+            String ext = fileType.substring(fileType.lastIndexOf(".") + 1);
+            if (ext.contains("%")) {
+                ext = ext.substring(0, ext.indexOf("%"));
+            }
+            if (ext.contains("/")) {
+                ext = ext.substring(0, ext.indexOf("/"));
+            }
+
+            return ext.toLowerCase();
+
+        }
 
     }
 

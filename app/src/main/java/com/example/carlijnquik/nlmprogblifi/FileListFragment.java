@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,8 +28,9 @@ public class FileListFragment extends Fragment {
     ArrayList<FileObject> trashedFiles;
     FileAdapter adapter;
     RecyclerView rvFiles;
-    String path;
-    String location;
+    TextView tvNoFiles;
+    String folderPath;
+    String folderLocation;
     Boolean trashClicked;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -38,9 +42,9 @@ public class FileListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
-        if (bundle.getString("filePath") != null) {
-            path = bundle.getString("filePath");
-            location = bundle.getString("fileLocation");
+        if (bundle.getString("folderPath") != null) {
+            folderPath = bundle.getString("folderPath");
+            folderLocation = bundle.getString("folderLocation");
 
         }
 
@@ -58,6 +62,7 @@ public class FileListFragment extends Fragment {
         // initialize views
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         rvFiles = (RecyclerView) view.findViewById(R.id.rvFiles);
+        tvNoFiles = (TextView) view.findViewById(R.id.tvNoFiles);
 
         // enable the user to refresh the view by swiping
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -83,13 +88,15 @@ public class FileListFragment extends Fragment {
      * Retrieve all the files, put them in a list and set the adapter with it.
      */
     public void getAllFiles() {
+        tvNoFiles.setVisibility(View.INVISIBLE);
+        trashedFiles = new ArrayList<>();
+
         // get the current list of internal files and clear it to avoid duplicates
         fileList = InternalFilesSingleton.getInstance().getFileList();
         fileList.clear();
-        trashedFiles = TrashedFilesSingleton.getInstance().getFileList();
 
         // check if a path and location are given so whether the file is a folder
-        if (path == null || location == null) {
+        if (folderPath == null || folderLocation == null) {
             // get files from device storage via path
             getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
 
@@ -102,25 +109,35 @@ public class FileListFragment extends Fragment {
             driveFiles = DriveFilesSingleton.getInstance().getFileList();
 
             for (int i = 0; i < driveFiles.size(); i++){
-                if (!fileList.contains(driveFiles.get(i))){
-                    fileList.add(driveFiles.get(i));
+                if (!fileList.contains(driveFiles.get(i))) {
+                    if (!driveFiles.get(i).getDriveFile().getTrashed()){
+                        fileList.add(driveFiles.get(i));
+                    }
+                    else {
+                        trashedFiles.add(driveFiles.get(i));
+                    }
                 }
 
             }
-
         } else {
             // get files from folder
-            getFiles(path, location);
+            getFiles(folderPath, folderLocation);
 
         }
-
+        // set the adapter with the file list
         if (!trashClicked) {
-            // set the adapter with the file list
             adapter = new FileAdapter(getActivity(), getContext(), fileList);
+            if (fileList.isEmpty()) {
+                tvNoFiles.setVisibility(View.VISIBLE);
+            }
         }
-        else {
+        else{
             // set the adapter with the trashed file list
+            getFiles(System.getenv("EXTERNAL_STORAGE") + "/Samsung/Trash", "PHONE");
             adapter = new FileAdapter(getActivity(), getContext(), trashedFiles);
+            if (trashedFiles.isEmpty()){
+                tvNoFiles.setVisibility(View.VISIBLE);
+            }
         }
 
         rvFiles.setAdapter(adapter);
@@ -148,43 +165,27 @@ public class FileListFragment extends Fragment {
 
         // loop over the files and folders in the given location and add the relevant ones to the list
         for (File file : files) {
-            FileObject fileObject = new FileObject(null, file, location, fileExt(file.getName()));
+            // get the file's mime type
+            String mime = NavigationActivity.getMimeType(file);
+            FileObject fileObject = new FileObject(null, file, location, mime);
 
-            // if the file is a directory, change the type
+            Log.d("string file", file.getName());
+
+            // if the mime type is null, set the type to "file"
+            if (mime == null){
+                fileObject.type = "file";
+            }
+
+            // if the file is a directory, change the type to "folder"
             if (file.isDirectory()){
                 fileObject.type = "folder";
             }
-
-            if (!trashedFiles.contains(fileObject) && file.getAbsolutePath().equals("/storage/emulated/legacy/Trash")){
+            if (file.getAbsolutePath().contains("Trash")) {
                 trashedFiles.add(fileObject);
             }
-            else if (!file.getAbsolutePath().equals("/storage/emulated/legacy/Trash")) {
+            else {
                 fileList.add(fileObject);
             }
-
-        }
-
-    }
-
-    /**
-     * Returns the file's extension.
-     */
-    public String fileExt(String fileType) {
-        if (fileType.contains("?")) {
-            fileType = fileType.substring(0, fileType.indexOf("?"));
-        }
-        if (fileType.lastIndexOf(".") == -1) {
-            return "file";
-        } else {
-            String ext = fileType.substring(fileType.lastIndexOf(".") + 1);
-            if (ext.contains("%")) {
-                ext = ext.substring(0, ext.indexOf("%"));
-            }
-            if (ext.contains("/")) {
-                ext = ext.substring(0, ext.indexOf("/"));
-            }
-
-            return ext.toLowerCase();
 
         }
 
