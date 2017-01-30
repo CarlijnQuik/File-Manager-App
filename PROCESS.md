@@ -152,24 +152,29 @@
 #### Day 9
 - Finishing the app as it is, so if there is time left I can add uploading
 - Signing in and out works
+- Can let the user know when downloading finishes and a folder is empty
+- Can show the trash can of files
+
+#### Day 10
+
+#### Day 11
+
+#### Final day
 
 TODO list;
-- Debugging: think about what happens when a user for instance loses connection
 
-- Better authentication (SHA 1), handling credential over multiple activities and token
+- Better authentication (SHA 1), handling credential over multiple activities and refresh token
 
 - Enable the user to sort files 
 - Enable the user to search through files 
 - Enable the user to select (all) files 
-- Let the user know when downloading finishes and a file is empty
 
-- Create Java files and remove files
-- Show the trash can of files 
-
-- Extra: Work with Drive folders
-- Extra: enable the user to upload / create Drive file
-- Extra: Enable the user to rename files
-- Extra: Enable the user to move files to a different folder (Drive)
+- Create files
+- Remove files
+- Work with Drive folders
+- Enable the user to upload / create Drive file
+- Enable the user to rename files
+- Enable the user to move files to a different folder (Drive)
 
 
 
