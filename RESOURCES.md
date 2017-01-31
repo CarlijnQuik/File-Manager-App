@@ -85,7 +85,7 @@ https://www.google.com/drive/static/images/drive/logo-drive.png
 http://www.bing.com/images/search?q=light+grey+background&view=detailv2&&id=3D72DBFA788C765D5E283AA8BB449D5F65DFE95D&selectedIndex=1&ccid=evU8cTrV&simid=608033470517019724&thid=OIP.M7af53c713ad56e113c7d3f1cc0bbe224H0&ajaxhist=0
 
 *Purple question mark*
-https://redefineschool.files.wordpress.com/2013/03/question-mark-purple.png?w=240
+http://www.iconsdb.com/icons/preview/purple/question-mark-xxl.png
 
 *SD card*
 http://www.iconsplace.com/icons/preview/purple/micro-sd-256.png
