@@ -37,6 +37,7 @@
 - http://stackoverflow.com/questions/5414657/extract-substring-from-a-string
 - http://stackoverflow.com/questions/6265298/action-view-intent-for-a-file-with-unknown-mimetype
 - http://stackoverflow.com/questions/4178168/how-to-programmatically-move-copy-and-delete-files-and-directories-on-sd
+- http://stackoverflow.com/questions/13953744/file-mkdir-and-mkdirs-are-creating-file-instead-of-directory
 
 *Google Drive (REST) API and authentication*
 - https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivityWithDrive.java
