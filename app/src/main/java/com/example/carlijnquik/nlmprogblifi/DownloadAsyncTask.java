@@ -34,7 +34,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
     Context context;
     String token;
     com.google.api.services.drive.model.File downloadFile;
-    private Exception mLastError = null;
+    private Exception lastError = null;
     private int NOTIFICATION_ID = 1;
     private Notification notification;
     private NotificationManager notificationManager;
@@ -54,7 +54,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
         try {
             return download(downloadFile);
         } catch (Exception e) {
-            mLastError = e;
+            lastError = e;
             cancel(true);
             return null;
         }
@@ -67,8 +67,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
             try {
                 // gets the download folder
                 File downloadsFolder = new File(System.getenv("EXTERNAL_STORAGE") + "/Download");
-                downloadsFolder.mkdirs();
-
+                
                 // connect and set authorization by token
                 URL url = new URL("https://www.googleapis.com/drive/v2/files/" + downloadFile.getId() + "?alt=media");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -139,7 +138,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
 
             // build the notification and sent it
             Notification.Builder builder = new Notification.Builder(context)
-                    .setSmallIcon(R.drawable.file_icon)
+                    .setSmallIcon(R.drawable.download_icon)
                     .setAutoCancel(true)
                     .setSound(soundUri)
                     .setContentText(downloadFile.getName())

@@ -27,8 +27,8 @@ import java.util.List;
 
 public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<FileObject>> {
 
-    private com.google.api.services.drive.Drive mService = null;
-    private Exception mLastError = null;
+    private com.google.api.services.drive.Drive driveService = null;
+    private Exception lastError = null;
     ArrayList<FileObject> driveFiles;
     Activity activity;
 
@@ -39,7 +39,7 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
         // connect to the Drive service
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        mService = new com.google.api.services.drive.Drive.Builder(transport, jsonFactory, credential)
+        driveService = new com.google.api.services.drive.Drive.Builder(transport, jsonFactory, credential)
                 .setApplicationName("File Manager")
                 .build();
 
@@ -53,7 +53,7 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
         try {
             return getDataFromApi();
         } catch (Exception e) {
-            mLastError = e;
+            lastError = e;
             cancel(true);
             return null;
         }
@@ -65,7 +65,7 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
      */
     private ArrayList<FileObject> getDataFromApi() throws IOException {
         // get the Drive files from the API
-        FileList result = mService.files().list()
+        FileList result = driveService.files().list()
                 .setFields("nextPageToken, files")
                 .execute();
         List<File> files = result.getFiles();
@@ -75,6 +75,9 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
         if (files != null) {
             // get the singleton
             driveFiles = DriveFilesSingleton.getInstance().getFileList();
+
+            // clear the list because a file could have been edited so all files have to be retrieved again
+            driveFiles.clear();
 
             // loop over the files and add them to the singleton
             for (File file : files) {
@@ -94,28 +97,26 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
     protected void onPostExecute(ArrayList<FileObject> output) {
         // check if there is output
         if (output == null || output.size() == 0) {
-            Log.d("string no", "no results");
-        } else {
-            Log.d("string yes", "results");
+           Toast.makeText(activity.getApplicationContext(), "No Drive files found.", Toast.LENGTH_SHORT).show();
         }
 
     }
 
     /**
-     * Handles exceptions (needs to be rewritten to be compatible with an async task).
+     * Handles exceptions.
      */
     @Override
     protected void onCancelled() {
-        if (mLastError != null) {
-            if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+        if (lastError != null) {
+            if (lastError instanceof GooglePlayServicesAvailabilityIOException) {
                 CredentialActivity.showGooglePlayServicesAvailabilityErrorDialog(
-                        ((GooglePlayServicesAvailabilityIOException) mLastError).getConnectionStatusCode(), activity);
-            } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                        ((GooglePlayServicesAvailabilityIOException) lastError).getConnectionStatusCode(), activity);
+            } else if (lastError instanceof UserRecoverableAuthIOException) {
                 activity.startActivityForResult(
-                        ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                        ((UserRecoverableAuthIOException) lastError).getIntent(),
                         CredentialActivity.REQUEST_AUTHORIZATION);
             } else {
-                Toast.makeText(activity.getApplicationContext(), "The following error occurred:\n" + mLastError.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(activity.getApplicationContext(), "The following error occurred:\n" + lastError.getMessage(), Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(activity.getApplicationContext(), "Request for Drive files was cancelled.", Toast.LENGTH_LONG).show();

@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -23,6 +24,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -66,12 +68,32 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
         // initialize views, button onClickListener and progress dialog
         tvStatus = (TextView) findViewById(R.id.tvStatus);
 
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getResultsFromApi();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // do nothing
+                        break;
+                }
+            }
+        };
+
+        builder.setTitle(R.string.deletion_title);
+        builder.setMessage(getString(R.string.deletion_1) + getString(R.string.deletion_2))
+                .setPositiveButton(R.string.got_it, dialogClickListener)
+                .setNegativeButton(R.string.cancel, dialogClickListener);
+
         bSignIn = (Button) findViewById(R.id.bSignIn);
         bSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getResultsFromApi();
-
+                // inform the user about the deletion of files
+                builder.show();
             }
 
         });
@@ -122,15 +144,12 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
         }
         // check token
         else {
-            // list the files in Drive using the credential
-            new ListDriveFilesAsyncTask(driveCredential, this).execute();
-
-            // get the token to sent with HTTP requests later on
-            // (valid one hour, assuming a user does not use the App for more than that and this is only for testing purposes)
+            // get the token to sent with HTTP requests later on, do this here because there is a limit of tokens per day,
+            // assuming the user does not use the app for more than one hour (it expires then)
             getToken();
 
             // go to navigation activity
-            Intent intent = new Intent(this, NavigationActivity.class);
+            Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
             startActivity(intent);
             finish();
 

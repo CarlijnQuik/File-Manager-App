@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -15,22 +16,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.api.services.drive.model.FileList;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.drive.DriveScopes;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The adapter of the list view, handles changes made to the file objects and click methods.
@@ -42,9 +49,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     TextView btvType;
     ImageView bivLocation;
     ImageView bivType;
-    SharedPreferences prefs;
-    String token;
-    String pathTrashCan = "/FM-Trash/";
+    ImageButton bibDownloadUpload;
+    CheckBox bCheckBox;
 
     /**
      * Initializes the view.
@@ -54,7 +60,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         public TextView tvType;
         public ImageView ivType;
         public ImageView ivLocation;
-        public ImageButton ibToolbar;
+        public ImageButton ibDownloadUpload;
         public CheckBox checkBox;
 
         public ViewHolder(View itemView){
@@ -65,7 +71,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             tvType = (TextView) itemView.findViewById(R.id.tvType);
             ivType = (ImageView) itemView.findViewById(R.id.ivType);
             ivLocation = (ImageView) itemView.findViewById(R.id.ivLocation);
-            ibToolbar = (ImageButton) itemView.findViewById(R.id.ibToolbar);
+            ibDownloadUpload = (ImageButton) itemView.findViewById(R.id.ibDownloadUpload);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);
 
         }
@@ -104,8 +110,13 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     /**
      * Involved populating data into the item through holder.
      */
+    String pathTrashCan;
+
     @Override
     public void onBindViewHolder(final FileAdapter.ViewHolder viewHolder, int position) {
+        // get the authorization and Drive service
+        getDrive();
+
         // get the data model based on position
         final FileObject fileObject = files.get(position);
 
@@ -114,6 +125,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         btvType = viewHolder.tvType;
         bivLocation = viewHolder.ivLocation;
         bivType = viewHolder.ivType;
+        bibDownloadUpload = viewHolder.ibDownloadUpload;
+        bCheckBox = viewHolder.checkBox;
+
+        // set the path of the trash can
+        pathTrashCan = Environment.getExternalStorageDirectory() + "/FileManager/Trash";
 
         // sets the layout of these views for the item (on the bottom of this page due to size)
         setLayout(fileObject);
@@ -170,40 +186,62 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 // recognize the item clicked and get the Java and Google file
                 int positionClick = viewHolder.getAdapterPosition();
                 final FileObject fileObject = files.get(positionClick);
-                //files.remove(fileObject);
 
-                final File file = fileObject.getFile();
-                com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
-
-                if (file != null && !file.isDirectory()){
-                    if (file.getPath().contains("Trash")){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which){
-                                    case DialogInterface.BUTTON_POSITIVE:
-                                        // yes button clicked
-                                        file.delete();
-                                        break;
-                                    case DialogInterface.BUTTON_NEGATIVE:
-                                        // do nothing
-                                        break;
+                // build a message to show to confirm the user wants to permanently delete a file
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                // delete the file
+                                if (fileObject.getFile() != null){
+                                    context.deleteFile(fileObject.getFile().getAbsolutePath());
+                                    Toast.makeText(activity.getApplicationContext(), "Deleted!", Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        };
-                        builder.setMessage("Are you sure you want to delete this file?").setPositiveButton("Yes", dialogClickListener)
-                                .setNegativeButton("No", dialogClickListener).show();
-                    }
-                    else {
-                        moveFile(file, pathTrashCan);
-                    }
-                    files.remove(fileObject);
-                    notifyDataSetChanged();
+                                else if (fileObject.getDriveFile() != null){
+                                    new DeleteAsyncTask(driveCredential, activity, fileObject.getDriveFile().getId()).execute();
+                                }
 
+                                // remove the file from the adapter
+                                files.remove(fileObject);
+                                notifyDataSetChanged();
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                // do nothing
+                                break;
+                        }
+                    }
+                };
+                builder.setMessage(R.string.permanent_delete)
+                        .setPositiveButton(R.string.yes, dialogClickListener)
+                        .setNegativeButton(R.string.no, dialogClickListener);
+
+                // if the file is a Java file and in the trash, let the user confirm permanent delete
+                if (fileObject.getFile() != null){
+                    if (fileObject.getFile().getAbsolutePath().contains(pathTrashCan)){
+                        builder.show();
+                    }
+                    // else move the file to trash
+                    else {
+                        moveFile(fileObject.getFile());
+                        Toast.makeText(activity.getApplicationContext(), "Moved to trash", Toast.LENGTH_SHORT).show();
+                        files.remove(fileObject);
+                        notifyDataSetChanged();
+                    }
                 }
 
-
+                // if the file is a Drive file, do the same
+                else if (fileObject.getDriveFile() != null){
+                    if (fileObject.getDriveFile().getTrashed()){
+                        builder.show();
+                    }
+                    else {
+                        new UpdateAsyncTask(driveCredential, activity, fileObject.getDriveFile().getId()).execute();
+                        files.remove(fileObject);
+                        notifyDataSetChanged();
+                    }
+                }
 
                 return true;
 
@@ -211,7 +249,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         });
 
         // enables the user to download and upload files by clicking the toolbar on the right of every file
-        viewHolder.ibToolbar.setOnClickListener(new View.OnClickListener() {
+        viewHolder.ibDownloadUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // recognize the item clicked and get the Java and Google file
@@ -221,10 +259,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
 
                 if (driveFile != null) {
-                    // get the token from SharedPreferences
-                    prefs = activity.getSharedPreferences("accounts", Context.MODE_PRIVATE);
-                    token = prefs.getString("token", null);
-
                     // check if the token is retrieved
                     if (token != null) {
                         Log.d("string downloadToken", token);
@@ -242,6 +276,27 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             }
 
         });
+
+    }
+
+    SharedPreferences prefs;
+    String token;
+    String accountName;
+    GoogleAccountCredential driveCredential;
+    private static final String[] SCOPES = {DriveScopes.DRIVE};
+
+
+    public void getDrive(){
+        // get token and account name from shared preferences
+        prefs = activity.getSharedPreferences("accounts", Context.MODE_PRIVATE);
+        token = prefs.getString("token", null);
+        accountName = prefs.getString("accountName", null);
+
+        // initialize credentials and service object
+        driveCredential = GoogleAccountCredential.usingOAuth2(
+                context, Arrays.asList(SCOPES))
+                .setSelectedAccountName(accountName)
+                .setBackOff(new ExponentialBackOff());
 
     }
 
@@ -301,10 +356,13 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     /**
      * Moves the file to another location.
      */
-    private void moveFile(File fileToMove, String outputPath) {
 
+    private void moveFile(File fileToMove) {
         try {
-            File folder = new File(System.getenv("EXTERNAL_STORAGE") + "/Samsung", "Trash");
+            File folder = new File(System.getenv("EXTERNAL_STORAGE"), "/Trash");
+            if (!folder.exists()){
+                folder.mkdir();
+            }
 
             // creates an empty file to put the moved file in
             java.io.File newLocation = new java.io.File(folder.getAbsolutePath() +  "/" + fileToMove.getName());
@@ -320,6 +378,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 fileOutput.write(buffer, 0, count);
             }
             fileOutput.close();
+
+            //context.deleteFile(fileToMove.getAbsolutePath());
 
         }
 
@@ -340,7 +400,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         File file = fileObject.getFile();
         com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
 
-        // set the location image based on location
+        bibDownloadUpload.setVisibility(View.INVISIBLE);
+        bCheckBox.setVisibility(View.INVISIBLE);
+
+        // set the views that are based on location
         if (fileObject.getLocation() != null) {
             if (fileObject.getLocation().equals("SD")) {
                 bivLocation.setImageResource(R.drawable.sd_card);
@@ -350,6 +413,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             }
             if (fileObject.getLocation().equals("DRIVE")) {
                 bivLocation.setImageResource(R.drawable.google_drive_logo);
+                btvFilename.setText(driveFile.getName());
+                bibDownloadUpload.setVisibility(View.VISIBLE);
+                bibDownloadUpload.setImageResource(R.drawable.download_icon);
             }
 
         }
@@ -357,11 +423,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         // if the file is a Java file, set the view accordingly
         if (file != null) {
             btvFilename.setText(file.getName());
-        }
 
-        // if the file is a Drive file, set the view accordingly
-        if (driveFile != null) {
-            btvFilename.setText(driveFile.getName());
         }
 
         // set the type view
@@ -369,6 +431,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         btvType.setText(type);
         if (type.equals("folder") || type.equals("application/vnd.google-apps.folder")) {
             bivType.setImageResource(R.drawable.folder_icon);
+            bibDownloadUpload.setVisibility(View.INVISIBLE);
+
         }
         if (type.equals("doc") || type.equals("docx") || type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
             bivType.setImageResource(R.drawable.doc_icon);

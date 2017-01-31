@@ -43,5 +43,13 @@
     <string name="trash">Trash</string>
     <string name="no_files_to_show">No files to show</string>
     <string name="empty">Empty</string>
+    <string name="permanent_delete">Are you sure you want to permanently delete this file?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="deletion_1">Android does not have a trash can by default, which is why File Manager creates this trash can for you\n\n</string>
+    <string name="deletion_2">To delete a file you can long click it\n</string>
+    <string name="got_it">Got it!</string>
+    <string name="cancel">Cancel</string>
+    <string name="deletion_title">Deletion of files</string>
 
 </resources>
