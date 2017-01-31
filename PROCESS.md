@@ -152,29 +152,39 @@
 #### Day 9
 - Finishing the app as it is, so if there is time left I can add uploading
 - Signing in and out works
-- Can let the user know when downloading finishes and a folder is empty
-- Can show the trash can of files
+- Can let the user know when downloading finishes and enables to open the file by notification
+- Can let the user know when a folder is empty
+- Can show the trash can of files and delete files
+
+<img src="https://cloud.githubusercontent.com/assets/22945709/22446406/bb08b24a-e74c-11e6-8abf-2c41c3385443.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22446404/bb03a64c-e74c-11e6-8dab-87cb31f96513.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22446405/bb07ea7c-e74c-11e6-9608-7cad71fc57f8.png" width="200">
 
 #### Day 10
+TODO;
+- Better authentication (SHA 1), handling credential over multiple activities and refresh token (Martijn)
+- Delete Java folders
+- Work with Drive folders
+- Delete Drive files and folders
 
 #### Day 11
+TODO;
+- Create a Java file / folder
+- Brainstorm about best practices with peergroup
+- Enable the user to upload / create a Drive file
 
 #### Final day
-
 TODO list;
+- Write the report
+- Go over code efficiency one more time
 
-- Better authentication (SHA 1), handling credential over multiple activities and refresh token
 
 - Enable the user to sort files 
 - Enable the user to search through files 
 - Enable the user to select (all) files 
 
-- Create files
-- Remove files
-- Work with Drive folders
-- Enable the user to upload / create Drive file
-- Enable the user to rename files
-- Enable the user to move files to a different folder (Drive)
+
+
 
 
 

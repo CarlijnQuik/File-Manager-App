@@ -36,6 +36,7 @@
 - http://stackoverflow.com/questions/12780446/check-if-a-path-represents-a-file-or-a-folder
 - http://stackoverflow.com/questions/5414657/extract-substring-from-a-string
 - http://stackoverflow.com/questions/6265298/action-view-intent-for-a-file-with-unknown-mimetype
+- http://stackoverflow.com/questions/4178168/how-to-programmatically-move-copy-and-delete-files-and-directories-on-sd
 
 *Google Drive (REST) API and authentication*
 - https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivityWithDrive.java
@@ -84,7 +85,7 @@ https://www.google.com/drive/static/images/drive/logo-drive.png
 http://www.bing.com/images/search?q=light+grey+background&view=detailv2&&id=3D72DBFA788C765D5E283AA8BB449D5F65DFE95D&selectedIndex=1&ccid=evU8cTrV&simid=608033470517019724&thid=OIP.M7af53c713ad56e113c7d3f1cc0bbe224H0&ajaxhist=0
 
 *Purple question mark*
-https://redefineschool.files.wordpress.com/2013/03/question-mark-purple.png?w=240
+http://www.iconsdb.com/icons/preview/purple/question-mark-xxl.png
 
 *SD card*
 http://www.iconsplace.com/icons/preview/purple/micro-sd-256.png
@@ -106,5 +107,8 @@ https://pixabay.com/p-297018/?no_redirect
 
 *Google icons*
 http://icons.iconarchive.com/icons/dtafalonso/android-lollipop/512/Docs-icon.png
+
+*Upload icon*
+http://www.iconsplace.com/purple-icons/downloading-updates-icon
 
 
