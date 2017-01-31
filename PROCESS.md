@@ -161,17 +161,15 @@
 <img src="https://cloud.githubusercontent.com/assets/22945709/22446405/bb07ea7c-e74c-11e6-9608-7cad71fc57f8.png" width="200">
 
 #### Day 10
-TODO;
-- Better authentication (SHA 1), handling credential over multiple activities and refresh token (Martijn)
-- Delete Java folders
-- Work with Drive folders
-- Delete Drive files and folders
+- The credential can be handled over multiple activities so the files can be synchronized
+- Can create a new folder to use as trashcan for Java files
+- Found out a way to use the credential more effectively and delete and update Drive files
 
 #### Day 11
 TODO;
-- Create a Java file / folder
 - Brainstorm about best practices with peergroup
-- Enable the user to upload / create a Drive file
+- Delete Java and Drive folders 
+- Open a Drive folder
 
 #### Final day
 TODO list;
@@ -182,6 +180,9 @@ TODO list;
 - Enable the user to sort files 
 - Enable the user to search through files 
 - Enable the user to select (all) files 
+
+- Create a Java file / folder
+- Enable the user to upload / create a Drive file
 
 
 
