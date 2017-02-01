@@ -9,6 +9,7 @@
 - http://stackoverflow.com/questions/26346727/android-material-design-button-styles
 - https://www.codeproject.com/Tips/845894/How-to-make-EditText-With-Border-and-Gradient-Back
 - https://github.com/futurice/android-best-practices#deephierarchy
+- http://stackoverflow.com/questions/27156680/change-textcolor-in-searchview-using-android-toolbar
 
 *Navigation drawer and fragments*
 - http://www.vogella.com/tutorials/AndroidActionBar/article.html
@@ -37,6 +38,7 @@
 - http://stackoverflow.com/questions/5414657/extract-substring-from-a-string
 - http://stackoverflow.com/questions/6265298/action-view-intent-for-a-file-with-unknown-mimetype
 - http://stackoverflow.com/questions/4178168/how-to-programmatically-move-copy-and-delete-files-and-directories-on-sd
+- http://stackoverflow.com/questions/13953744/file-mkdir-and-mkdirs-are-creating-file-instead-of-directory
 
 *Google Drive (REST) API and authentication*
 - https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivityWithDrive.java
