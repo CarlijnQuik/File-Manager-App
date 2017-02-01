@@ -9,6 +9,7 @@
 - http://stackoverflow.com/questions/26346727/android-material-design-button-styles
 - https://www.codeproject.com/Tips/845894/How-to-make-EditText-With-Border-and-Gradient-Back
 - https://github.com/futurice/android-best-practices#deephierarchy
+- http://stackoverflow.com/questions/27156680/change-textcolor-in-searchview-using-android-toolbar
 
 *Navigation drawer and fragments*
 - http://www.vogella.com/tutorials/AndroidActionBar/article.html
