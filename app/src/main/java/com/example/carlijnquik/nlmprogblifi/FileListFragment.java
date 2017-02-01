@@ -2,25 +2,33 @@ package com.example.carlijnquik.nlmprogblifi;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
+import com.google.common.collect.ArrayTable;
 
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -32,154 +40,34 @@ import java.util.Objects;
 public class FileListFragment extends Fragment {
 
     ArrayList<FileObject> fileList;
-    ArrayList<FileObject> driveFiles;
-    ArrayList<FileObject> trashedFiles;
-    FileAdapter adapter;
+    Boolean trash;
+
+    String pathPhone = System.getenv("EXTERNAL_STORAGE");
+    String pathTrashCan = pathPhone + "/FileManager";
+    String pathSD = System.getenv("SECONDARY_STORAGE");
+
     RecyclerView rvFiles;
     TextView tvNoFiles;
+    SwipeRefreshLayout swipeRefreshLayout;
+
     String folderPath;
     String folderLocation;
     Boolean trashClicked;
-    SwipeRefreshLayout swipeRefreshLayout;
-    String pathTrashCan;
-    SharedPreferences prefs;
-    String accountName;
-    GoogleAccountCredential driveCredential;
-    private static final String[] SCOPES = {DriveScopes.DRIVE};
+    String searchRequest;
 
     /**
-     * Retrieve the file's location from its arguments.
+     * Retrieve the characteristics of the new fragment.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // get the arguments that decide what to do
         Bundle bundle = getArguments();
-        if (bundle.getString("folderPath") != null) {
-            folderPath = bundle.getString("folderPath");
-            folderLocation = bundle.getString("folderLocation");
-
-        }
-
-        trashClicked = bundle.getBoolean("trashClicked");
-
-        prefs = getActivity().getSharedPreferences("accounts", Context.MODE_PRIVATE);
-        accountName = prefs.getString("accountName", null);
-
-    }
-
-    /**
-     * Create the recycler (list) view.
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_file_list, container, false);
-
-        // initialize views
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
-        rvFiles = (RecyclerView) view.findViewById(R.id.rvFiles);
-        tvNoFiles = (TextView) view.findViewById(R.id.tvNoFiles);
-
-        // enable the user to refresh the view by swiping
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // retrieve the files again to detect changes
-                getAllFiles();
-
-            }
-        });
-
-        // set the layout manager to position the items
-        rvFiles.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        // get the files
-        getAllFiles();
-
-        return view;
-
-    }
-
-    /**
-     * Retrieve all the files, put them in a list and set the adapter with it.
-     */
-    public void getAllFiles() {
-        tvNoFiles.setVisibility(View.INVISIBLE);
-
-        // get the path of the trashcan
-        pathTrashCan = Environment.getExternalStorageDirectory() + "/FileManager/Trash";
-
-        // create new lists to avoid duplicates
-        fileList = InternalFilesSingleton.getInstance().getFileList();
-        fileList.clear();
-        trashedFiles = new ArrayList<>();
-
-        // check if a path and location are given so whether the file is a folder
-        if (folderPath == null || folderLocation == null) {
-            // get files from device storage via path
-            getFiles(System.getenv("EXTERNAL_STORAGE"), "PHONE");
-
-            // get files from sd card if present
-            if (isExternalStorageWritable()) {
-                getFiles(System.getenv("SECONDARY_STORAGE"), "SD");
-            }
-
-            // get/synchronize the Drive files of the selected account
-            if (accountName != null) {
-                Log.d("string account", accountName);
-                // initialize credentials and service object
-                driveCredential = GoogleAccountCredential.usingOAuth2(
-                        getContext(), Arrays.asList(SCOPES))
-                        .setSelectedAccountName(accountName)
-                        .setBackOff(new ExponentialBackOff());
-
-                new ListDriveFilesAsyncTask(driveCredential, getActivity()).execute();
-
-            }
-
-            // get the current list of Drive files and add it to the list if not already there
-            driveFiles = DriveFilesSingleton.getInstance().getFileList();
-
-            // avoid duplicates in the recycler view
-            for (int i = 0; i < driveFiles.size(); i++){
-                if (!fileList.contains(driveFiles.get(i))) {
-                    if (!driveFiles.get(i).getDriveFile().getTrashed()){
-                        fileList.add(driveFiles.get(i));
-                    }
-                    else {
-                        trashedFiles.add(driveFiles.get(i));
-                    }
-                }
-
-            }
-        } else {
-            // get files from folder
-            getFiles(folderPath, folderLocation);
-
-        }
-        // set the adapter with the file list
-        if (!trashClicked) {
-            adapter = new FileAdapter(getActivity(), getContext(), fileList);
-            if (fileList.isEmpty()) {
-                tvNoFiles.setVisibility(View.VISIBLE);
-            }
-        }
-        else{
-            // set the adapter with the trashed file list
-            if (pathTrashCan != null) {
-                getFiles(pathTrashCan, "PHONE");
-            }
-            adapter = new FileAdapter(getActivity(), getContext(), trashedFiles);
-            if (trashedFiles.isEmpty()){
-                tvNoFiles.setVisibility(View.VISIBLE);
-            }
-        }
-
-        rvFiles.setAdapter(adapter);
-        //rvFiles.addOnItemTouchListener();
-
-        // the layout is set, loading icon needs to be removed
-        swipeRefreshLayout.setRefreshing(false);
+        folderPath = bundle.getString("folderPath", null);
+        folderLocation = bundle.getString("folderLocation", null);
+        trashClicked = bundle.getBoolean("trashClicked", false);
+        searchRequest = bundle.getString("searchRequest", null);
 
     }
 
@@ -193,42 +81,255 @@ public class FileListFragment extends Fragment {
     }
 
     /**
-     * Adds the files from the given path to the array list.
+     * Create the view.
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_file_list, container, false);
+
+        // make the no files text view invisible (until relevant)
+        tvNoFiles = (TextView) view.findViewById(R.id.tvNoFiles);
+        tvNoFiles.setVisibility(View.INVISIBLE);
+
+        // set the recycler view and layout manager to position the items
+        rvFiles = (RecyclerView) view.findViewById(R.id.rvFiles);
+        rvFiles.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // enable the user to refresh the view by swiping
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // get the relevant files
+                retrieveFiles();
+
+            }
+        });
+
+        // get the relevant files
+        retrieveFiles();
+
+        return view;
+
+    }
+
+    /**
+     * Decide which files to retrieve and then set the adapter with them.
+     */
+    public void retrieveFiles(){
+        // clear the list to avoid duplicates
+        fileList = InternalFilesSingleton.getInstance().getFileList();
+        fileList.clear();
+
+        // get the current list of Drive files
+        updateDriveFiles();
+
+        // if no search request was made
+        if (searchRequest == null) {
+
+            // if folder nor trash can are clicked get overview of files
+            if (folderPath == null && !trashClicked) {
+
+                getFiles(pathPhone, "PHONE");
+                getDriveFiles(trash = false);
+
+                if (isExternalStorageWritable()){
+                    getFiles(pathSD, "SD");
+                }
+
+            }
+
+            // if the trash can is clicked get files in trash can
+            else if (folderPath == null) {
+                getFiles(pathTrashCan, "PHONE");
+                getDriveFiles(trash = true);
+            }
+
+            // if a folder is clicked get files from folder
+            else {
+                getFiles(folderPath, folderLocation);
+            }
+
+        }
+
+        // if a search request was made
+        else if (searchRequest.length() > 5 && searchRequest != null){
+
+            // if the trash can is not clicked get all files
+            if (!trashClicked){
+                // get files from phone
+                getFiles(pathPhone, "PHONE");
+
+                // get files from sd card if present
+                if (isExternalStorageWritable()) {
+                    getFiles(pathSD, "SD");
+                }
+
+                // get files from Drive
+                getDriveFiles(trash = false);
+            }
+
+            // if the trash can is clicked, get the files that are in the trash
+            else {
+                getFiles(pathTrashCan, "PHONE");
+                getDriveFiles(trash = true);
+
+            }
+
+            // search for files in the relevant list
+            fileList = searchFiles(fileList, searchRequest);
+
+        }
+
+        // set the adapter to the relevant list
+        setAdapter();
+
+        // the list is set, loading icon needs to be removed
+        swipeRefreshLayout.setRefreshing(false);
+
+    }
+
+    /**
+     * Sets the adapter of the recycler view.
+     */
+    public void setAdapter(){
+        FileAdapter adapter = new FileAdapter(getActivity(), getContext(), fileList);
+        rvFiles.setAdapter(adapter);
+
+        // if the list is empty, change the view
+        if (fileList.isEmpty()) {
+            tvNoFiles.setVisibility(View.VISIBLE);
+        }
+
+        Log.d("string adapter", "adapter set");
+
+    }
+
+    /**
+     * Adds the files from the given path to the relevant array list.
      */
     public void getFiles(String path, String location){
-        File list = new File(path);
-        File[] files = list.listFiles();
+        File selectedFile = new File(path);
+        File[] files = selectedFile.listFiles();
 
+        // check if there are files
         if (files != null) {
-            // loop over the files and folders in the given location and add the relevant ones to the list
             for (File file : files) {
-                // get the file's mime type
-                String mime = NavigationActivity.getMimeType(file);
-                FileObject fileObject = new FileObject(null, file, location, mime);
+                // create a new file object
+                FileObject fileObject = javaFileObject(file, location);
 
-                Log.d("string file", file.getName());
-
-                // if the mime type is null, set the type to "file"
-                if (mime == null) {
-                    fileObject.type = "file";
-                }
-
-                // if the file is a directory, change the type to "folder"
-                if (file.isDirectory()) {
-                    fileObject.type = "folder";
-                }
-
-                // if the file is in the trashcan, add it to the list of files in the trash can
+                // decide to which list the file has to be added
                 if (path.equals(pathTrashCan)) {
-                    trashedFiles.add(fileObject);
-                } else {
                     fileList.add(fileObject);
-                }
+                    Log.d("string trash file", fileObject.getFile().getName());
 
+                } else if (searchRequest != null && searchRequest.length() > 5){
+                    if (file.isDirectory()) {
+                        getFiles(file.getAbsolutePath(), location);
+                        Log.d("string search folder", fileObject.getFile().getName());
+                    } else {
+                        fileList.add(fileObject);
+                        Log.d("string search file", fileObject.getFile().getName());
+                    }
+
+                } else if (!path.equals(pathTrashCan)){
+                    fileList.add(fileObject);
+                    Log.d("string file", fileObject.getFile().getName());
+                }
             }
         }
 
     }
 
+    /**
+     * Get/synchronize the Drive files of the selected account.
+     */
+    public void updateDriveFiles(){
+        // get the selected account
+        SharedPreferences prefs = getActivity().getSharedPreferences("accounts", Context.MODE_PRIVATE);
+        String accountName = prefs.getString("accountName", null);
+
+        if (accountName != null) {
+            // initialize credentials and service object
+            String[] SCOPES = {DriveScopes.DRIVE};
+            GoogleAccountCredential driveCredential = GoogleAccountCredential.usingOAuth2(
+                    getContext(), Arrays.asList(SCOPES))
+                    .setSelectedAccountName(accountName)
+                    .setBackOff(new ExponentialBackOff());
+
+            // start async task to retrieve the Drive files
+            new ListDriveFilesAsyncTask(driveCredential, getActivity()).execute();
+
+        }
+
+    }
+
+    /**
+     * Get the relevant Drive files.
+     */
+    public void getDriveFiles(Boolean trashed){
+        ArrayList<FileObject> driveFiles = DriveFilesSingleton.getInstance().getFileList();
+
+        // avoid duplicates in the recycler view
+        for (int i = 0; i < driveFiles.size(); i++){
+            if (!fileList.contains(driveFiles.get(i))) {
+                if (driveFiles.get(i).getDriveFile().getTrashed() && trashed){
+                    fileList.add(driveFiles.get(i));
+                    Log.d("string drive trash", driveFiles.get(i).getDriveFile().getName());
+                }
+                else if (!driveFiles.get(i).getDriveFile().getTrashed() && !trashed) {
+                    fileList.add(driveFiles.get(i));
+                    Log.d("string drive normal", driveFiles.get(i).getDriveFile().getName());
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Create a new Java file object.
+     */
+    public FileObject javaFileObject(File file, String location){
+        // get the file's mime type
+        String mime = NavigationActivity.getMimeType(file);
+        FileObject fileObject = new FileObject(null, file, location, mime);
+
+        // if the mime type is null, set the type to "file"
+        if (mime == null) {
+            fileObject.type = "file";
+        }
+
+        // if the file is a directory, change the type to "folder"
+        if (file.isDirectory()) {
+            fileObject.type = "folder";
+        }
+
+        return fileObject;
+
+    }
+
+    /**
+     * Enables the user to search for files.
+     */
+    public ArrayList<FileObject> searchFiles(ArrayList<FileObject> list, String query) {
+        ArrayList<FileObject> adapterList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getDriveFile() != null) {
+                if (list.get(i).getDriveFile().getName().contains(query)) {
+                    adapterList.add(list.get(i));
+                }
+            }
+            if (list.get(i).getFile() != null) {
+                if (list.get(i).getFile().getName().contains(query)) {
+                    adapterList.add(list.get(i));
+                }
+            }
+        }
+
+        return adapterList;
+
+    }
+
 }
+
 

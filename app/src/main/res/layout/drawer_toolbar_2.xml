@@ -22,25 +22,14 @@
     </android.support.design.widget.AppBarLayout>
 
     <SearchView
-        android:layout_width="174dp"
-        android:id="@+id/searchView"
-        app:layout_anchorGravity="right"
-        android:layout_marginRight="50dp"
-        android:layout_marginEnd="50dp"
-        app:layout_anchor="@+id/toolbar_2"
-        android:layout_height="wrap_content" />
+        android:layout_width="250dp"
+        android:layout_height="58dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginStart="55dp"
+
+        android:id="@+id/searchView" />
 
     <include layout="@layout/drawer_content_3"
         android:id="@+id/include" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|left"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_add"
-        app:layout_anchor="@+id/include"
-        app:layout_anchorGravity="bottom|right" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimaryTransparent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryTransparent</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/common_google_signin_btn_text_light_default
+        </item>
+        <item name="android:textColorSecondaryInverse">@color/cardview_dark_background</item>
+        <item name="android:textColorPrimary">@color/cardview_dark_background</item>
     </style>
 
     <!-- Button theme. -->

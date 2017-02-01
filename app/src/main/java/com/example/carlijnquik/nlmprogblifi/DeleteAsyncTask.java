@@ -1,12 +1,9 @@
 package com.example.carlijnquik.nlmprogblifi;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.credentials.CredentialRequest;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -14,27 +11,24 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-/*
- * An asynchronous task that handles the Drive API call and puts the retrieved files in a list.
+/**
+ * Enables the user to delete a Drive file.
  */
 
-public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<FileObject>> {
+public class DeleteAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private com.google.api.services.drive.Drive driveService = null;
     private Exception lastError = null;
-    ArrayList<FileObject> driveFiles;
     Activity activity;
+    String fileId;
 
     // constructor
-    ListDriveFilesAsyncTask(GoogleAccountCredential credential, Activity activity) {
+    DeleteAsyncTask(GoogleAccountCredential credential, Activity activity, String fileId) {
         this.activity = activity;
+        this.fileId = fileId;
 
         // connect to the Drive service
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -49,55 +43,23 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
      * Background task to call Drive API.
      */
     @Override
-    protected ArrayList<FileObject> doInBackground(Void... params) {
+    protected Boolean doInBackground(Void... params) {
         try {
-            return getDataFromApi();
-        } catch (Exception e) {
-            lastError = e;
-            cancel(true);
-            return null;
+            // try to delete the file
+            driveService.files().delete(fileId).execute();
+            return true;
+
+        } catch (IOException e) {
+            System.out.println("An error occurred: " + e);
+            return false;
         }
-
-    }
-
-    /**
-     * Retrieve the Drive files and put them in the Drive Files Singleton.
-     */
-    private ArrayList<FileObject> getDataFromApi() throws IOException {
-        // get the Drive files from the API
-        FileList result = driveService.files().list()
-                .setFields("nextPageToken, files")
-                .execute();
-        List<File> files = result.getFiles();
-
-        driveFiles = null;
-
-        if (files != null) {
-            // get the singleton
-            driveFiles = DriveFilesSingleton.getInstance().getFileList();
-
-            // clear the list because a file could have been edited so all files have to be retrieved again
-            driveFiles.clear();
-
-            // loop over the files and add them to the singleton
-            for (File file : files) {
-
-                driveFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
-
-            }
-
-        }
-
-        return driveFiles;
 
     }
 
     @Override
-    protected void onPostExecute(ArrayList<FileObject> output) {
+    protected void onPostExecute(Boolean output) {
         // check if there is output
-        if (output == null || output.size() == 0) {
-           Toast.makeText(activity.getApplicationContext(), "No Drive files found.", Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(activity.getApplicationContext(), "Deleted!", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -118,7 +80,7 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
                 Toast.makeText(activity.getApplicationContext(), "The following error occurred:\n" + lastError.getMessage(), Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(activity.getApplicationContext(), "Request for Drive files was cancelled.", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity.getApplicationContext(), "Request to delete file was cancelled.", Toast.LENGTH_LONG).show();
 
         }
 

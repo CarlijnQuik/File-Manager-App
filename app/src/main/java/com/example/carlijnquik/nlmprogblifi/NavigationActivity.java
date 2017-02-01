@@ -1,14 +1,12 @@
 package com.example.carlijnquik.nlmprogblifi;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -16,19 +14,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * Controls the navigation drawer.
@@ -37,7 +33,6 @@ import java.util.ArrayList;
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
-    FloatingActionButton fab;
     android.widget.SearchView searchView;
     SharedPreferences prefs;
     Boolean trashClicked;
@@ -47,35 +42,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_navigation_1);
 
-
-
-
-
-        // initialize the search view
-        searchView = (android.widget.SearchView) findViewById(R.id.searchView);
-        searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                searchFiles(s);
-                return false;
-
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                return false;
-            }
-
-        });
-
-        // initialize the floating action button
-        fab = (FloatingActionButton) findViewById(R.id.fab_2);
-        fab.setVisibility(View.VISIBLE);
-
         // initialize the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_2);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // initialize the navigation drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);
@@ -103,41 +73,45 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
 
         // set the initial fragment
-        openFileList(trashClicked = false);
+        openFileList(trashClicked = false, null);
+
+        searchView = (SearchView) findViewById(R.id.searchView);
+        changeSearchViewTextColor(searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                openFileList(trashClicked = false, s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
 
     }
 
-    // search files function (not finished)
-    public void searchFiles(String query){
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvFiles);
-
-        ArrayList<FileObject> fileList = InternalFilesSingleton.getInstance().getFileList();
-
-        ArrayList<FileObject> adapterList = new ArrayList<>();
-        for (int i = 0; i < fileList.size(); i++){
-            if (fileList.get(i).getDriveFile() != null){
-                if (fileList.get(i).getDriveFile().getName().contains(query)){
-                    adapterList.add(fileList.get(i));
-                }
-            }
-            if(fileList.get(i).getFile() != null){
-                if (fileList.get(i).getFile().getName().contains(query)){
-                    adapterList.add(fileList.get(i));
+    /**
+     * Changes the text color of the search view so it is better readable.
+     */
+    private void changeSearchViewTextColor(View view) {
+        if (view != null) {
+            if (view instanceof TextView) {
+                ((TextView) view).setTextColor(Color.WHITE);
+                return;
+            } else if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    changeSearchViewTextColor(viewGroup.getChildAt(i));
                 }
             }
         }
-        if (!adapterList.isEmpty()) {
-
-            FileAdapter searchAdapter = new FileAdapter(this, getApplicationContext(), adapterList);
-            recyclerView.setAdapter(searchAdapter);
-        }
-        else {
-            Toast.makeText(this, "No results!", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
+    /**
+     * Handles the drawer menu on back pressed.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);
@@ -150,9 +124,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
     }
 
+    /**
+     * Adds items to the action bar if it is present.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // inflate the menu: this adds items to the action bar if it is present
+        // inflate the menu
         getMenuInflater().inflate(R.menu.drawer_settings, menu);
         return true;
 
@@ -218,23 +195,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         if (id == R.id.nav_file_list) {
             // set the fragment
-            openFileList(trashClicked = false);
+            openFileList(trashClicked = false, null);
 
-            // initialize the floating action button
-            fab = (FloatingActionButton) findViewById(R.id.fab_2);
-            fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("string fab", "fab works");
-
-                }
-            });
             searchView.setVisibility(View.VISIBLE);
         }
         if (id == R.id.nav_trash_can){
             // set the fragment
-            openFileList(trashClicked = true);
+            openFileList(trashClicked = true, null);
         }
         if (id == R.id.nav_sing_out){
             // remove the saved account name
@@ -254,12 +221,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     /**
      * Set the file list fragment.
      */
-    public void openFileList(Boolean trashClicked){
+    public void openFileList(Boolean trashClicked, String searchRequest){
         FileListFragment fragment = new FileListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("folderPath", null);
         bundle.putString("folderLocation", null);
         bundle.putBoolean("trashClicked", trashClicked);
+        bundle.putString("searchRequest", searchRequest);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).addToBackStack(null).commit();
 

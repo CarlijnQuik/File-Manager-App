@@ -129,7 +129,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         bCheckBox = viewHolder.checkBox;
 
         // set the path of the trash can
-        pathTrashCan = Environment.getExternalStorageDirectory() + "/FileManager/Trash";
+        pathTrashCan = System.getenv("EXTERNAL_STORAGE") + "/FileManager";
 
         // sets the layout of these views for the item (on the bottom of this page due to size)
         setLayout(fileObject);
@@ -359,7 +359,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
     private void moveFile(File fileToMove) {
         try {
-            File folder = new File(System.getenv("EXTERNAL_STORAGE"), "/Trash");
+            // create a folder in the phone's storage if not already there
+            File folder = new File(System.getenv("EXTERNAL_STORAGE"), "/FileManager");
             if (!folder.exists()){
                 folder.mkdir();
             }
