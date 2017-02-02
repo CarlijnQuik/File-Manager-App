@@ -27,6 +27,7 @@
 *ArrayList with files*
 - http://stackoverflow.com/questions/7149802/how-to-transfer-some-data-to-another-fragment
 - http://stackoverflow.com/questions/6383330/how-to-combine-two-array-list-and-show-in-a-listview-in-android
+- http://stackoverflow.com/questions/19471005/sorting-an-arraylist-of-objects-alphabetically
 
 *Android version*
 - http://stackoverflow.com/questions/27749397/can-you-explain-why-suport-v4-and-v7-on-android
@@ -78,6 +79,7 @@
 - http://stackoverflow.com/questions/11741270/android-sharedpreferences-in-fragment
 - http://stackoverflow.com/questions/15588981/google-drive-account-picker-onactivityresult-resultcode-is-always-1
 - http://stackoverflow.com/questions/37347326/errorconflict-with-dependency-com-google-code-findbugsjsr305
+- http://stackoverflow.com/questions/37004069/errorjack-is-required-to-support-java-8-language-features
 
 #### Images
 *Google Drive Logo*
