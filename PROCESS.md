@@ -166,16 +166,19 @@
 - Found out a way to use the credential more effectively and delete and update Drive files
 
 #### Day 11
-- Enabled the user to search all files
+- Enabled the user to search all files (and created the search view)
+- Made the code more efficient
 
 #### Final day
 - Changed the layout so it is usable from any phone
+- Made the code more efficient
+- Made the search view delete the text after input to avoid an overload of requests
 
-- Enable the user to sort files 
-- Enable the user to select (all) files 
-- Delete Java folders
+- Delete Java folders (debug)
 - Write the report
-- Go over code efficiency one more time
+- On touch listener
+- Layout drawer pressed
+- Efficiency async
 
 
 
