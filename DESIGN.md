@@ -36,7 +36,7 @@
 - Icons show different offline places the files are in, like USB drive or SD card. 
 - Icons show different online platforms the files are on, logging into more platforms is possible.
 - The option to label WhatsApp photo's as "important" and automatically remove the rest.
-- Backup and automatic saving as described in the proposal.
+- Backup and automatic saving to avoid files get lost.
 
 **User Interface**
 - The UI looks like the Google Drive UI.
