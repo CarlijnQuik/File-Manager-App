@@ -13,8 +13,6 @@
 - The sign in button will sign the user in to their Google account.
 - Some space is left in the layout for eventual extra buttons.
 
-<img src="https://cloud.githubusercontent.com/assets/22945709/21811271/610f8794-d74f-11e6-9336-8ef359f75a76.png" width="250">
-
 #### Screen 2: Overview of files activity
 - With colors, the distinction between files in the cloud and on the phone is made.
 - On short click a file or folder is opened (the screen that opens looks exactly like this screen).
