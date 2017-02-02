@@ -1,5 +1,6 @@
 package com.example.carlijnquik.nlmprogblifi;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,16 +16,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Controls the navigation drawer.
@@ -75,20 +82,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         // set the initial fragment
         openFileList(trashClicked = false, null);
 
+        // initialize the search view and change the text color so it is better readable
         searchView = (SearchView) findViewById(R.id.searchView);
         changeSearchViewTextColor(searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                openFileList(trashClicked = false, s);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
+        setSearchView(trashClicked = false);
 
     }
 
@@ -125,67 +122,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     }
 
     /**
-     * Adds items to the action bar if it is present.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // inflate the menu
-        getMenuInflater().inflate(R.menu.drawer_settings, menu);
-        return true;
-
-    }
-
-    /**
-     * Handles action/settings bar item clicks. ->what is meant by the home/up button?
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // get the item clicked
-        int id = item.getItemId();
-
-        if (id == R.id.action_sort_by) {
-            return true;
-
-        }
-        if (id == R.id.action_select) {
-            // popup with three options
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setPositiveButton("Files on phone", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-
-                }
-            });
-            builder.setNeutralButton("Files on SD", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int id) {
-
-
-                }
-            });
-            builder.setNegativeButton("Files on Drive", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-
-                }
-            });
-
-            // create the alert dialog/popup
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            return true;
-
-        }
-        if (id == R.id.action_select_all) {
-            return true;
-
-        }
-
-        return super.onOptionsItemSelected(item);
-
-    }
-
-    /**
      * Handles navigation view item clicks.
      */
     @Override
@@ -197,11 +133,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             // set the fragment
             openFileList(trashClicked = false, null);
 
-            searchView.setVisibility(View.VISIBLE);
+            setSearchView(false);
+
         }
         if (id == R.id.nav_trash_can){
             // set the fragment
             openFileList(trashClicked = true, null);
+            setSearchView(true);
+
         }
         if (id == R.id.nav_sing_out){
             // remove the saved account name
@@ -212,7 +151,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         }
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_navigation_1);
         drawer.closeDrawer(GravityCompat.START);
         return true;
 
@@ -230,6 +168,38 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         bundle.putString("searchRequest", searchRequest);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.drawer_content_shown_3, fragment).addToBackStack(null).commit();
+
+    }
+
+    /**
+     * Initialize the search view.
+     */
+    public void setSearchView(final Boolean trashClicked){
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String searchRequest) {
+                if (searchRequest.length() > 3) {
+                    // search
+                    openFileList(trashClicked, searchRequest);
+
+                    searchView.setQuery("", false);
+
+                    return false;
+
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Search request must be 4+ characters long", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+
+        });
 
     }
 

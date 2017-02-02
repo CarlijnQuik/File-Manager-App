@@ -47,7 +47,6 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
 
     GoogleAccountCredential driveCredential;
     TextView tvStatus;
-    ProgressDialog progressDialog;
     String token;
     Button bSignIn;
     String accountName;
@@ -97,9 +96,6 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
             }
 
         });
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Calling Drive API ...");
 
         // get previously signed in user if there
         prefs = getSharedPreferences("accounts", Context.MODE_PRIVATE);

@@ -150,6 +150,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
 
             notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(NOTIFICATION_ID, builder.getNotification());
+
         }
         else {
             // notify the user that the file could not be downloaded and ask what to do
@@ -167,6 +168,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
             });
             AlertDialog dialog = builder.create();
             dialog.show();
+
         }
 
     }

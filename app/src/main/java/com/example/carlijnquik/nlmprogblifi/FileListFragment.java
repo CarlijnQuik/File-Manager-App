@@ -2,36 +2,25 @@ package com.example.carlijnquik.nlmprogblifi;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
-import com.google.common.collect.ArrayTable;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Retrieves the files from SD, phone and Drive singleton and puts them in a list together.
@@ -68,6 +57,7 @@ public class FileListFragment extends Fragment {
         folderLocation = bundle.getString("folderLocation", null);
         trashClicked = bundle.getBoolean("trashClicked", false);
         searchRequest = bundle.getString("searchRequest", null);
+
 
     }
 
@@ -117,8 +107,9 @@ public class FileListFragment extends Fragment {
      * Decide which files to retrieve and then set the adapter with them.
      */
     public void retrieveFiles(){
-        // clear the list to avoid duplicates
-        fileList = new ArrayList<>();
+        // get a globally reachable list and clear it to avoid duplicates
+        fileList = AdapterFilesSingleton.getInstance().getFileList();
+        fileList.clear();
 
         // get the current list of Drive files
         updateDriveFiles();
@@ -130,11 +121,12 @@ public class FileListFragment extends Fragment {
             if (folderPath == null && !trashClicked) {
 
                 getFiles(pathPhone, "PHONE");
+
                 if (isExternalStorageWritable()){
                     getFiles(pathSD, "SD");
                 }
-                getDriveFiles(trash = false);
 
+                getDriveFiles(trash = false);
             }
 
             // if the trash can is clicked get files in trash can
@@ -147,14 +139,14 @@ public class FileListFragment extends Fragment {
             else {
                 getFiles(folderPath, folderLocation);
             }
-
         }
 
         // if a search request was made
-        else if (searchRequest.length() > 5 && searchRequest != null){
+        else {
 
             // if the trash can is not clicked get all files
             if (!trashClicked){
+
                 // get files from phone
                 getFiles(pathPhone, "PHONE");
 
@@ -176,7 +168,6 @@ public class FileListFragment extends Fragment {
 
             // search for files in the relevant list
             fileList = searchFiles(fileList, searchRequest);
-
         }
 
         // set the adapter to the relevant list
@@ -219,7 +210,7 @@ public class FileListFragment extends Fragment {
                     fileList.add(fileObject);
                     Log.d("string trash file", fileObject.getFile().getName());
 
-                } else if (searchRequest != null && searchRequest.length() > 5){
+                } else if (searchRequest != null){
                     if (file.isDirectory()) {
                         getFiles(file.getAbsolutePath(), location);
                         Log.d("string search folder", fileObject.getFile().getName());
@@ -231,6 +222,7 @@ public class FileListFragment extends Fragment {
                 } else {
                     fileList.add(fileObject);
                     Log.d("string file", fileObject.getFile().getName());
+
                 }
             }
         }
@@ -255,7 +247,6 @@ public class FileListFragment extends Fragment {
 
             // start async task to retrieve the Drive files
             new ListDriveFilesAsyncTask(driveCredential, getActivity()).execute();
-
         }
 
     }
@@ -308,6 +299,7 @@ public class FileListFragment extends Fragment {
      * Enables the user to search for files.
      */
     public ArrayList<FileObject> searchFiles(ArrayList<FileObject> list, String query) {
+        // search the current list of files
         ArrayList<FileObject> adapterList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getDriveFile() != null) {

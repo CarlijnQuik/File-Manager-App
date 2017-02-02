@@ -12,6 +12,7 @@ public class FileObject {
     public File file = null;
     public String location = null;
     public String type = null;
+    public String name;
 
     // constructor
     public FileObject(com.google.api.services.drive.model.File driveFile, File file, String location, String type){
@@ -20,16 +21,21 @@ public class FileObject {
         this.location = location;
         this.type = type;
 
+        if (file != null){
+            this.name = file.getName();
+        }
+        else {
+            this.name = driveFile.getName();
+        }
+
     }
 
     public com.google.api.services.drive.model.File getDriveFile(){
         return this.driveFile;
-
     }
 
     public File getFile(){
         return this.file;
-
     }
 
     public String getLocation(){
@@ -38,7 +44,10 @@ public class FileObject {
 
     public String getType(){
         return this.type;
+    }
 
+    public String getName(){
+        return this.name;
     }
 
 }

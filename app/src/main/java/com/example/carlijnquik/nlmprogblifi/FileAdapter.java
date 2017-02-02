@@ -49,9 +49,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     TextView btvType;
     ImageView bivLocation;
     ImageView bivType;
-    ImageButton bibDownloadUpload;
-    CheckBox bCheckBox;
-
+    ImageButton bibDownload;
     /**
      * Initializes the view.
      */
@@ -60,8 +58,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         public TextView tvType;
         public ImageView ivType;
         public ImageView ivLocation;
-        public ImageButton ibDownloadUpload;
-        public CheckBox checkBox;
+        public ImageButton ibDownload;
 
         public ViewHolder(View itemView){
             super(itemView);
@@ -71,8 +68,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             tvType = (TextView) itemView.findViewById(R.id.tvType);
             ivType = (ImageView) itemView.findViewById(R.id.ivType);
             ivLocation = (ImageView) itemView.findViewById(R.id.ivLocation);
-            ibDownloadUpload = (ImageButton) itemView.findViewById(R.id.ibDownloadUpload);
-            checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);
+            ibDownload = (ImageButton) itemView.findViewById(R.id.ibDownload);
 
         }
 
@@ -125,8 +121,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         btvType = viewHolder.tvType;
         bivLocation = viewHolder.ivLocation;
         bivType = viewHolder.ivType;
-        bibDownloadUpload = viewHolder.ibDownloadUpload;
-        bCheckBox = viewHolder.checkBox;
+        bibDownload = viewHolder.ibDownload;
 
         // set the path of the trash can
         pathTrashCan = System.getenv("EXTERNAL_STORAGE") + "/FileManager";
@@ -249,7 +244,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         });
 
         // enables the user to download and upload files by clicking the toolbar on the right of every file
-        viewHolder.ibDownloadUpload.setOnClickListener(new View.OnClickListener() {
+        viewHolder.ibDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // recognize the item clicked and get the Java and Google file
@@ -265,11 +260,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                         // download the file
                         new DownloadAsyncTask(context, token, driveFile).execute();
                     }
-
-                }
-                if (file != null){
-                    // upload the Java file (still to be written)
-                    Log.d("string startup", "upload" + file.getName());
 
                 }
 
@@ -401,8 +391,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         File file = fileObject.getFile();
         com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
 
-        bibDownloadUpload.setVisibility(View.INVISIBLE);
-        bCheckBox.setVisibility(View.INVISIBLE);
+        bibDownload.setVisibility(View.INVISIBLE);
 
         // set the views that are based on location
         if (fileObject.getLocation() != null) {
@@ -412,11 +401,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             if (fileObject.getLocation().equals("PHONE")) {
                 bivLocation.setImageResource(R.drawable.phone);
             }
+            bibDownload.setVisibility(View.VISIBLE);
             if (fileObject.getLocation().equals("DRIVE")) {
                 bivLocation.setImageResource(R.drawable.google_drive_logo);
                 btvFilename.setText(driveFile.getName());
-                bibDownloadUpload.setVisibility(View.VISIBLE);
-                bibDownloadUpload.setImageResource(R.drawable.download_icon);
+                bibDownload.setVisibility(View.VISIBLE);
+                bibDownload.setImageResource(R.drawable.download_icon);
             }
 
         }
@@ -432,7 +422,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         btvType.setText(type);
         if (type.equals("folder") || type.equals("application/vnd.google-apps.folder")) {
             bivType.setImageResource(R.drawable.folder_icon);
-            bibDownloadUpload.setVisibility(View.INVISIBLE);
+            bibDownload.setVisibility(View.INVISIBLE);
 
         }
         if (type.equals("doc") || type.equals("docx") || type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {

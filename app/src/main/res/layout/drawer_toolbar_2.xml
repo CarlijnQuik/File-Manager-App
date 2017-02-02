@@ -26,7 +26,7 @@
         android:layout_height="58dp"
         android:layout_marginLeft="55dp"
         android:layout_marginStart="55dp"
-
+        android:queryHint="4+ characters"
         android:id="@+id/searchView" />
 
     <include layout="@layout/drawer_content_3"
