@@ -380,7 +380,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             }
             fileOutput.close();
 
-            //context.deleteFile(fileToMove.getAbsolutePath());
+            context.deleteFile(fileToMove.getAbsolutePath());
 
         }
 

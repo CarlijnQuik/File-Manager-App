@@ -131,11 +131,10 @@ public class FileListFragment extends Fragment {
             if (folderPath == null && !trashClicked) {
 
                 getFiles(pathPhone, "PHONE");
-                getDriveFiles(trash = false);
-
                 if (isExternalStorageWritable()){
                     getFiles(pathSD, "SD");
                 }
+                getDriveFiles(trash = false);
 
             }
 
@@ -201,8 +200,6 @@ public class FileListFragment extends Fragment {
             tvNoFiles.setVisibility(View.VISIBLE);
         }
 
-        Log.d("string adapter", "adapter set");
-
     }
 
     /**
@@ -232,7 +229,7 @@ public class FileListFragment extends Fragment {
                         Log.d("string search file", fileObject.getFile().getName());
                     }
 
-                } else if (!path.equals(pathTrashCan)){
+                } else {
                     fileList.add(fileObject);
                     Log.d("string file", fileObject.getFile().getName());
                 }

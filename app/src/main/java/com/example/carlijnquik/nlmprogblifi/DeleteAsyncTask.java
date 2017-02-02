@@ -50,7 +50,7 @@ public class DeleteAsyncTask extends AsyncTask<Void, Void, Boolean> {
             return true;
 
         } catch (IOException e) {
-            System.out.println("An error occurred: " + e);
+            System.out.println("An error occurred: " + e + " reload your files.");
             return false;
         }
 

@@ -47,7 +47,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="deletion_1">Android does not have a trash can by default, which is why File Manager creates this trash can for you\n\n</string>
-    <string name="deletion_2">To delete a file you can long click it\n</string>
+    <string name="deletion_2">To delete a file you can long click it\n\n</string>
     <string name="got_it">Got it!</string>
     <string name="cancel">Cancel</string>
     <string name="deletion_title">Deletion of files</string>

@@ -129,6 +129,9 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
 
         // check if the file was downloaded
         if (result != null) {
+            // notify user download has started
+            Toast.makeText(context, "Downloading...", Toast.LENGTH_SHORT).show();
+
             // notify the user the file was downloaded and enable to open it
             Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
