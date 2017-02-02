@@ -9,7 +9,7 @@ In this way, the user can search for files in all places at once and open or dow
 #### Technical design
 This paragraph describes the technical design of the App. The diagram below given an overview of the different components of the app.
 
-<img src="https://cloud.githubusercontent.com/assets/22945709/22568993/34a35858-e996-11e6-9a52-460b01525a58.png" width="200">
+<img src="https://cloud.githubusercontent.com/assets/22945709/22568993/34a35858-e996-11e6-9a52-460b01525a58.png" width="600">
 
 *Sign In*
 To begin with, the **Credential Activity** enables the user to sign in to Google Drive. When the user hits the "Sign In" button, the app explains the user about the deletion of files before moving on so the user can still decide not to use the app. The alert dialog build explains to the user that Android does not have a trash can by default (due to memory saving) so File Manager creates this for them. This decision was made so the chance a user loses their files becomes smaller, for they cannot delete their file by accident. The user signs in by choosing an account with an intent that pops up and giving the app permission to use their Drive account.
