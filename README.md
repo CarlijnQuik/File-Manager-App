@@ -1,15 +1,15 @@
 ### BliFi: Blind Find Filemanager
-*App project of the Minor Programming at the University of Amsterdam*
+*App project of the Minor Programming at the University of Amsterdam.*
 
 #### Author
-Written by student Carlijn Quik with student number 11334231
+Written by student Carlijn Quik with student number 11334231.
 
 #### Purpose
 The purpose of this App is to enable the user to find files more efficiently. 
 It does so by integrating Google Drive, internal and SD card files into one UI.
 
 #### Copyright statement
-Copyright © 2017 by Carlijn Quik
+Copyright © 2017 by Carlijn Quik.
 
 #### Overview in images
 The following gives a visual overview of the App.
