@@ -14,7 +14,6 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,7 +47,6 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
     GoogleAccountCredential driveCredential;
     TextView tvStatus;
     String token;
-    Button bSignIn;
     String accountName;
     SharedPreferences prefs;
 
@@ -64,43 +62,13 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_sign_in);
 
-        // initialize views, button onClickListener and progress dialog
+        // initialize status view
         tvStatus = (TextView) findViewById(R.id.tvStatus);
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        getResultsFromApi();
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        // do nothing
-                        break;
-                }
-            }
-        };
-
-        builder.setTitle(R.string.deletion_title);
-        builder.setMessage(getString(R.string.deletion_1) + getString(R.string.deletion_2))
-                .setPositiveButton(R.string.got_it, dialogClickListener)
-                .setNegativeButton(R.string.cancel, dialogClickListener);
-
-        bSignIn = (Button) findViewById(R.id.bSignIn);
-        bSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // inform the user about the deletion of files
-                builder.show();
-            }
-
-        });
 
         // get previously signed in user if there
         prefs = getSharedPreferences("accounts", Context.MODE_PRIVATE);
 
-        // initialize credentials and service object
+        // initialize Drive credentials and service object
         driveCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
@@ -119,6 +87,42 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
             getResultsFromApi();
 
         }
+
+    }
+
+    /**
+     * Decides what clicking the sign in button does.
+     */
+    public void onClick(View view) {
+        // inform the user about the deletion of files
+        getBuilder().show();
+    }
+
+    /**
+     * Builds a dialog to inform the user about the deletion of files.
+     */
+    public AlertDialog.Builder getBuilder(){
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getResultsFromApi();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // do nothing
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.deletion_title);
+        builder.setMessage(getString(R.string.deletion_1) + getString(R.string.deletion_2))
+                .setPositiveButton(R.string.got_it, dialogClickListener)
+                .setNegativeButton(R.string.cancel, dialogClickListener);
+
+        return builder;
 
     }
 
@@ -195,7 +199,6 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
 
         // check which request is done
         switch (requestCode) {
-
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
                     tvStatus.setText(getString(R.string.install_play_services));
@@ -206,9 +209,11 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
 
             case REQUEST_ACCOUNT_PICKER:
                 if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
+
                     // get the account name that is chosen
                     accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
+
                         // save the account name
                         prefs.edit().putString("accountName", accountName).apply();
                         driveCredential.setSelectedAccountName(accountName);
@@ -222,7 +227,6 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
                     getResultsFromApi();
                 }
                 break;
-
         }
 
     }
@@ -309,10 +313,9 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
             @Override
             protected String doInBackground(Void... params) {
                 token = null;
-
                 try {
+                    // try to get the token
                     token = driveCredential.getToken();
-
                 } catch (IOException transientEx) {
                     // network or server error, try later
                     Log.e("string net", transientEx.toString());
@@ -333,7 +336,6 @@ public class CredentialActivity extends AppCompatActivity implements EasyPermiss
             @Override
             protected void onPostExecute(String token) {
                 // save the retrieved token
-                Log.i("string adaptertoken", "Access token retrieved:" + token);
                 prefs.edit().putString("token", token).apply();
 
             }

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -16,17 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
 
@@ -34,7 +28,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +43,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     ImageView bivLocation;
     ImageView bivType;
     ImageButton bibDownload;
+
     /**
      * Initializes the view.
      */
@@ -101,10 +95,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
         // return a new holder instance
         return new ViewHolder(fileView);
+
     }
 
     /**
-     * Involved populating data into the item through holder.
+     * Populating data into the item through holder.
      */
     String pathTrashCan;
 
@@ -157,7 +152,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                     }
                     else if(file.isFile()){
                         // enable the user to pick a program to open the file with (see function below)
-                        Intent intent = NavigationActivity.openFile(file);
+                        Intent intent = NavigationActivity.openFile(file, fileObject.getType());
                         openIntent(intent);
 
                     }
@@ -169,7 +164,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
                 }
 
-                // function to open Drive folders within the App still has to be written
 
             }
         });
@@ -191,7 +185,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                             case DialogInterface.BUTTON_POSITIVE:
                                 // delete the file
                                 if (fileObject.getFile() != null){
-                                    context.deleteFile(fileObject.getFile().getAbsolutePath());
+                                    activity.deleteFile(fileObject.getName());
                                     Toast.makeText(activity.getApplicationContext(), "Deleted!", Toast.LENGTH_SHORT).show();
                                 }
                                 else if (fileObject.getDriveFile() != null){
@@ -250,13 +244,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                 // recognize the item clicked and get the Java and Google file
                 int positionClick = viewHolder.getAdapterPosition();
                 final FileObject fileObject = files.get(positionClick);
-                File file = fileObject.getFile();
                 com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
 
                 if (driveFile != null) {
                     // check if the token is retrieved
                     if (token != null) {
-                        Log.d("string downloadToken", token);
                         // download the file
                         new DownloadAsyncTask(context, token, driveFile).execute();
                     }
@@ -312,7 +304,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
      */
     public void openIntent(Intent intent){
         try {
+
             context.startActivity(intent);
+
         } catch (ActivityNotFoundException e) {
 
             // let the user know if the file can be opened
@@ -357,8 +351,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
             // creates an empty file to put the moved file in
             java.io.File newLocation = new java.io.File(folder.getAbsolutePath() +  "/" + fileToMove.getName());
-            Log.d("string newPath", newLocation.getAbsolutePath());
-            Log.d("string newPath", newLocation.getPath());
 
             InputStream inputStream = new FileInputStream(fileToMove);
             FileOutputStream fileOutput = new FileOutputStream(newLocation);
@@ -370,7 +362,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             }
             fileOutput.close();
 
-            context.deleteFile(fileToMove.getAbsolutePath());
+            String root = System.getenv("EXTERNAL_STORAGE");
+            File file = new File(root, fileToMove.getPath());
+            Log.d("string name", file.getPath());
+
 
         }
 
@@ -401,12 +396,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             if (fileObject.getLocation().equals("PHONE")) {
                 bivLocation.setImageResource(R.drawable.phone);
             }
-            bibDownload.setVisibility(View.VISIBLE);
             if (fileObject.getLocation().equals("DRIVE")) {
                 bivLocation.setImageResource(R.drawable.google_drive_logo);
                 btvFilename.setText(driveFile.getName());
                 bibDownload.setVisibility(View.VISIBLE);
-                bibDownload.setImageResource(R.drawable.download_icon);
             }
 
         }
@@ -419,6 +412,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
         // set the type view
         String type = fileObject.getType();
+        Log.d("string type", fileObject.getType());
         btvType.setText(type);
         if (type.equals("folder") || type.equals("application/vnd.google-apps.folder")) {
             bivType.setImageResource(R.drawable.folder_icon);

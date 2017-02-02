@@ -214,55 +214,16 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
     }
 
-
     /**
      * Opens the file in default extension and otherwise lets the user pick one.
      */
-    public static Intent openFile(File file) {
+    public static Intent openFile(File file, String type) {
         // create the intent to show the "open with" picker by extension
         Intent newIntent = new Intent(Intent.ACTION_VIEW);
-        newIntent.setDataAndType(Uri.fromFile(file), getMimeType(file));
+        newIntent.setDataAndType(Uri.fromFile(file), type);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         return newIntent;
-
-    }
-
-    /**
-     * Returns the file's mime type.
-     */
-    public static String getMimeType(File file){
-        String ext = fileExt(file.getName());
-        if (ext != null) {
-            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
-        }
-        else{
-            return null;
-        }
-
-    }
-
-    /**
-     * Returns the file's extension.
-     */
-    public static String fileExt(String fileType) {
-        if (fileType.contains("?")) {
-            fileType = fileType.substring(0, fileType.indexOf("?"));
-        }
-        if (fileType.lastIndexOf(".") == -1) {
-            return null;
-        } else {
-            String ext = fileType.substring(fileType.lastIndexOf(".") + 1);
-            if (ext.contains("%")) {
-                ext = ext.substring(0, ext.indexOf("%"));
-            }
-            if (ext.contains("/")) {
-                ext = ext.substring(0, ext.indexOf("/"));
-            }
-
-            return ext.toLowerCase();
-
-        }
 
     }
 

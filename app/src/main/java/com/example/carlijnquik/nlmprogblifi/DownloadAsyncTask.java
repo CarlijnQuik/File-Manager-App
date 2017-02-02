@@ -29,14 +29,13 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * Enables the user to download a file and saves it in the download folder.
  */
 
-public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
+public class DownloadAsyncTask extends AsyncTask<Void, Void, FileObject> {
 
     Context context;
     String token;
     com.google.api.services.drive.model.File downloadFile;
     private Exception lastError = null;
     private int NOTIFICATION_ID = 1;
-    private Notification notification;
     private NotificationManager notificationManager;
 
     public DownloadAsyncTask(Context context, String token, com.google.api.services.drive.model.File downloadFile){
@@ -50,7 +49,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
      * Background task to call Drive API, no parameters needed for this task.
      */
     @Override
-    protected java.io.File doInBackground(Void... params) {
+    protected FileObject doInBackground(Void... params) {
         try {
             return download(downloadFile);
         } catch (Exception e) {
@@ -62,7 +61,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
     }
 
 
-    private java.io.File download(com.google.api.services.drive.model.File downloadFile) throws IOException {
+    private FileObject download(com.google.api.services.drive.model.File downloadFile) throws IOException {
         if (downloadFile.getId() != null && token != null) {
             try {
                 // gets the download folder
@@ -102,7 +101,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
                 fileOutput.close();
 
                 // return the downloaded file
-                return javaFile;
+                return new FileObject(null, javaFile, "PHONE");
 
             } catch (IOException e) {
                 // file is empty
@@ -124,11 +123,11 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
     }
 
     @Override
-    protected void onPostExecute(java.io.File result) {
-        super.onPostExecute(result);
+    protected void onPostExecute(FileObject downloadedFile) {
+        super.onPostExecute(downloadedFile);
 
         // check if the file was downloaded
-        if (result != null) {
+        if (downloadedFile.getFile() != null) {
             // notify user download has started
             Toast.makeText(context, "Downloading...", Toast.LENGTH_SHORT).show();
 
@@ -136,7 +135,7 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, java.io.File> {
             Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
             // create the intent to show the "open with" picker by extension
-            Intent newIntent = NavigationActivity.openFile(result);
+            Intent newIntent = NavigationActivity.openFile(downloadedFile.getFile(), downloadedFile.getType());
             PendingIntent pIntent = PendingIntent.getActivity(context, 0, newIntent, 0);
 
             // build the notification and sent it

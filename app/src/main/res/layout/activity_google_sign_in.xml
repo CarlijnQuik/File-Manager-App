@@ -22,6 +22,7 @@
         android:drawablePadding="10dp"
         android:text="@string/string_sign_in"
         android:textSize="20sp"
+        android:onClick="onClick"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="300dp"
         android:layout_alignParentBottom="true"

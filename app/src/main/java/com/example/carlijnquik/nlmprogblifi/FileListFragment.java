@@ -58,7 +58,6 @@ public class FileListFragment extends Fragment {
         trashClicked = bundle.getBoolean("trashClicked", false);
         searchRequest = bundle.getString("searchRequest", null);
 
-
     }
 
     /**
@@ -107,9 +106,8 @@ public class FileListFragment extends Fragment {
      * Decide which files to retrieve and then set the adapter with them.
      */
     public void retrieveFiles(){
-        // get a globally reachable list and clear it to avoid duplicates
-        fileList = AdapterFilesSingleton.getInstance().getFileList();
-        fileList.clear();
+        // create a new list to avoid duplicates
+        fileList = new ArrayList<>();
 
         // get the current list of Drive files
         updateDriveFiles();
@@ -203,7 +201,7 @@ public class FileListFragment extends Fragment {
         if (files != null) {
             for (File file : files) {
                 // create a new file object
-                FileObject fileObject = javaFileObject(file, location);
+                FileObject fileObject = new FileObject(null, file, location);
 
                 // decide to which list the file has to be added
                 if (path.equals(pathTrashCan)) {
@@ -270,28 +268,6 @@ public class FileListFragment extends Fragment {
                 }
             }
         }
-
-    }
-
-    /**
-     * Create a new Java file object.
-     */
-    public FileObject javaFileObject(File file, String location){
-        // get the file's mime type
-        String mime = NavigationActivity.getMimeType(file);
-        FileObject fileObject = new FileObject(null, file, location, mime);
-
-        // if the mime type is null, set the type to "file"
-        if (mime == null) {
-            fileObject.type = "file";
-        }
-
-        // if the file is a directory, change the type to "folder"
-        if (file.isDirectory()) {
-            fileObject.type = "folder";
-        }
-
-        return fileObject;
 
     }
 

@@ -25,7 +25,9 @@ public class DeleteAsyncTask extends AsyncTask<Void, Void, Boolean> {
     Activity activity;
     String fileId;
 
-    // constructor
+    /**
+     * Constructor.
+     */
     DeleteAsyncTask(GoogleAccountCredential credential, Activity activity, String fileId) {
         this.activity = activity;
         this.fileId = fileId;

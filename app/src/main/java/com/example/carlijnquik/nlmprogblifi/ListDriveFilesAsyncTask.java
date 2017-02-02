@@ -80,9 +80,9 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
             driveFiles.clear();
 
             // loop over the files and add them to the singleton
-            for (File file : files) {
+            for (File driveFile : files) {
 
-                driveFiles.add(new FileObject(file, null, "DRIVE", file.getMimeType()));
+                driveFiles.add(new FileObject(driveFile, null, "DRIVE"));
 
             }
 

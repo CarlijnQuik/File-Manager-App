@@ -50,10 +50,11 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="35dp"
-        android:layout_weight="0.75"
+        android:layout_weight="1"
         android:src="@drawable/question_mark"
         android:contentDescription="@string/image_display"
         android:id="@+id/ivLocation"
+        android:padding="5dp"
         android:layout_gravity="center_vertical"
         android:background="@null" />
 
