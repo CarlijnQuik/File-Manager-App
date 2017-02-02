@@ -32,6 +32,7 @@ If the user decides to delete a file, he or she can long click it. The file will
 #### Challenges
 The details of these activities will now be set forth according to the challenges I have faced during creation.
 
+
 *Credential Activity*
 The greatest challenge tackled during the project was enabling the app to authenticate with Google Drive. It took a long time before I fully understood the differences between the available Google APIs. Once I made these differences clear as can be seen in the table below, it was easier to understand how to implement its functionality and authentication.
 
@@ -40,6 +41,7 @@ The first mistake I made was mixing the two APIs up, which got me confused for I
 
 
 The second mistake I made was not checking all the users requirements before signing him or her in. I had once made a sign in activity within the app that this ask for the GET_ACCOUNTS and Drive permission, which is why the app kept on functioning even after being removed. When both APIs where still installed in the app, I figured out how to request a token with the Google API client. This made the App malfunction due to an error I could not resolve at first. This is when I figured out the usage of both Google API Client and Google Account Credential was not necessary and removed the API client from the project. The error (Token: Unknown Source) only resolved when I asked the user for permission again ánd put the token request in an async task so it would not cause a deadlock (conflicting processes) anymore. 
+
 
 | GDAA                                                    | REST V3                                                    | 
 | ------------------------------------------------------- | ---------------------------------------------------------- | 
@@ -57,16 +59,20 @@ OutputStream outputStream = new ByteArrayOutputStream();
 driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
 
 
-Yet, after trying, it did not deliver any result (though no error too). This seems strange due to the fact that Updating, Deleting and Listing files dóes work using the same driveService (com.google.api.services.drive.Drive). To download, I now sent a HTTP request myself so I can sent the authentication token with it. If I would have had more time, I would have figured out completely what causes this difference in using the API and enabled the user to upload files as well. Also, I would have sent the type of async task in the params so I wouldn't have needed 4 different async tasks for the different types of requests.
+Yet, after trying, it did not deliver any result (though no error too). This seems strange due to the fact that Updating, Deleting and Listing files dóes work using the same driveService (com.google.api.services.drive.Drive). To download, I now sent a HTTP request myself so I can sent the authentication token with it. If I would have had more time, I would have figured out completely what causes this difference in using the API and enabled the user to upload files as well. Also, I would have sent the type of async task in the params so I wouldn't have needed 4 different async tasks for the different types of requests. Besides that, I found out how to check whether a Drive file is a folder but did not have time to implement the ability to open Drive folders within the app yet.
+
 
 *File List Fragment*
 In the beginning, I used two different singletons: one for the internal files and one for the Drive files. After making the file list fragment more efficient, the internal files singleton was not needed anymore. Now, to retreive the list that results from the Drive files async task from the file list activity I use the **Drive Files Singleton**, for this task has to run in the background and so the current list of Drive files, whether the async task has finished or not, can be retreived. If I would have had more time I would have adapted it in such a way a select and sort function could be enabled (by for instance passing it another parameter stating whether to sort or select). Also, I could have looked into async tasks more and figure out whether I could pass the Drive files in a different way instead of a singleton.
 
+
 *File Object*
 The **File Object** is composed by setting either the Java or Drive file to null and adding a location. At first, the file's extension was decided in a function in the navigation activity, but later on I figured it would be more logical to add this to the file object so the seperation of concerns is more logical. If I would have had more time, I would have made the file object recognize the file's location by path or file type, so this would not have to be passed to the object.
 
+
 *Working with internal files*
 The app contains one final bug but I had no time left to revise it. It concerns the deletion of Java files by calling:
+
 
 File file = new File(path);
 context.deleteFile(file.getName());
@@ -74,11 +80,14 @@ context.deleteFile(file.getName());
 
 Several online sources state that this should work, yet trying different ways did not result in success. I decided to keep the code in the project, because it does not cause any bugs. If I had more time I would have fixed this (probably two lines of code when the reason of failure is found). For now I notify the user that the file cannot be removed.
 
+
 *Layout*
 If there had been more time, I would have wanted to change some small things about the layout. Right now the recyclerview layout does not respond to click events, the drawer menu item pressed can be wrong due to the use of the backstack of fragments that does not recognize that the previous fragment is from a different menu option and the sign in button does not have any gravity that makes it feel less like a real button.
 
+
 *Search function*
 The search function can cause a bug when a user deliberately sents a lot of search requests at once that cause a memory error. More time would have enabled me to look into this further. Also, I do not know for sure what amounts of data the app can handle before the search function and other functions in general start to mal function. 
+
 
 #### Conclusion
 To sum up, the major things I have learned are as follows. To begin with, I have a better idea of which aspects to take into account when building an app. Examples of these are API/SDK version, error checking, separation of concerns (MVC) and authentication. Second, the way in which I solve problems has developed. At first I tended to assume too quickly that I knew what the problem was (while I didn't). Now I write down an overview of possible options, check them in the most logical order and only move on to the next option when I am sure the current one is not working. I have lost a lot of time on errors for which I already had a solution that I oversaw because I did not check it seriously first. I just assumed it was more complicated and the solution I had in mind therefore could not be the right one. Also, I learned to search more effectively. I spent a lot of time reading and trying out answers online that turned out to be unhelpful. Specifying the problem and searching for that exact one has helped me save time reading documentation or blog posts that were not of use for the problem I was facing.
