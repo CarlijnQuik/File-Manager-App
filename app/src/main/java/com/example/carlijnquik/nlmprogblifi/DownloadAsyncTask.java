@@ -3,17 +3,14 @@ package com.example.carlijnquik.nlmprogblifi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import java.io.File;
@@ -128,9 +125,6 @@ public class DownloadAsyncTask extends AsyncTask<Void, Void, FileObject> {
 
         // check if the file was downloaded
         if (downloadedFile.getFile() != null) {
-            // notify user download has started
-            Toast.makeText(context, "Downloading...", Toast.LENGTH_SHORT).show();
-
             // notify the user the file was downloaded and enable to open it
             Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 

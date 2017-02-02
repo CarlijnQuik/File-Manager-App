@@ -363,8 +363,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             fileOutput.flush();
             fileOutput.close();
 
-            String root = System.getenv("EXTERNAL_STORAGE");
-            File file = new File(root, fileToMove.getPath());
+            // function to delete the file is not working
+            File file = new File(fileToMove.getPath());
             Log.d("string name", file.getPath());
             context.deleteFile(file.getName());
 
@@ -412,6 +412,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         // set the type view
         String type = fileObject.getType();
         Log.d("string type", fileObject.getType());
+        bivType.setImageResource(R.drawable.file_icon);
         btvType.setText(type);
         if (type.equals("folder") || type.equals("application/vnd.google-apps.folder")) {
             bivType.setImageResource(R.drawable.folder_icon);
