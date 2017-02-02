@@ -12,7 +12,7 @@ It does so by integrating Google Drive, internal and SD card files into one UI.
 Copyright © 2017 by Carlijn Quik
 
 #### Overview in images
-The following given a visual overview of the App.
+The following gives a visual overview of the App.
 
 <img src="https://cloud.githubusercontent.com/assets/22945709/22566234/5df19ac2-e98b-11e6-8819-19881cf3d912.png" width="200">
 <img src="https://cloud.githubusercontent.com/assets/22945709/22566235/5df4aa78-e98b-11e6-8f82-c365e129b37f.png" width="200">
