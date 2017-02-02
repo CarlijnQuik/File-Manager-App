@@ -166,16 +166,14 @@
 - Found out a way to use the credential more effectively and delete and update Drive files
 
 #### Day 11
-- The user can delete a Drive folder
-- 
-
-- Enable the user to sort files 
-- Enable the user to search through files 
-- Enable the user to select (all) files 
-- Delete Java folders
+- Enabled the user to search all files
 
 #### Final day
-TODO list;
+- Changed the layout so it is usable from any phone
+
+- Enable the user to sort files 
+- Enable the user to select (all) files 
+- Delete Java folders
 - Write the report
 - Go over code efficiency one more time
 
