@@ -41,14 +41,14 @@ The first mistake I made was mixing the two APIs up, which got me confused for I
 
 The second mistake I made was not checking all the users requirements before signing him or her in. I had once made a sign in activity within the app that this ask for the GET_ACCOUNTS and Drive permission, which is why the app kept on functioning even after being removed. When both APIs where still installed in the app, I figured out how to request a token with the Google API client. This made the App malfunction due to an error I could not resolve at first. This is when I figured out the usage of both Google API Client and Google Account Credential was not necessary and removed the API client from the project. The error (Token: Unknown Source) only resolved when I asked the user for permission again ánd put the token request in an async task so it would not cause a deadlock (conflicting processes) anymore. 
 
-| GDAA                                                    | REST V3                                           | 
-| ------------------------------------------------------- | ------------------------------------------------- | 
-| Newest API                                              | Different permissions due to deeper control       |
-| Login with Google API client and sign In Options        | Log in by Google Account Credential               |   
-| Can only work with files created in the app itself      | Can work with all files                           |    
-| RequestToken by Web Client ID (API console)             | Token by credential.getToken AsyncTask            |    
-| Log out clearly handled                                 | Log out not clearly handled             |    
-| Easier way to create files with its predefined intent   | Handle all connections yourself (asynctasks etc.) |
+| GDAA                                                    | REST V3                                                    | 
+| ------------------------------------------------------- | ---------------------------------------------------------- | 
+| Newest API                                              | Different permissions due to deeper control                |
+| Login with Google API client and sign In Options        | Log in by Google Account Credential                        |   
+| Can only work with files created in the app itself      | Can work with all files                                    |    
+| RequestToken by Web Client ID (API console)             | Token by credential.getToken AsyncTask                     |    
+| Log out clearly handled                                 | Log out not clearly handled                                |    
+| Easier way to create files with its predefined intent   | Handle all connections yourself (e.g. asynctasks & checks) |
 
 One of the things that are still unclear about the connection to this API, is that according to the Google documentation, the following formula should enable the user to download a file using the Drive service initialized with the Google Account Credential:
 
@@ -73,6 +73,15 @@ context.deleteFile(file.getName());
 
 
 Several online sources state that this should work, yet trying different ways did not result in success. I decided to keep the code in the project, because it does not cause any bugs. If I had more time I would have fixed this (probably two lines of code when the reason of failure is found). For now I notify the user that the file cannot be removed.
+
+*Layout*
+If there had been more time, I would have wanted to change some small things about the layout. Right now the recyclerview layout does not respond to click events, the drawer menu item pressed can be wrong due to the use of the backstack of fragments that does not recognize that the previous fragment is from a different menu option and the sign in button does not have any gravity that makes it feel less like a real button.
+
+*Search function*
+The search function can cause a bug when a user deliberately sents a lot of search requests at once that cause a memory error. More time would have enabled me to look into this further. Also, I do not know for sure what amounts of data the app can handle before the search function and other functions in general start to mal function. 
+
+#### Conclusion
+To sum up, the major things I have learned are as follows. To begin with, I have a better idea of which aspects to take into account when building an app. Examples of these are API/SDK function
 
 
 
