@@ -118,8 +118,7 @@ public class FileListFragment extends Fragment {
      */
     public void retrieveFiles(){
         // clear the list to avoid duplicates
-        fileList = InternalFilesSingleton.getInstance().getFileList();
-        fileList.clear();
+        fileList = new ArrayList<>();
 
         // get the current list of Drive files
         updateDriveFiles();
