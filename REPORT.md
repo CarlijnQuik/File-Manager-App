@@ -81,7 +81,7 @@ If there had been more time, I would have wanted to change some small things abo
 The search function can cause a bug when a user deliberately sents a lot of search requests at once that cause a memory error. More time would have enabled me to look into this further. Also, I do not know for sure what amounts of data the app can handle before the search function and other functions in general start to mal function. 
 
 #### Conclusion
-To sum up, the major things I have learned are as follows. To begin with, I have a better idea of which aspects to take into account when building an app. Examples of these are API/SDK function
+To sum up, the major things I have learned are as follows. To begin with, I have a better idea of which aspects to take into account when building an app. Examples of these are API/SDK version, error checking, separation of concerns (MVC) and authentication. Second, the way in which I solve problems has developed. At first I tended to assume too quickly that I knew what the problem was (while I didn't). Now I write down an overview of possible options, check them in the most logical order and only move on to the next option when I am sure the current one is not working. I have lost a lot of time on errors for which I already had a solution that I oversaw because I did not check it seriously first. I just assumed it was more complicated and the solution I had in mind therefore could not be the right one. Also, I learned to search more effectively. I spent a lot of time reading and trying out answers online that turned out to be unhelpful. Specifying the problem and searching for that exact one has helped me save time reading documentation or blog posts that were not of use for the problem I was facing.
 
 
 
