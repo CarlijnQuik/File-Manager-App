@@ -189,15 +189,15 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                                     File file = new File(fileObject.getFile().getPath());
                                     Log.d("string name", file.getPath());
                                     context.deleteFile(file.getName());
-                                    Toast.makeText(activity.getApplicationContext(), "Deleted!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity.getApplicationContext(), "Java files cannot be removed at this time", Toast.LENGTH_SHORT).show();
                                 }
                                 else if (fileObject.getDriveFile() != null){
                                     new DeleteAsyncTask(driveCredential, activity, fileObject.getDriveFile().getId()).execute();
+                                    // remove the file from the adapter
+                                    files.remove(fileObject);
+                                    notifyDataSetChanged();
                                 }
 
-                                // remove the file from the adapter
-                                files.remove(fileObject);
-                                notifyDataSetChanged();
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
                                 // do nothing
@@ -217,9 +217,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                     // else move the file to trash
                     else {
                         moveFile(fileObject.getFile());
-                        Toast.makeText(activity.getApplicationContext(), "Moved to trash", Toast.LENGTH_SHORT).show();
-                        files.remove(fileObject);
-                        notifyDataSetChanged();
+                        Toast.makeText(activity.getApplicationContext(), "Java files cannot be removed at this time", Toast.LENGTH_SHORT).show();
+                        //files.remove(fileObject);
+                        //notifyDataSetChanged();
                     }
                 }
 
