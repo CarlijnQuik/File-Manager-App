@@ -185,7 +185,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
                             case DialogInterface.BUTTON_POSITIVE:
                                 // delete the file
                                 if (fileObject.getFile() != null){
-                                    activity.deleteFile(fileObject.getName());
+                                    // delete the file (not functioning)
+                                    File file = new File(fileObject.getFile().getPath());
+                                    Log.d("string name", file.getPath());
+                                    context.deleteFile(file.getName());
                                     Toast.makeText(activity.getApplicationContext(), "Deleted!", Toast.LENGTH_SHORT).show();
                                 }
                                 else if (fileObject.getDriveFile() != null){
@@ -267,7 +270,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
     GoogleAccountCredential driveCredential;
     private static final String[] SCOPES = {DriveScopes.DRIVE};
 
-
+    /**
+     * Initialize Google Drive.
+     */
     public void getDrive(){
         // get token and account name from shared preferences
         prefs = activity.getSharedPreferences("accounts", Context.MODE_PRIVATE);

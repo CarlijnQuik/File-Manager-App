@@ -25,7 +25,7 @@ import java.util.List;
  * An asynchronous task that handles the Drive API call and puts the retrieved files in a list.
  */
 
-public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<FileObject>> {
+public class DriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<FileObject>> {
 
     private com.google.api.services.drive.Drive driveService = null;
     private Exception lastError = null;
@@ -33,7 +33,7 @@ public class ListDriveFilesAsyncTask extends AsyncTask<Void, Void, ArrayList<Fil
     Activity activity;
 
     // constructor
-    ListDriveFilesAsyncTask(GoogleAccountCredential credential, Activity activity) {
+    DriveFilesAsyncTask(GoogleAccountCredential credential, Activity activity) {
         this.activity = activity;
 
         // connect to the Drive service

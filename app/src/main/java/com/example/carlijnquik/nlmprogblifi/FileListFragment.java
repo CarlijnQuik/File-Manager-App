@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
@@ -235,7 +234,7 @@ public class FileListFragment extends Fragment {
                     .setBackOff(new ExponentialBackOff());
 
             // start async task to retrieve the Drive files
-            new ListDriveFilesAsyncTask(driveCredential, getActivity()).execute();
+            new DriveFilesAsyncTask(driveCredential, getActivity()).execute();
         }
 
     }

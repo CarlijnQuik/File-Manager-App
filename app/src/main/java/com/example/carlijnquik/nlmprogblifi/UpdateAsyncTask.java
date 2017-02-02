@@ -16,7 +16,7 @@ import com.google.api.services.drive.model.File;
 import java.io.IOException;
 
 /**
- * Enables the user to delete a Drive file.
+ * Enables the user to update a Drive file.
  */
 
 public class UpdateAsyncTask extends AsyncTask<Void, Void, Boolean> {
