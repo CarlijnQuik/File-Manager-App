@@ -1,7 +1,7 @@
 ### BliFi: Blind Find Filemanager
 *App project of the Minor Programming at the University of Amsterdam*
 
-### Author
+#### Author
 Written by student Carlijn Quik with student number 11334231
 
 #### Purpose
