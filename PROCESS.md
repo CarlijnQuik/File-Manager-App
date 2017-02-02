@@ -173,12 +173,8 @@
 - Changed the layout so it is usable from any phone
 - Made the code more efficient
 - Made the search view delete the text after input to avoid an overload of requests
+- Wrote the report and made my repository ready for grading
 
-- Delete Java folders (debug)
-- Write the report
-- On touch listener
-- Layout drawer pressed
-- Efficiency async
 
 
 
