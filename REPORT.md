@@ -3,6 +3,9 @@
 It does so by integrating Google Drive, internal and SD card files into one UI.
 In this way, the user can search for files in all places at once and open or download files to view them or edit them with applications on their phone that support the file type.*
 
+### Resources
+The most important resources used can be found in RESOURCES.md.
+
 #### Screenshot of most important UI
 <img src="https://cloud.githubusercontent.com/assets/22945709/22566235/5df4aa78-e98b-11e6-8f82-c365e129b37f.png" width="300">
 
@@ -26,11 +29,50 @@ If the user decides to download a file by clicking the download image button he 
 *Deletion*
 If the user decides to delete a file, he or she can long click it. The file will be moved to the trashcan and removed from the adapter. The **Update Async Task** handles this movage if the file is a Drive file. The user can also decide to click the trash can and view the deleted files. From here a file can be permanently deleted, yet an alertdialog will ask the user first so it is certain the deletion will not be regretted by him or her. The **Delete Async Task** handles this deletion for Drive files.
 
+#### Challenges
+The details of these activities will now be set forth according to the challenges I have faced during creation.
+
+*Credential Activity*
+The greatest challenge tackled during the project was enabling the app to authenticate with Google Drive. It took a long time before I fully understood the differences between the available Google APIs. Once I made these differences clear as can be seen in the table below, it was easier to understand how to implement its functionality and authentication.
 
 
+The first mistake I made was mixing the two APIs up, which got me confused for I was not able to understand which functionality I could use. Creating a file with GDAA for instance worked at one point, yet I had to keep both versions of the API in the App in order to keep it. To keep a clear overview and because I could not oversee the consequences in therms of for instance memory and speed when using two versions at once, I decided to only keep one. Because the REST V3 version gives deeper control over the users Drive this is the one I chose. 
 
 
+The second mistake I made was not checking all the users requirements before signing him or her in. I had once made a sign in activity within the app that this ask for the GET_ACCOUNTS and Drive permission, which is why the app kept on functioning even after being removed. When both APIs where still installed in the app, I figured out how to request a token with the Google API client. This made the App malfunction due to an error I could not resolve at first. This is when I figured out the usage of both Google API Client and Google Account Credential was not necessary and removed the API client from the project. The error (Token: Unknown Source) only resolved when I asked the user for permission again ánd put the token request in an async task so it would not cause a deadlock (conflicting processes) anymore. 
 
+| GDAA                                                    | REST V3                                           | 
+| ------------------------------------------------------- | ------------------------------------------------- | 
+| Newest API                                              | Different permissions due to deeper control       |
+| Login with Google API client and sign In Options        | Log in by Google Account Credential               |   
+| Can only work with files created in the app itself      | Can work with all files                           |    
+| RequestToken by Web Client ID (API console)             | Token by credential.getToken AsyncTask            |    
+| Log out clearly handled                                 | Log out not clearly handled             |    
+| Easier way to create files with its predefined intent   | Handle all connections yourself (asynctasks etc.) |
+
+One of the things that are still unclear about the connection to this API, is that according to the Google documentation, the following formula should enable the user to download a file using the Drive service initialized with the Google Account Credential:
+
+
+OutputStream outputStream = new ByteArrayOutputStream();
+driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
+
+
+Yet, after trying, it did not deliver any result (though no error too). This seems strange due to the fact that Updating, Deleting and Listing files dóes work using the same driveService (com.google.api.services.drive.Drive). To download, I now sent a HTTP request myself so I can sent the authentication token with it. If I would have had more time, I would have figured out completely what causes this difference in using the API and enabled the user to upload files as well. Also, I would have sent the type of async task in the params so I wouldn't have needed 4 different async tasks for the different types of requests.
+
+*File List Fragment*
+In the beginning, I used two different singletons: one for the internal files and one for the Drive files. After making the file list fragment more efficient, the internal files singleton was not needed anymore. Now, to retreive the list that results from the Drive files async task from the file list activity I use the **Drive Files Singleton**, for this task has to run in the background and so the current list of Drive files, whether the async task has finished or not, can be retreived. If I would have had more time I would have adapted it in such a way a select and sort function could be enabled (by for instance passing it another parameter stating whether to sort or select). Also, I could have looked into async tasks more and figure out whether I could pass the Drive files in a different way instead of a singleton.
+
+*File Object*
+The **File Object** is composed by setting either the Java or Drive file to null and adding a location. At first, the file's extension was decided in a function in the navigation activity, but later on I figured it would be more logical to add this to the file object so the seperation of concerns is more logical. If I would have had more time, I would have made the file object recognize the file's location by path or file type, so this would not have to be passed to the object.
+
+*Working with internal files*
+The app contains one final bug but I had no time left to revise it. It concerns the deletion of Java files by calling:
+
+File file = new File(path);
+context.deleteFile(file.getName());
+
+
+Several online sources state that this should work, yet trying different ways did not result in success. I decided to keep the code in the project, because it does not cause any bugs. If I had more time I would have fixed this (probably two lines of code when the reason of failure is found). For now I notify the user that the file cannot be removed.
 
 
 
