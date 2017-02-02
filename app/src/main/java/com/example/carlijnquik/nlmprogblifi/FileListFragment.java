@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
@@ -92,6 +93,9 @@ public class FileListFragment extends Fragment {
                 // get the relevant files
                 retrieveFiles();
 
+                // the list is set, loading icon needs to be removed
+                swipeRefreshLayout.setRefreshing(false);
+
             }
         });
 
@@ -103,76 +107,63 @@ public class FileListFragment extends Fragment {
     }
 
     /**
-     * Decide which files to retrieve and then set the adapter with them.
+     * Decide which files to retrieve and do.
      */
     public void retrieveFiles(){
         // create a new list to avoid duplicates
         fileList = new ArrayList<>();
 
-        // get the current list of Drive files
+        // update the current list of Drive files in background
         updateDriveFiles();
 
-        // if no search request was made
-        if (searchRequest == null) {
-
-            // if folder nor trash can are clicked get overview of files
-            if (folderPath == null && !trashClicked) {
-
-                getFiles(pathPhone, "PHONE");
-
-                if (isExternalStorageWritable()){
-                    getFiles(pathSD, "SD");
-                }
-
-                getDriveFiles(trash = false);
-            }
-
-            // if the trash can is clicked get files in trash can
-            else if (folderPath == null) {
-                getFiles(pathTrashCan, "PHONE");
-                getDriveFiles(trash = true);
-            }
-
-            // if a folder is clicked get files from folder
-            else {
-                getFiles(folderPath, folderLocation);
-            }
+        // if folder nor trash can are clicked get overview of files
+        if (folderPath == null && !trashClicked) {
+            getAllFiles();
         }
 
-        // if a search request was made
+        // if the trash can is clicked get files in trash can
+        else if (folderPath == null) {
+            getTrash();
+
+        }
+
+        // if a folder is clicked get files from folder
         else {
+            getFiles(folderPath, folderLocation);
+        }
 
-            // if the trash can is not clicked get all files
-            if (!trashClicked){
-
-                // get files from phone
-                getFiles(pathPhone, "PHONE");
-
-                // get files from sd card if present
-                if (isExternalStorageWritable()) {
-                    getFiles(pathSD, "SD");
-                }
-
-                // get files from Drive
-                getDriveFiles(trash = false);
-            }
-
-            // if the trash can is clicked, get the files that are in the trash
-            else {
-                getFiles(pathTrashCan, "PHONE");
-                getDriveFiles(trash = true);
-
-            }
-
+        if (searchRequest != null) {
             // search for files in the relevant list
             fileList = searchFiles(fileList, searchRequest);
         }
 
-        // set the adapter to the relevant list
+        // set the adapter
         setAdapter();
 
-        // the list is set, loading icon needs to be removed
-        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * Retreive all the files that are not in the trashcan.
+     */
+    public void getAllFiles(){
+        // get files from phone
+        getFiles(pathPhone, "PHONE");
+
+        // get files from sd card if present
+        if (isExternalStorageWritable()) {
+            getFiles(pathSD, "SD");
+        }
+        // get files from Drive
+        getDriveFiles(trash = false);
+
+    }
+
+    /**
+     * Retreive all the files that are in the trashcan.
+     */
+    public void getTrash(){
+        getFiles(pathTrashCan, "PHONE");
+        getDriveFiles(trash = true);
 
     }
 

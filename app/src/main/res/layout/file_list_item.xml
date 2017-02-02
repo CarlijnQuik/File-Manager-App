@@ -66,6 +66,7 @@
         android:layout_gravity="center_vertical"
         android:scaleType="fitCenter"
         android:id="@+id/ibDownload"
+        android:visibility="invisible"
         android:src="@drawable/download_icon"
         android:background="@null" />
 

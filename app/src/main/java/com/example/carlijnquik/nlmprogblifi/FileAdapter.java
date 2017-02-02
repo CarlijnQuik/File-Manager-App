@@ -360,12 +360,13 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             while ((count = inputStream.read(buffer)) != -1) {
                 fileOutput.write(buffer, 0, count);
             }
+            fileOutput.flush();
             fileOutput.close();
 
             String root = System.getenv("EXTERNAL_STORAGE");
             File file = new File(root, fileToMove.getPath());
             Log.d("string name", file.getPath());
-
+            context.deleteFile(file.getName());
 
         }
 
@@ -385,8 +386,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         // get both the file and Drive file to see which one is empty
         File file = fileObject.getFile();
         com.google.api.services.drive.model.File driveFile = fileObject.getDriveFile();
-
-        bibDownload.setVisibility(View.INVISIBLE);
 
         // set the views that are based on location
         if (fileObject.getLocation() != null) {

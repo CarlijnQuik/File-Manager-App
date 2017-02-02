@@ -180,13 +180,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             @Override
             public boolean onQueryTextSubmit(String searchRequest) {
                 if (searchRequest.length() > 3) {
-                    // search
-                    openFileList(trashClicked, searchRequest);
-
+                    // clear search text to avoid overload of search requests
                     searchView.setQuery("", false);
-
+                    openFileList(trashClicked, searchRequest);
                     return false;
-
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Search request must be 4+ characters long", Toast.LENGTH_SHORT).show();
