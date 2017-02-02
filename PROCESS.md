@@ -166,10 +166,13 @@
 - Found out a way to use the credential more effectively and delete and update Drive files
 
 #### Day 11
-TODO;
-- Brainstorm about best practices with peergroup
-- Delete Java and Drive folders 
-- Open a Drive folder
+- The user can delete a Drive folder
+- 
+
+- Enable the user to sort files 
+- Enable the user to search through files 
+- Enable the user to select (all) files 
+- Delete Java folders
 
 #### Final day
 TODO list;
@@ -177,12 +180,6 @@ TODO list;
 - Go over code efficiency one more time
 
 
-- Enable the user to sort files 
-- Enable the user to search through files 
-- Enable the user to select (all) files 
-
-- Create a Java file / folder
-- Enable the user to upload / create a Drive file
 
 
 
