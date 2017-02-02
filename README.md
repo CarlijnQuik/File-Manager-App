@@ -6,6 +6,9 @@
 The purpose of this App is to enable the user to find files more efficiently. 
 It does so by integrating Google Drive, internal and SD card files into one UI.
 
+#### Copyright statement
+Copyright © 2017 by Carlijn Quik
+
 #### Overview in images
 The following given a visual overview of the App.
 
