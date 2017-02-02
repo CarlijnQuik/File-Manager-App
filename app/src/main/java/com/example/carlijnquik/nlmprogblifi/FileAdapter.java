@@ -363,7 +363,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             fileOutput.flush();
             fileOutput.close();
 
-            // function to delete the file is not working
+            // delete the file (not functioning)
             File file = new File(fileToMove.getPath());
             Log.d("string name", file.getPath());
             context.deleteFile(file.getName());
